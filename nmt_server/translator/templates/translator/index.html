@@ -23,14 +23,16 @@
     <div class="navbar-header">
       <a class="navbar-brand" href="#">SkyDict</a>
     </div>
-    <ul class="nav navbar-nav">
-      <li class="is-active"><a href="#">Translator</a></li>
-      <li><a href="#">About</a></li>
-    </ul>
-    <ul class="nav navbar-nav navbar-right">
-        <li><a id="menu_login" href="#"><span class="glyphicon glyphicon-user"></span> Login</a></li>
-        <li><a id="menu_any" href="#"><span class="glyphicon glyphicon-menu-hamburger"></a></li>
-    </ul>
+    <div class="nav navbar-nav">
+        <div class = "nav-left">
+            <span class="header_menu_separator"></span>
+            <a href="#">Translator</a>
+        </div>
+        <div class="nav-right">
+            <a id="menu_login" href="#"><span class="glyphicon glyphicon-user"></span> Login</a>
+            <a id="menu_any" href="#"><span class="glyphicon glyphicon-menu-hamburger"></a>
+        </div>
+    </div>
   </div>
 </nav>
 <div class="container">
@@ -52,17 +54,18 @@
                 </div>
                 <div class='textarea_container'>
                   <div class='inner_textarea_container'>
-                      <textarea class='textarea source_textarea textarea_base_style' id="ta_source"></textarea>
-                      <span class='visible_desktop_only'><span class='textarea_placeholder_text'>Type, paste text, <br>or drop document here.<span class="sky_addition"><br>(English, Thai)</span></span></span>
+                      <textarea class='textarea source_textarea textarea_base_style' id="ta_source" placeholder="Type, paste text, &#13;&#10; or drop document here"></textarea>
+                      <!-- <span class='visible_desktop_only'><span class='textarea_placeholder_text'>Type, paste text, <br>or drop document here.<span class="sky_addition"><br>(English, Thai)</span></span></span> -->
                               <!-- ==== docTrans: UploadButton === -->
                         <div class='docTrans_translator_upload_button'>
-                        <form>
+                        <form class="source_textarea_bottom">
                             <div class='docTrans_translator_upload_button__inner'>
                                 <button type='button' class="btn docTrans_translator_upload_button__inner_button">
                                     <span class="glyphicon glyphicon-book"></span>
                                     Translate document</button>
                                 <input type="file" name='file' id="docTrans"/>
                             </div>
+                            <div id='docTrans_char_count'>0/5000</div>
                         </form>
                         </div>
                   </div>
@@ -155,13 +158,13 @@
                 </nav>
             </div>
             <div class="menu__footer_section">
-                <a class="sky_header_menu__nav_link menu__login" href="/login.html">Login</a>
-                <a class="sky_header_menu__nav_link menu__signup" href="/pro.html">Sign up</a>
+                <a class="sky_header_menu__nav_link menu__login" href="#">Login</a>
+                <a class="sky_header_menu__nav_link menu__signup menu_signup_link" href="#">Sign up</a>
             </div>
         </div>
     </div>
 </template>
-<template id="login_ManinSection">
+<template id="login_MainSection">
     <div class="PopupMenu">
         <div class="menu_overlay"></div>
         <div id="menu" class="menu" dl-test="menu-site">
@@ -173,16 +176,16 @@
                         <input class="" name='username' type='email' dl-attr='value: $0.data_login'
                             autocomplete="username email" placeholder="Email"
                             tabindex="10" autofocus="autofocus" spellcheck="false"
-                            id='login_email' required dl-test="menu-login-username">
+                            id='login_email' required>
                     </div>
                     <div class="menu__login__form__pass">
                         <input name='password' type='password' autocomplete="current-password" dl-attr='value: $0.data_password'
                             placeholder="Password" tabindex="10"
-                            id='login_password' required dl-test="menu-login-password">
-                        <button type="button" class="menu__login__form__pass__forgot" dl-attr="onClick: $0.doOpenPasswordForgotten" tabindex="10" >Forgot your password?</button>
+                            id='login_password' required>
+                        <button type="button" class="menu__login__form__pass__forgot" tabindex="10" >Forgot your password?</button>
                     </div>
                     <button class="menu__login__form__submit sky_button" dl-attr="onClick: $0.doLogin" tabindex="10"
-                        dl-test="menu-login-submit">Log in</button>
+                        >Log in</button>
                     <div class="menu__login__form__rememberme">
                         <label for="login_rememberme">
                             <input type="checkbox" name="login_rememberme" id="login_rememberme" dl-attr='value: $0.data_keepLogin' tabindex="10">
@@ -196,41 +199,89 @@
             </div>
             <div class="menu__footer_section">
                 <div class="menu__login__signup_text">No account yet?</div>
-                <a class="menu__login__signup_link sky_link sky_link--small sky_link--more" href="/pro.html">Sign up for DeepL Pro</a>
+                <a class="menu__login__signup_link sky_link sky_link--small sky_link--more menu_signup_link" href="#">Sign up for DeepL Pro</a>
             </div>
         </div>
     </div>
 </template>
 <!-- =============================== -->
-<template dl-template='dlMainPopup_ForgotPasswordSection'>
-    <div class="menu__login__back" dl-attr="onClick: $0.doOpenLoginMenu">
-        <a href="#" class="menu__login__back_link">
-            Back to login        </a>
-    </div>
-    <div class="menu__login__banner">Password reset</div>
-    <form class="menu__login__form menu__forgot__form" method='POST' onsubmit="event.preventDefault(); return false;" novalidate='novalidate'>
-        <div class="menu__login__form__email">
-            <!-- <label class="menu__login__form__email" for="forgot_email">Email</label> -->
-            <input class="" name='username' type='email' dl-attr='value: $0.data_login'
-                autocomplete="username email" placeholder="Email" tabindex="0" autofocus="autofocus"
-                id='forgot_email' required dl-test="menu-login-username">
+<template id="sign_MainSection">
+    <div class="PopupMenu">
+        <div class="menu_overlay"></div>
+        <div id="menu" class="menu" dl-test="menu-site">
+            <button type="button" class="close menu_close">&times;</button>
+            <div class="menu__main_section" >
+                <a class="sky_header_menu__nav_link menu__login" href="#">Back into Login</a>
+                <div class="menu__login__banner">SkyDict <br> SignUp</div>
+                <form class="menu__login__form" method='POST' onsubmit="event.preventDefault(); return false;" novalidate='novalidate'>
+                    <div class="menu__login__form__email">
+                        <input class="" name='username' type='email' dl-attr='value: $0.data_login'
+                            autocomplete="username email" placeholder="Email"
+                            tabindex="10" autofocus="autofocus" spellcheck="false"
+                            id='login_email' required>
+                    </div>
+                    <div class="menu__login__form__name">
+                        <input class="" name='firstname' type='text' placeholder="First Name"
+                            tabindex="10" spellcheck="false" id='firstname' required>
+                    </div>
+                    <div class="menu__login__form__name">
+                        <input class="" name='lastname' type='text' placeholder="Last Name"
+                            tabindex="10" spellcheck="false" id='lastname' required>
+                    </div>
+                    <div class="menu__login__form__pass">
+                        <input name='password' type='password' dl-attr='value: $0.data_password'
+                            placeholder="Password" tabindex="10"
+                            id='login_password' required>
+                    </div>
+                    <div class="menu__login__form__pass">
+                        <input name='confirm' type='password' dl-attr='value: $0.data_password'
+                            placeholder="Password Confirm" tabindex="10"
+                            id='login_confirm' required>
+                    </div>
+                    <button class="menu__sign__form__submit sky_button" dl-attr="onClick: $0.doLogin" tabindex="10"
+                        dl-test="menu-login-submit">Sign Up</button>
+                    <div class="menu__login__form__rememberme">
+                        <label for="login_rememberme">
+                            <input type="checkbox" name="login_rememberme" id="login_rememberme" dl-attr='value: $0.data_keepLogin' tabindex="10">
+                            <span class="sky_form__checkbox"></span>
+                            <span class="menu__login__form__rememberme__title"> Remember me </span>
+                        </label>
+                    </div>
+                </form>
+                <div class='menu__error' dl-attr='html: $0.loginError'></div>
+            </div>
+            <div class="menu__footer_section">
+            </div>
         </div>
-        <button class="menu__login__form__submit sky_button--2"
-            dl-attr="onClick: $0.doSendPasswordLink, removeIf: $0.removeInput">Reset password</button>
-    </form>
-    <div class='menu__error' dl-attr='html: $0.errorMessage'></div>
-    <div class='menu__message' dl-attr='html: $0.feedbackMessage'></div>
-</template>
-
-<!-- =============================== -->
-
-<template dl-template='dlMainPopup_SignupFooterSection'>
-    <div class="menu__bottom_section--signup">
-        <div class="menu__login__signup_text">No account yet?</div>
-        <a class="menu__login__signup_link sky_link sky_link--small sky_link--more" href="/pro.html">Sign up for SkyDict</a>
     </div>
 </template>
-
+<!-- =============================== -->
+<template id='ForgotPasswordSection'>
+    <div class="PopupMenu">
+        <div class="menu_overlay"></div>
+        <div id="menu" class="menu" dl-test="menu-site">
+            <button type="button" class="close menu_close">&times;</button>
+            <div class="menu__main_section" >
+                <a class="sky_header_menu__nav_link menu__login" href="#">Back into Login</a>
+                <div class="menu__login__banner">Password <br> reset</div>
+                <form class="menu__login__form" method='POST' onsubmit="event.preventDefault(); return false;" novalidate='novalidate'>
+                    <div class="menu__login__form__email">
+                        <input class="" name='username' type='email' dl-attr='value: $0.data_login'
+                            autocomplete="username email" placeholder="Email"
+                            tabindex="10" autofocus="autofocus" spellcheck="false"
+                            id='login_email' required>
+                    </div>
+                    <button class="menu__reset__form__submit sky_button">Reset password</button>
+                </form>
+                <div class='menu__error' dl-attr='html: $0.loginError'></div>
+            </div>
+            <div class="menu__footer_section">
+                <div class="menu__login__signup_text">No account yet?</div>
+                <a class="menu__login__signup_link sky_link sky_link--small sky_link--more menu_signup_link" href="#">Sign up for DeepL Pro</a>
+            </div>
+        </div>
+    </div>
+</template>
 <!-- =============================== -->
 </body>
 </html>

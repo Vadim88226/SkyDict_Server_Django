@@ -10,6 +10,16 @@ body{
     font-size: 24px;
     font-weight: bold;
 }
+.navbar-nav a{
+    color: #777;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+.header_menu_separator {
+    margin: 0 30px 0 16px;
+    border-left: 2px solid #f1f1f1;
+    height: 20px;
+}
 .dropdown-menu {
     line-height: 200px;
 }
@@ -80,6 +90,9 @@ textarea{
     position: relative;
     resize: none;
 }
+textarea::placeholder {
+    font-size: 30px;
+}
 .textarea_container {
     box-shadow: 0px 14px 16px rgba(0, 0, 0, 0.06) !important;
     border: 2px solid transparent !important;
@@ -116,6 +129,17 @@ textarea{
 .docTrans_translator_upload_button{
     position: absolute;
     bottom: 10px;
+    width: 100%;
+}
+.source_textarea_bottom{
+    display: flex;
+    width: 100%;
+}
+#docTrans_char_count{
+    position: absolute;
+    align-self: center;
+    right: 10px;
+    bottom: 5px;
 }
 .textarea_placeholder_text {
     position: absolute;
@@ -372,7 +396,7 @@ k{
     border-bottom: 1px solid #dee2e5;
     border-radius: 0;
 }
-.menu__login__form__pass {
+.menu__login__form__pass, .menu__login__form__name {
     position: relative;
     margin-top: 24px;
 }
@@ -413,7 +437,7 @@ k{
 .sky_button:hover {
     background-color: #05668D !important;
 }
-.body a:link, .body--text_page a:link {
+a:link, a:link:hover {
     text-decoration: none;
 }
 .menu__login__signup_link {
@@ -431,4 +455,14 @@ k{
     height: 10px;
     right: -10px;
     top: 0px;
+}
+input[type=text]:placeholder-shown[required], input[type=email]:placeholder-shown[required], input[type=number]:placeholder-shown[required], input[type=password]:placeholder-shown[required] {
+    background-image: url(../icons/asterisk.svg);
+    background-size: 8px;
+    background-repeat: no-repeat;
+    background-position: right 5px top 5px;
+}
+.menu__login__form input[type=text]:focus, .menu__login__form input[type=email]:focus, .menu__login__form input[type=password]:focus {
+    border-bottom: 1px solid #006494;
+    outline: none;
 }

@@ -2,11 +2,10 @@ var source_language = "English";
 var target_language = "Thai";
 var api_url = "trans_sentences";
 var dict_url = 'query_dict'
-var selector = '.nav li';
-
-$(selector).on('click', function(){
-    alert(selector)
-    $(selector).removeClass('active');
+var wait;
+$('.nav li').on('click', function(){
+    alert('.nav li')
+    $('.nav li').removeClass('active');
     $(this).addClass('active');
 });
 
@@ -37,8 +36,8 @@ function ShowSelection()
         url: dict_url,
         data: {
           'seltext': selectedText,
-          'inLang' : source_language,
-          'outLang' : target_language
+          'sl' : source_language.substr(0,2),
+          'tl' : target_language.substr(0,2)
         },
         dataType: 'json',
         success: function (data) {
@@ -64,8 +63,8 @@ function ShowSentence()
         url: api_url,
         data: {
           'seltext': selectedText,
-          'inLang' : source_language,
-          'outLang' : target_language
+          'sl' : source_language.substr(0,2),
+          'tl' : target_language.substr(0,2)
         },
         dataType: 'json',
         success: function (data) {  //console.log(data);
@@ -82,16 +81,20 @@ function swap_language(){
     $("#btn_target strong").html(target_language);
     $("#ta_source").val($("#ta_target").val());
     $("#ta_target").val("");
+    source_textarea_change();
     ShowSentence();
 }
 function source_textarea_change() {
     $('.source_textarea').css('height', 'auto');
-    if( $('.source_textarea').val() ) 
-        $('.textarea_placeholder_text').css("display", "none");
-    else
-        $('.textarea_placeholder_text').css("display", "block");
+    // if( $('.source_textarea').val() ) 
+    //     $('.textarea_placeholder_text').css("display", "none");
+    // else
+    //     $('.textarea_placeholder_text').css("display", "block");
+    var len = $('.source_textarea').val().length.toString();
+    document.getElementById("docTrans_char_count").innerHTML = $('.source_textarea').val().length.toString() + "/5000";
     var height = document.getElementById('ta_source').scrollHeight;
-        $('.source_textarea').css("font-size", 22 - height/500);
+        $('.source_textarea').css("font-size", 23 - (height/500).toFixed(0));
+        $('.target_textarea').css("font-size", 23 - (height/500).toFixed(0));
         height = document.getElementById('ta_source').scrollHeight;
         $('.source_textarea').css('height', height);
         $('.target_textarea').css('height', height);
@@ -114,20 +117,17 @@ $(function(){
         $('.target_textarea').val("");
         $('.source_textarea').css('height', 'auto');
         source_textarea_change();
-        $('.textarea_placeholder_text').css("display", "block");
+        // $('.textarea_placeholder_text').css("display", "block");
     });
-    $('.source_textarea').on('keydown keyup paste mouseup change', function (e) {
-        //clearTimeout($.data(this, 'timer'));
-        var wait = setTimeout(source_textarea_change, 100);
-        $(this).data('timer', wait);
+    $('.source_textarea').on('keydown keyup paste mouseup change input', function (e) {
+        setTimeout(source_textarea_change, 100);
     });
     $('.source_textarea').on('select', function(e) {
         ShowSelection();
     });
     $('.source_textarea').on('keyup', function(e) {
-        clearTimeout($.data(this, 'timer'));
-        var wait = setTimeout(ShowSentence, 500);
-        $(this).data('timer', wait);
+        clearTimeout(wait);
+        wait = setTimeout(ShowSentence, 500);
     });
     $('.docTrans_translator_upload_button__inner_button').on('click', function (e) {
         $('#docTrans').click();        
@@ -164,6 +164,7 @@ $(function(){
         })
     });
     $("#menu_any").click(function(){
+        $(".PopupMenu").remove();
         var t = document.querySelector('#dlMainPopup');
         var clone = document.importNode(t.content, true);
         document.body.appendChild(clone);
@@ -176,7 +177,23 @@ $(function(){
         $(".PopupMenu").remove();
     });
     $("#menu_login").click(function(){
-        var t = document.querySelector('#login_ManinSection');
+        $(".PopupMenu").remove();
+        var t = document.querySelector('#login_MainSection');
+        var clone = document.importNode(t.content, true);
+        document.body.appendChild(clone);
+    });
+    $(document).on('click',".menu__login", function() { 
+        $("#menu_login").click();
+    });
+    $(document).on('click',".menu_signup_link", function(){
+        $(".PopupMenu").remove();
+        var t = document.querySelector('#sign_MainSection');
+        var clone = document.importNode(t.content, true);
+        document.body.appendChild(clone);
+    });
+    $(document).on('click',".menu__login__form__pass__forgot", function(){
+        $(".PopupMenu").remove();
+        var t = document.querySelector('#ForgotPasswordSection');
         var clone = document.importNode(t.content, true);
         document.body.appendChild(clone);
     });
