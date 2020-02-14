@@ -15,8 +15,12 @@ class IndexView(generic.TemplateView):
 
 def query_dict(request):
     selectedText = request.GET.get('seltext', None)
-    dict = TranslatorConfig.en_th_dict
-    response = dict.dict[selectedText]
+    dict = TranslatorConfig.en_th_dict    
+    try:
+        response = dict.dict[selectedText]
+    except KeyError:
+        response = ""
+    print(response)
     data = {
         'content' : response
     }
@@ -47,10 +51,6 @@ def trans_sentences(request):
 
     for i, sent in enumerate(pre_sentences):
         output_sentences = output_sentences.replace(sent,predicted_sentences[i])
-
-
-
-
     data = {
         'content' : output_sentences
     }
