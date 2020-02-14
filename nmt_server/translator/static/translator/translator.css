@@ -1,0 +1,276 @@
+body{
+    background-color:rgb(241, 241, 241);
+    font-size: 16px;
+    overflow: overlay;
+}
+.container{
+    width: 80% !important;
+}
+.navbar-brand{
+    font-size: 24px;
+    font-weight: bold;
+}
+.dropdown-menu {
+    line-height: 200px;
+}
+.main_menu{
+    font-size: 24px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.normal_menu{
+    font-size: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.navbar-nav{
+    font-size: 20px;
+}
+.close{
+    font-size: 30px;
+}
+button {
+    border: none !important;
+    background: transparent !important;
+}
+.btn{
+    font-size: 20px;
+}
+.btn:active:focus, .btn:focus, .btn.focus{
+    outline:0;
+}
+.language_select {
+    text-align:center;
+}
+#source_menu, #target_menu {
+    left: 50% !important;
+}
+.sides_container{
+    display: flex;
+}
+.side_container--source {
+    width:calc(50% - 2px);
+}
+.side_container--target {
+    width:calc(50% - 2px);
+    margin-left:5px;
+}
+textarea{
+    padding: 16px 32px 60px 24px;
+    color: #333;
+    line-height: 1.5;
+    min-height: 400px;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 400;    
+    display: inline-block;
+    -webkit-appearance: none;
+    appearance: none;
+    box-shadow: none;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    border: none;
+    background-color: transparent;
+    background: transparent;
+    vertical-align: top;
+    text-align: left;
+    font-size: 22px;
+    position: relative;
+    resize: none;
+}
+.textarea_container {
+    box-shadow: 0px 14px 16px rgba(0, 0, 0, 0.06) !important;
+    border: 2px solid transparent !important;
+    background-color: #fff;
+    position: relative;
+    font-size: 100%;
+}
+.clear_text_button {
+    top: 4px;
+    right: 6px;
+    color: #D1D2D4;
+    position: absolute;
+    font-size: 30px;
+    font-weight: 400;
+    width: 24px;
+    height: 24px;
+    outline: none;
+    border: none;
+    background-color: transparent;
+}
+.clear_text_button span {
+    display: inline-block;
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    height: 26px;
+    padding-right: 10px;
+}
+.docTrans_translator_upload_button input {
+    opacity: 0;
+    height: 0.1px;
+    width: 0.1px;
+}
+.docTrans_translator_upload_button{
+    position: absolute;
+    bottom: 10px;
+}
+.textarea_placeholder_text {
+    position: absolute;
+    display: block;
+    position: absolute;
+    text-align: left;
+    cursor: text;
+    pointer-events: none;
+    font-size: 26px;
+    color: #959595;
+    top: 20px;
+    right: 30px;
+    top: 16px;
+    left: 24px;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 300;
+    line-height: inherit;
+}
+.textarea_placeholder_text > span {
+  font-size: 16px;
+  line-height: 150%;
+  top: 0.4em;
+  position: relative;
+  display: block;
+}
+.textarea_separator {
+    position: absolute;
+    top: 54px;
+    left: calc(50% - 5px);
+    /* height: calc(100% - 55px); */
+    min-height: 530px;
+}
+.textarea_separator .textarea_separator__vertical_line {
+    display: block;
+    position: absolute;
+    width: 6px;
+    height: calc(100% - 40px);
+    right: -8px;
+    top: -2px;
+    z-index: 11;
+    background-color: rgb(241, 241, 241);
+}
+.textarea_separator .textarea_separator__arrow {
+    display: block;
+    position: absolute;
+    transform: scaleY(1.1) rotate(45deg);
+    right: -8px;
+    top: calc(50% - 4px);
+    width: 6px;
+    height: 6px;
+    z-index: 12;
+    border-top: 2px solid rgb(15, 43, 70);
+    border-right: 2px solid rgb(15, 43, 70);
+    border-radius: 0px;
+}
+.textarea_separator .textarea_separator__border_inner {
+    content: " ";
+    display: block;
+    position: absolute;
+    right: -20px;
+    top: calc(50% - 24px);
+    width: 30px;
+    height: 48px;
+    background-color: rgb(255, 255, 255);
+    z-index: 11;
+    box-sizing: border-box;
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgb(241, 241, 241);
+    border-image: initial;
+    border-radius: 16px;
+}
+.textarea_separator .textarea_separator__border_outer {
+    content: " ";
+    display: none;
+    position: absolute;
+    right: -22px;
+    top: calc(50% - 26px);
+    width: 34px;
+    height: 52px;
+    z-index: 10;
+    box-sizing: border-box;
+    background-color: rgb(231, 231, 231);
+    border-width: 2px;
+    border-style: solid;
+    border-color: rgb(15, 43, 70);
+    border-image: initial;
+    border-radius: 16px;
+}
+.textarea_separator .textarea_separator__busy {
+    display: block;
+    position: absolute;
+    right: -13px;
+    top: calc(50% - 9px);
+    z-index: 12;
+    width: 16px;
+    height: 16px;
+    background-color: white;
+    opacity: 0;
+    transition: opacity 100ms ease-out 0s;
+}
+.translate_convert{
+    position: absolute;
+    z-index: 15;
+    right: -30px;
+    top: 10px;
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 48px!important;
+    width: 48px!important;
+    background-position: 0px -96px;
+    border-radius: 24px;
+    background-image: -webkit-image-set(url(../icons/2x_mobile.png) 1x,url(../icons/2x_mobile.png) 2x);
+}
+.translate_convert:hover{
+    background-color: lightgray;
+    cursor: pointer;
+}
+.target_toolbar {
+    position: relative;
+    top: -40px;
+    width: 100%;
+    height: 32px;
+    line-height: 22px;
+    opacity: 0.9;
+    transition: opacity 250ms ease-in-out;
+    padding: 5px 20px 5px 20px;
+    box-sizing: border-box;
+    text-align: right;
+    direction: rtl;
+    display: flex;
+}
+.target_toolbar__generic > button, .target_toolbar__copy > button, .target_toolbar__save > button, .target_toolbar__share > button {
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 22px;
+    height: 22px;
+    padding-left: 30px;
+    background-color: transparent;
+    color: #0F2B46;
+    stroke: #0F2B46;
+    position: relative;
+    border: none;
+    transition: opacity 300ms ease-in-out, background-color 250ms ease-out;
+    float: left;
+    font-size: 20px;
+    line-height: 20px;
+}
+.dict_area{
+    display: none;
+    width:50%;
+    margin-bottom: 60px;
+}
+#translator_dict {
+    padding: 16px 32px 16px 24px;
+}
+k{
+    color: #265180;
+    font-size: 20px;
+}
