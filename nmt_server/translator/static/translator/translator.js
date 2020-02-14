@@ -150,4 +150,29 @@ $(function(){
         document.execCommand("copy");
         $temp.remove();
     });
+    $(".target_toolbar__save").click(function(e){
+        $("<a />", {
+            download: $.now() + ".txt",
+            href: URL.createObjectURL(
+            new Blob([$("#ta_target").val()], {
+                type: "text/plain"
+            }))
+        })
+        .appendTo("body")[0].click();
+        $(window).one("focus", function() {
+            $("a").last().remove()
+        })
+    });
+    $("#menu_any").click(function(){
+        // select
+        var t = document.querySelector('#dlMainPopup');
+        /*
+        // set
+        t.content.querySelector('img').src = 'demo.png';
+        t.content.querySelector('p').textContent= 'demo text';*/
+        
+        // add to document DOM
+        var clone = document.importNode(t.content, true); // where true means deep copy
+        document.body.appendChild(clone);
+    });
 });
