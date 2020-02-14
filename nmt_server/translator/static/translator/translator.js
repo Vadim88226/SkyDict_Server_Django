@@ -1,5 +1,5 @@
-var source_language = "English";
-var target_language = "Thai";
+var source_language = "en";
+var target_language = "th";
 var api_url = "trans_sentences";
 var dict_url = 'query_dict'
 var selector = '.nav li';
@@ -37,8 +37,8 @@ function ShowSelection()
         url: dict_url,
         data: {
           'seltext': selectedText,
-          'inLang' : source_language,
-          'outLang' : target_language
+          'sl' : source_language,
+          'tl' : target_language
         },
         dataType: 'json',
         success: function (data) {
@@ -64,10 +64,9 @@ function ShowSentence()
         url: api_url,
         data: {
           'seltext': selectedText,
-          'inLang' : source_language,
-          'outLang' : target_language
-        },
-        dataType: 'json',
+          'sl': source_language,
+          'tl': target_language
+        },        dataType: 'json',
         success: function (data) {  //console.log(data);
             $("#ta_target").val(data.content);
         },
