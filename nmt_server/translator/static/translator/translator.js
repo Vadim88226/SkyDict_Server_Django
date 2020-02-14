@@ -46,8 +46,11 @@ function ShowSelection()
                 $(".dict_area").css('display', 'block');
                 var dText = data.content;
                 dText = dText.replace(/\n/g, "<br>");
-                dText = dText.replace(/  /g, "&nbsp;"); console.log(dText);
+                dText = dText.replace(/  /g, "&nbsp;"); //console.log(dText);
                 document.getElementById('translator_dict').innerHTML = dText;
+            } else {
+                console.log(data.content);
+                $(".dict_area").css('display', 'none');
             }
         }
     });
@@ -126,7 +129,7 @@ $(function(){
         var wait = setTimeout(ShowSentence, 500);
         $(this).data('timer', wait);
     });
-    $('.docTrans_translator_upload_button__inner_button').on('click', function () {
+    $('.docTrans_translator_upload_button__inner_button').on('click', function (e) {
         $('#docTrans').click();        
     });
     $("#source_menu li a").on("click", function(event){
@@ -140,9 +143,6 @@ $(function(){
         }
     });
     $(".translate_convert").on("click", swap_language);
-    $(".clear_dict_text").on('click', function(e){
-        $(".dict_area").css('display', 'none');
-    });
     $(".target_toolbar__copy").on('click', function(e){
         var $temp = $("<textarea>");
         $("body").append($temp);
@@ -164,15 +164,20 @@ $(function(){
         })
     });
     $("#menu_any").click(function(){
-        // select
         var t = document.querySelector('#dlMainPopup');
-        /*
-        // set
-        t.content.querySelector('img').src = 'demo.png';
-        t.content.querySelector('p').textContent= 'demo text';*/
-        
-        // add to document DOM
-        var clone = document.importNode(t.content, true); // where true means deep copy
+        var clone = document.importNode(t.content, true);
+        document.body.appendChild(clone);
+    });
+    $(document).on('click',".menu_close", function(e) { 
+        e.preventDefault();
+        $(".PopupMenu").remove();
+    });
+    $(document).on('click',".menu_overlay", function() { 
+        $(".PopupMenu").remove();
+    });
+    $("#menu_login").click(function(){
+        var t = document.querySelector('#login_ManinSection');
+        var clone = document.importNode(t.content, true);
         document.body.appendChild(clone);
     });
 });
