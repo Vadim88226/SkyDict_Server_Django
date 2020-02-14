@@ -1,3 +1,4 @@
+import re
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
 from django.template import loader
@@ -7,7 +8,7 @@ from django.utils import timezone
 from .models import TransModel
 from .apps import TranslatorConfig
 from translator.translation_model.processing import evaluate
-from translator.translation_model.processing import normalizeString
+from translator.translation_model.processing import normalizeString, normalizeString_fix
 
 
 class IndexView(generic.TemplateView):
@@ -27,32 +28,49 @@ def query_dict(request):
     return JsonResponse(data)
 
 def trans_sentences(request):
-    sentences = request.GET.get('seltext', None)
-    output_sentences = sentences
-    nlp = TranslatorConfig.en_nlp
-    tokens = nlp(sentences)
-    predicted_sentences = []
-    pre_sentences = []
-    encoder = TranslatorConfig.encoder
-    decoder = TranslatorConfig.decoder
-    input_lang = TranslatorConfig.input_lang
-    output_lang = TranslatorConfig.output_lang
+    sentences = request.GET.get('seltext', '')
+    s_lang = request.GET.get('sl', '')
+    t_lang = request.GET.get('tl', '')
 
-    for sent in tokens.sents:
-        pre_sentences.append(sent.string.strip())
-        sentence = ' '.join(sent.string.split())
-        sentence = normalizeString(sentence, True)
-        predicted = evaluate(input_lang, output_lang, encoder, decoder, sentence, False, cutoff_length=30)
-        predicted = predicted.replace(" ", "")
-        predicted = predicted.replace("<EOS>", "")
+    if s_lang=='en' and t_lang=='th':
+        output_sentences = sentences
+        nlp = TranslatorConfig.en_nlp
+        tokens = nlp(sentences)
+        predicted_sentences = []
+        pre_sentences = []
+        encoder = TranslatorConfig.encoder
+        decoder = TranslatorConfig.decoder
+        input_lang = TranslatorConfig.input_lang
+        output_lang = TranslatorConfig.output_lang
 
-        predicted_sentences.append(predicted)
+        for sent in tokens.sents:
+            pre_sentence = sent.string.strip()
+            for sent1 in pre_sentence.splitlines():
+                if sent1=='':
+                    continue
+                pre_sentences.append(sent1)
+                sentence = re.sub(' +', ' ', sent1)
+                # sentence = normalizeString_fix(sentence, True)
+                print(sentence)
+                predicted = evaluate(input_lang, output_lang, encoder, decoder, sentence, False, cutoff_length=30)
+                predicted = predicted.replace(" ", "")
+                predicted = predicted.replace("<EOS>", "")
+
+                predicted_sentences.append(predicted)
 
 
-    for i, sent in enumerate(pre_sentences):
-        output_sentences = output_sentences.replace(sent,predicted_sentences[i])
-    data = {
-        'content' : output_sentences
-    }
-    print(output_sentences)
+
+        print(pre_sentences)
+        for i, sent in enumerate(pre_sentences):
+            output_sentences = output_sentences.replace(sent,predicted_sentences[i])
+        data = {
+            'content' : output_sentences
+        }
+
+
+    else:
+        data = {
+            'content' : "no supported"
+        }
+
     return JsonResponse(data)

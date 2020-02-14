@@ -43,7 +43,17 @@ def normalizeString(s, isEn=True, tagging = True):
     #     if not tagging:
     #         s = s.replace(" ", "")
     return s   
-
+def normalizeString_fix(s, isEn=True, tagging = True):
+    if isEn:
+        s = re.sub(u'\ufeff', "", s)
+        s = uniToAscii(s.lower().strip())
+        # s = re.sub(r"([.!?])", r" \1", s)
+        # s = re.sub(r"[^a-zA-Z.!?]+", r" ", s)
+    else:
+        s = re.sub(u'\xa0', "", s)
+        if not tagging:
+            s = s.replace(" ", "")
+    return s
   
 """Denote patterns that sentences must start with to be kept in dataset. 
 Can be changed if desired (from pytorch)"""
@@ -462,7 +472,7 @@ class EncoderRNN(nn.Module):
                                     batch_size, self.hidden_size)
 		c_hidden = torch.zeros(self.num_layers*self.directions, 
                                     batch_size, self.hidden_size)
-		if torch.cuda.is_available():
+		if use_cuda:
 			return h_hidden.cuda(), c_hidden.cuda()
 		else:
 			return h_hidden, c_hidden
