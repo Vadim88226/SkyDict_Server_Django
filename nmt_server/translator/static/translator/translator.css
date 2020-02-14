@@ -4,24 +4,40 @@ body{
     overflow: overlay;
 }
 .container{
-    width: 80% !important;
+    width: 80%;
+}
+.container-fluid{
+    display: flex;
+    align-self: center;
+    justify-content: space-between;
+    align-items: center;
 }
 .navbar-brand{
     font-size: 24px;
     font-weight: bold;
 }
-.navbar-nav a{
-    color: #777;
-    padding-top: 15px;
-    padding-bottom: 15px;
-}
-.nav .navbar-nav{
+.navbar-nav{
     width:100%;
     display: flex;
+    align-self: center;
+    justify-content: space-between;
+    align-items: center;
+}
+.navbar-nav a{
+    color: #777;
+    padding:15px 10px 15px 10px;
 }
 .header_menu_separator {
-    margin: 0 30px 0 16px;
+    /* margin: 0 30px 0 16px; */
     border-left: 2px solid #f1f1f1;
+    float: left;
+    height: 50px;
+    padding: 15px 15px;
+    font-size: 18px;
+    line-height: 20px;
+}
+.nav-item {
+    margin: 0 30px 0 16px;
     float: left;
     height: 50px;
     padding: 15px 15px;
@@ -99,7 +115,7 @@ textarea{
     resize: none;
 }
 textarea::placeholder {
-    font-size: 30px;
+    font-size: xx-large;
 }
 .textarea_container {
     box-shadow: 0px 14px 16px rgba(0, 0, 0, 0.06) !important;
@@ -473,4 +489,37 @@ input[type=text]:placeholder-shown[required], input[type=email]:placeholder-show
 .menu__login__form input[type=text]:focus, .menu__login__form input[type=email]:focus, .menu__login__form input[type=password]:focus {
     border-bottom: 1px solid #006494;
     outline: none;
+}
+@media (max-width: 768px) {
+    .container{
+        width: 99%;
+    }
+    .textarea_separator{
+        display:none;
+        width: 0;
+        height: 0;
+    }
+    .sides_container { display: block;}
+    .side_container { width: 100%; }
+    textarea {min-height: 250px;}
+    textarea::placeholder{
+        font-size: x-large;
+    }
+    .side_container--target {margin-left: 0;}
+    .dict_area { width: 100%;}
+}
+@media (max-width: 400px) {
+    #menu_login, .nav-left {
+        display: none;
+    }
+    .navbar-nav{
+        display: block;
+        text-align: right;
+    }
+    textarea::placeholder, .btn{
+        font-size: medium;
+    }
+    .textarea_container{
+        font-size: small;
+    }
 }

@@ -92,13 +92,18 @@ function source_textarea_change() {
 	//     $('.textarea_placeholder_text').css("display", "block");
 	var len = $('.source_textarea').val().length.toString();
 	document.getElementById("docTrans_char_count").innerHTML = $('.source_textarea').val().length.toString() + "/5000";
-	var height = document.getElementById('ta_source').scrollHeight;
-		$('.source_textarea').css("font-size", 23 - (height/500).toFixed(0));
-		$('.target_textarea').css("font-size", 23 - (height/500).toFixed(0));
-		height = document.getElementById('ta_source').scrollHeight;
-		$('.source_textarea').css('height', height);
-		$('.target_textarea').css('height', height);
-		$('.textarea_separator').css('height', height+150);
+    var height = document.getElementById('ta_source').scrollHeight;
+    var fontSize = 23;
+    if ($("body").width() < 768) {
+        fontSize = 20;
+        if ($("body").width() < 400) fontSize = 17;
+    } 
+    $('.source_textarea').css("font-size", fontSize - (height/500).toFixed(0));
+    $('.target_textarea').css("font-size", fontSize - (height/500).toFixed(0));
+    height = document.getElementById('ta_source').scrollHeight;
+    $('.source_textarea').css('height', height);
+    $('.target_textarea').css('height', height);
+    $('.textarea_separator').css('height', height+150);
 }
 $(function(){
 	$('a[href*="#"]').on('click', function(e) {

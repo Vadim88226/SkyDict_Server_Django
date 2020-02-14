@@ -20,13 +20,13 @@
 <body>
 <nav class="navbar navbar-default">
   <div class="container-fluid container">
-    <a class="navbar-brand" href="/">SkyDict</a>
+    <a class="navbar-brand" href="/translator">SkyDict</a>
     <span class="header_menu_separator"></span>
-    <div class="nav">
-        <div class = "nav-right">
+    <div class="navbar-nav navbar-item">
+        <div class = "nav-left navbar-item">
             <a href="#">Translator</a>
         </div>
-        <div class="nav-right">
+        <div class="nav-right navbar-item">
             <a id="menu_login" href="#"><span class="glyphicon glyphicon-user"></span> Login</a>
             <a id="menu_any" href="#"><span class="glyphicon glyphicon-menu-hamburger"></a>
         </div>
@@ -172,7 +172,7 @@
                 <form class="menu__login__form" method='POST' onsubmit="event.preventDefault(); return false;" novalidate='novalidate'>
                     <div class="menu__login__form__email">
                         <input class="" name='username' type='email' dl-attr='value: $0.data_login'
-                            autocomplete="username email" placeholder="Email"
+                            autocomplete="username email" placeholder="Email or UserID"
                             tabindex="10" autofocus="autofocus" spellcheck="false"
                             id='login_email' required>
                     </div>
@@ -213,10 +213,14 @@
                 <div class="menu__login__banner">SkyDict <br> SignUp</div>
                 <form class="menu__login__form" method='POST' onsubmit="event.preventDefault(); return false;" novalidate='novalidate'>
                     <div class="menu__login__form__email">
-                        <input class="" name='username' type='email' dl-attr='value: $0.data_login'
-                            autocomplete="username email" placeholder="Email"
+                        <input class="" name='login_email' type='email' dl-attr='value: $0.data_login'
+                            autocomplete="email" placeholder="Email"
                             tabindex="10" autofocus="autofocus" spellcheck="false"
                             id='login_email' required>
+                    </div>
+                    <div class="menu__login__form__name">
+                        <input class="" name='userid' type='text' placeholder="User ID"
+                            tabindex="10" spellcheck="false" id='userid'>
                     </div>
                     <div class="menu__login__form__name">
                         <input class="" name='firstname' type='text' placeholder="First Name"
