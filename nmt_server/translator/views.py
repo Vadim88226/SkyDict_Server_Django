@@ -1,10 +1,20 @@
 import re
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
 from django.template import loader
+from django.template import Context 
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
+from django.contrib import messages
+from django.contrib.auth import authenticate, login 
+from django.contrib.auth.decorators import login_required 
+from django.contrib.auth.forms import AuthenticationForm 
+
+from .forms import UserRegisterForm 
+from django.core.mail import send_mail 
+from django.core.mail import EmailMultiAlternatives
+
 from .models import TransModel
 from .apps import TranslatorConfig
 from translator.translation_model.processing import evaluate
@@ -74,3 +84,42 @@ def trans_sentences(request):
         }
 
     return JsonResponse(data)
+
+def register(request): 
+    if request.method == 'POST': 
+        form = UserRegisterForm(request.POST) 
+        if form.is_valid(): 
+            form.save() 
+            username = form.cleaned_data.get('username') 
+            email = form.cleaned_data.get('email') 
+            ######################### mail system ####################################  
+            htmly = loader.get_template('translator / Email.html') 
+            d = { 'username': username } 
+            subject, from_email, to = 'welcome', 'your_email@gmail.com', email 
+            html_content = htmly.render(d) 
+            msg = EmailMultiAlternatives(subject, html_content, from_email, [to]) 
+            msg.attach_alternative(html_content, "text / html") 
+            msg.send() 
+            ##################################################################  
+            messages.success(request, f'Your account has been created ! You are now able to log in') 
+            return redirect('login') 
+    else: 
+        form = UserRegisterForm() 
+    return render(request, 'translator / register.html', {'form': form, 'title':'reqister here'}) 
+
+def Login(request): 
+    if request.method == 'POST': 
+   
+        # AuthenticationForm_can_also_be_used__ 
+   
+        username = request.POST['username'] 
+        password = request.POST['password'] 
+        user = authenticate(request, username = username, password = password) 
+        if user is not None: 
+            form = login(request, user) 
+            messages.success(request, f' wecome {username} !!') 
+            return redirect('index') 
+        else: 
+            messages.info(request, f'account done not exit plz sign in') 
+    form = AuthenticationForm() 
+    return render(request, 'translator / login.html', {'form':form, 'title':'log in'}) 
