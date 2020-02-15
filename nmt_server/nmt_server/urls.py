@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from translator import views as user_view
 
 from material.admin.sites import site
 
@@ -26,3 +27,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('translator/', include('translator.urls')),
 ]
+
+

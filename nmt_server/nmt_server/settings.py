@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'material.admin',
     'material.admin.default',
+    'crispy_forms',
     'translator.apps.TranslatorConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -122,3 +123,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+LOGIN_REDIRECT_URL = "index"
+EMAIL_BACKEND = 'django.core.mail.backends.smtp'
+EMAIL_HIST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST = "kingdragon2108@gmail.com"
+EMAIL_HOST_PASSWORD='password'
+
+
+
