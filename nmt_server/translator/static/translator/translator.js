@@ -36,7 +36,7 @@ function ShowSelection()
 	if (sel.length > 1 || selectedText.length == 0) {$(".dict_area").css('display', 'none');return;}
 	selectedText = sel[0];
 	$.ajax({
-        type: "POST",
+        // type: "POST",
 		url: dict_url,
 		data: {
 		  'seltext': selectedText,
@@ -64,7 +64,7 @@ function ShowSentence()
 	var selectedText = $('#ta_source').val().trim();
 	if (selectedText.length == 0) return;
 	$.ajax({
-        type: "POST",
+        // type: "POST",
 		url: api_url,
 		data: {
 		  'seltext': selectedText,
