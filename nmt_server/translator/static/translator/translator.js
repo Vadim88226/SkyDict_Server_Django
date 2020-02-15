@@ -2,6 +2,9 @@ var source_language = "English";
 var target_language = "Thai";
 var api_url = "trans_sentences";
 var dict_url = 'query_dict'
+var signup_url = 'sign_up';
+var login_url = 'log_in';
+var forgot_url = 'forgot';
 var wait;
 $('.nav li').on('click', function(){
 	alert('.nav li')
@@ -33,6 +36,7 @@ function ShowSelection()
 	if (sel.length > 1 || selectedText.length == 0) {$(".dict_area").css('display', 'none');return;}
 	selectedText = sel[0];
 	$.ajax({
+        type: "POST",
 		url: dict_url,
 		data: {
 		  'seltext': selectedText,
@@ -60,6 +64,7 @@ function ShowSentence()
 	var selectedText = $('#ta_source').val().trim();
 	if (selectedText.length == 0) return;
 	$.ajax({
+        type: "POST",
 		url: api_url,
 		data: {
 		  'seltext': selectedText,
@@ -135,8 +140,17 @@ $(function(){
 		wait = setTimeout(ShowSentence, 500);
 	});
 	$('.docTrans_translator_upload_button__inner_button').on('click', function (e) {
-		$('#docTrans').click();        
-	});
+		$('#docTrans').click();
+    });
+    $('#docTrans').change(function(e) {
+        var _filename = this.files[0].name; 
+        var _filetype = _filename.substr(_filename.length - 5, 5).toLowerCase;
+        if(_filetype == ".docx") {
+            
+        } else if (_filetype == ".pptx") {
+            
+        }
+    })
 	$("#source_menu li a").on("click", function(event){
 		if (source_language != event.currentTarget.text) {
 			swap_language();
@@ -201,5 +215,68 @@ $(function(){
 		var t = document.querySelector('#ForgotPasswordSection');
 		var clone = document.importNode(t.content, true);
 		document.body.appendChild(clone);
+	});
+	$(document).on('click',".menu__sign__form__submit", function(){
+		var email = $("#sign_email").val();
+		var uId = $("#sign_userid").val();
+		var firstname = $("#firstname").val();
+		var lastname = $("#lastname").val();
+		var pwd = $("#sign_password").val();
+		var sign_confirm = $("#sign_confirm").val();
+        var rememberme = $("#sign_rememberme").val();
+        if(!email || !firstname || !lastname)  {
+            document.getElementById("menu__error").innerHTML  = "Input correct data!";
+            return;
+        }
+        if(pwd != sign_confirm || pwd == "") {
+            document.getElementById("menu__error").innerHTML = "Incorrect Password!";
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: signup_url,
+            data: {
+                '_email': email,
+                '_uid': uId,
+                '_fname': firstname,
+                '_sname': lastname,
+                '_pwd': pwd
+            },
+            dataType: 'json',
+            success: function (data, status) {
+                if (data.content == "ok") {
+                    document.getElementById('menu__error').innerHTML = "SignUP Success!";
+                    document.getElementById("login_user").innerHTML = email;
+                } else {
+                    document.getElementById('menu__error').innerHTML = data.content;
+                }
+            }
+        });
+    });
+	$(document).on('click',".menu__login__form__submit", function(){
+		var email = $("#login_email").val();
+		var pwd = $("#login_password").val();
+        var rememberme = $("#sign_rememberme").val();
+        if(!email || !pwd)  {
+            document.getElementById("menu__error").innerHTML  = "Input correct data!";
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: login_url,
+            data: {
+                '_email': email,
+                '_pwd': pwd
+            },
+            dataType: 'json',
+            success: function (data, status) {
+                if (data.content == "ok") {
+                    document.getElementById("login_user").innerHTML = email;
+                    $(".PopupMenu").remove();
+                } else {
+                    document.getElementById('menu__error').innerHTML = data.content;
+                }
+            }
+        });
 	});
 });
