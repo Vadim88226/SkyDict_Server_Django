@@ -218,7 +218,7 @@ $(function(){
 	});
 	$(document).on('click',".menu__sign__form__submit", function(){
 		var email = $("#sign_email").val();
-		var uId = $("#sign_userid").val();
+		var uname = $("#sign_username").val();
 		var firstname = $("#firstname").val();
 		var lastname = $("#lastname").val();
 		var pwd = $("#sign_password").val();
@@ -237,7 +237,7 @@ $(function(){
             url: signup_url,
             data: {
                 '_email': email,
-                '_uid': uId,
+                '_uname': uname,
                 '_fname': firstname,
                 '_sname': lastname,
                 '_pwd': pwd

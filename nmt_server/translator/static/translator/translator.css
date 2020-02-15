@@ -433,7 +433,7 @@ input[type=text], input[type=email], input[type=password]{
     border-radius: 0;
     width: 100%;
 }
-.menu__login__form__pass, .menu__login__form__name {
+.menu__login__form__pass, .menu__login__form__name, .menu__sign__form__email {
     position: relative;
     margin-top: 24px;
 }
