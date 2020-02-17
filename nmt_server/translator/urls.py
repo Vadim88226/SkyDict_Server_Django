@@ -10,6 +10,7 @@ urlpatterns = [
     path('trans_sentences/', views.trans_sentences, name='trans_sentences'),
     path('log_in/', views.log_in, name='index'),
     path('sign_up/', views.register, name ='register'), 
+    path('log_out/', views.log_out, name='index'),
     # path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/', views.activate, name='activate'),
     
 ]
