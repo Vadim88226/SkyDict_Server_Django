@@ -2,7 +2,7 @@ var source_language = "English";
 var target_language = "Thai";
 var api_url = "trans_sentences";
 var dict_url = 'query_dict'
-var signup_url = 'sign_up';
+var signup_url = 'sign_up/';
 var login_url = 'log_in';
 var forgot_url = 'forgot';
 var wait;
@@ -232,24 +232,26 @@ $(function(){
             document.getElementById("menu__error").innerHTML = "Incorrect Password!";
             return;
         }
+        var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+
         $.ajax({
             type: "POST",
             url: signup_url,
+            headers:{
+                "X-CSRFToken": csrftoken
+            },
             data: {
-                '_email': email,
-                '_uid': uId,
-                '_fname': firstname,
-                '_sname': lastname,
-                '_pwd': pwd
+                'email': email,
+                'username': uId,
+                'first_name': firstname,
+                'last_name': lastname,
+                'password1': pwd,
+                'password2': sign_confirm,
             },
             dataType: 'json',
+            cache: true,
             success: function (data, status) {
-                if (data.content == "ok") {
-                    document.getElementById('menu__error').innerHTML = "SignUP Success!";
-                    document.getElementById("login_user").innerHTML = email;
-                } else {
-                    document.getElementById('menu__error').innerHTML = data.content;
-                }
+                document.getElementById('menu__error').innerHTML = data.content;
             }
         });
     });
@@ -261,17 +263,23 @@ $(function(){
             document.getElementById("menu__error").innerHTML  = "Input correct data!";
             return;
         }
+        var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+        console.log(csrftoken)
+
         $.ajax({
-            type: "POST",
+            
             url: login_url,
+            headers:{
+                "X-CSRFToken": csrftoken
+            },
             data: {
                 '_email': email,
-                '_pwd': pwd
+                '_pwd': pwd,                
             },
+            cache: true,
             dataType: 'json',
             success: function (data, status) {
                 if (data.content == "ok") {
-                    document.getElementById("login_user").innerHTML = email;
                     $(".PopupMenu").remove();
                 } else {
                     document.getElementById('menu__error').innerHTML = data.content;
