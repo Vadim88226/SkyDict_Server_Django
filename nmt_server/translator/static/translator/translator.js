@@ -4,6 +4,7 @@ var api_url = "trans_sentences";
 var dict_url = 'query_dict'
 var signup_url = 'sign_up/';
 var login_url = 'log_in';
+var logout_url = 'log_out';
 var forgot_url = 'forgot';
 var wait;
 $('.nav li').on('click', function(){
@@ -235,7 +236,7 @@ $(function(){
         var csrftoken = $("[name=csrfmiddlewaretoken]").val();
 
         $.ajax({
-            type: "POST",
+            // type: "POST",
             url: signup_url,
             headers:{
                 "X-CSRFToken": csrftoken
@@ -264,10 +265,7 @@ $(function(){
             return;
         }
         var csrftoken = $("[name=csrfmiddlewaretoken]").val();
-        console.log(csrftoken)
-
         $.ajax({
-            
             url: login_url,
             headers:{
                 "X-CSRFToken": csrftoken
@@ -280,11 +278,21 @@ $(function(){
             dataType: 'json',
             success: function (data, status) {
                 if (data.content == "ok") {
-                    $(".PopupMenu").remove();
+					$(".PopupMenu").remove();
+					window.location.assign("/translator");
                 } else {
                     document.getElementById('menu__error').innerHTML = data.content;
                 }
             }
         });
+    });
+    $("#menu_logout").click(function(){
+		var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            url: logout_url,
+            success: function (data, status) {
+				window.location.assign("/translator");
+			}
+		});
     });
 });
