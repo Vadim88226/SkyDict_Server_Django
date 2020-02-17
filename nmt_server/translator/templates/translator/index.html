@@ -14,6 +14,7 @@
   <script src="{% static 'translator/jquery.min.js' %}"></script>
   <script src="{% static 'translator/bootstrap.min.js' %}"></script>
   <link rel="stylesheet" type="text/css" href="{% static 'translator/translator.css' %}">
+  <link rel="shortcut icon" type="image/png" href="{% static 'icons/favicon.ico' %}">
   <script src="{% static 'translator/translator.js' %}"></script>
 
 </head>
@@ -28,9 +29,16 @@
         </div>
         <div class="nav-right navbar-item">
             {% if not request.user.is_authenticated %}
-            <a id="menu_login" href="#"><span class="glyphicon glyphicon-user"></span> <span id="login_user">Login</span></a>
+            <a id="menu_login" href="#"><span class="glyphicon glyphicon-user"></span> Login </a>
             {% else %}
-            <a id="menu_login" href="#"><span class="glyphicon glyphicon-user"></span> <span id="login_user">{{request.user.username}}</span></a>
+            <ul class="nav navbar-left">
+                <li><a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <span class="glyphicon glyphicon-user"></span> {{request.user.username}}</a>
+                    <ul class="dropdown-menu">
+                        <li class='main_menu'><a href="#" id='menu_logout'>Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
             {% endif %}
             <a id="menu_any" href="#"><span class="glyphicon glyphicon-menu-hamburger"></a>
         </div>
@@ -188,7 +196,7 @@
                     {% csrf_token %}
                     <div class="menu__login__form__email">
                         <input name='username' type='email' dl-attr='value: $0.data_login'
-                            autocomplete="username email" placeholder="Email or UserID"
+                            autocomplete="username email" placeholder="Email or Username"
                             tabindex="10" autofocus="autofocus" spellcheck="false"
                             id='login_email' required>
                     </div>
@@ -225,28 +233,29 @@
         <div id="menu" class="menu" dl-test="menu-site">
             <button type="button" class="close menu_close">&times;</button>
             <div class="menu__main_section" >
+                {% if not request.user.is_authenticated %}
                 <a class="sky_header_menu__nav_link menu__login" href="#">Back into Login</a>
+                {% endif %}
                 <div class="menu__login__banner">SkyDict <br> SignUp</div>
                 <form class="menu__sign__form" method='POST' onsubmit="event.preventDefault(); return false;" novalidate='novalidate'>
                     {% csrf_token %}
-
+                    <div class="menu__login__form__name">
+                        <input class="" name='sign_username' type='text' placeholder="Username"
+                            tabindex="10" spellcheck="false" id='sign_username'>
+                    </div>
+                    <div class="menu__login__form__name">
+                        <input class="" name='firstname' type='text' placeholder="First name"
+                            tabindex="10" spellcheck="false" id='firstname' required>
+                    </div>
+                    <div class="menu__login__form__name">
+                        <input class="" name='lastname' type='text' placeholder="Last name"
+                            tabindex="10" spellcheck="false" id='lastname' required>
+                    </div>
                     <div class="menu__sign__form__email">
                         <input class="" name='sign_email' type='email'
                             autocomplete="email" placeholder="Email"
                             tabindex="10" autofocus="autofocus" spellcheck="false"
                             id='sign_email' required>
-                    </div>
-                    <div class="menu__login__form__name">
-                        <input class="" name='sign_userid' type='text' placeholder="User ID"
-                            tabindex="10" spellcheck="false" id='sign_userid'>
-                    </div>
-                    <div class="menu__login__form__name">
-                        <input class="" name='firstname' type='text' placeholder="First Name"
-                            tabindex="10" spellcheck="false" id='firstname' required>
-                    </div>
-                    <div class="menu__login__form__name">
-                        <input class="" name='lastname' type='text' placeholder="Last Name"
-                            tabindex="10" spellcheck="false" id='lastname' required>
                     </div>
                     <div class="menu__login__form__pass">
                         <input name='sign_password' type='password' dl-attr='value: $0.data_password'

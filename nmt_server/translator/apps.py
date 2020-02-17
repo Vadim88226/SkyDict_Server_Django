@@ -115,7 +115,7 @@ lr_schedule = {}
 criterion = nn.NLLLoss()
 
 use_cuda = torch.cuda.is_available()
-
+use_cuda = False
 
 encoder_file = SITE_ROOT + "/translation_model/testdata.orig_trim.60_vocab.100000_directions.2_layers.2_hidden.440_dropout.0.2_learningrate.1_batch.4_epochs.50_enc_weights.pt"
 decoder_file = SITE_ROOT + "/translation_model/testdata.orig_trim.60_vocab.100000_directions.2_layers.2_hidden.440_dropout.0.2_learningrate.1_batch.4_epochs.50_dec_weights.pt"

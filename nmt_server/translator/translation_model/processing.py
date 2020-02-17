@@ -21,6 +21,7 @@ import torch.cuda
 import deepcut
 
 use_cuda = torch.cuda.is_available()
+use_cuda = False
 
 # from .encoder import EncoderRNN
 # from .decoder import DecoderAttn
