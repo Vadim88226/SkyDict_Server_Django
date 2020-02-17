@@ -127,7 +127,7 @@ def register(request):
                 'token':account_activation_token.make_token(user),
             })
             # user.email_user(mail_subject, message)
-            mail = EmailMessage('Django Survey Email Confirmation', message, to=[user.email], from_email=settings.EMAIL_HOST_USER)
+            mail = EmailMessage('Activate your SkyDict account.', message, to=[user.email], from_email=settings.EMAIL_HOST_USER)
             mail.content_subtype = 'html'
             mail.send()
             return JsonResponse({'content':'<p>Please confirm your email address to complete the registration. </p>'})
