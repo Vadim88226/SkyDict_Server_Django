@@ -539,6 +539,18 @@ input[type=text]:placeholder-shown[required], input[type=email]:placeholder-show
     line-height: 60px;
     margin: 0 15px;
 }
+.menu__error {
+    font-size: x-larger;
+    background: bisque;
+    color: #006494;
+}
+.menu__error ul li ul{
+    list-style: none;
+    padding-left: 10px;
+    font-size: smaller;
+    color: #090909;
+}
+
 @media (max-width: 768px) {
     .container{
         width: 99%;

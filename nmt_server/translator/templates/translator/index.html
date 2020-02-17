@@ -245,20 +245,20 @@
                     {% csrf_token %}
                     <div class="menu__login__form__name">
                         <input class="" name='sign_username' type='text' placeholder="Username"
-                            tabindex="10" spellcheck="false" id='sign_username'>
+                            tabindex="10" autofocus="autofocus" spellcheck="false" id='sign_username' required>
                     </div>
                     <div class="menu__login__form__name">
                         <input class="" name='firstname' type='text' placeholder="First name"
-                            tabindex="10" spellcheck="false" id='firstname' required>
+                            tabindex="10" spellcheck="false" id='firstname' >
                     </div>
                     <div class="menu__login__form__name">
                         <input class="" name='lastname' type='text' placeholder="Last name"
-                            tabindex="10" spellcheck="false" id='lastname' required>
+                            tabindex="10" spellcheck="false" id='lastname'>
                     </div>
                     <div class="menu__sign__form__email">
                         <input class="" name='sign_email' type='email'
                             autocomplete="email" placeholder="Email"
-                            tabindex="10" autofocus="autofocus" spellcheck="false"
+                            tabindex="10" spellcheck="false"
                             id='sign_email' required>
                     </div>
                     <div class="menu__login__form__pass">
