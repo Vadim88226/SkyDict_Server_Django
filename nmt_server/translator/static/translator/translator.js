@@ -243,7 +243,7 @@ $(function(){
             },
             data: {
                 'email': email,
-                'username': uId,
+                'username': uname,
                 'first_name': firstname,
                 'last_name': lastname,
                 'password1': pwd,
@@ -286,7 +286,7 @@ $(function(){
             }
         });
     });
-    $("#menu_logout").click(function(){
+    $(document).on('click',"#menu_logout", function(){
 		var csrftoken = $("[name=csrfmiddlewaretoken]").val();
         $.ajax({
             url: logout_url,
