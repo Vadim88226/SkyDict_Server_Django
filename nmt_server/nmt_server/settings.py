@@ -124,9 +124,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 LOGIN_REDIRECT_URL = "index"
-EMAIL_BACKEND = 'django.core.mail.backends.smtp'
 EMAIL_HIST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True

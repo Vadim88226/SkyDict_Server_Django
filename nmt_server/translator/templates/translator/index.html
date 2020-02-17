@@ -27,7 +27,11 @@
             <a href="#">Translator</a>
         </div>
         <div class="nav-right navbar-item">
+            {% if not request.user.is_authenticated %}
             <a id="menu_login" href="#"><span class="glyphicon glyphicon-user"></span> <span id="login_user">Login</span></a>
+            {% else %}
+            <a id="menu_login" href="#"><span class="glyphicon glyphicon-user"></span> <span id="login_user">{{request.user.username}}</span></a>
+            {% endif %}
             <a id="menu_any" href="#"><span class="glyphicon glyphicon-menu-hamburger"></a>
         </div>
     </div>
@@ -179,8 +183,9 @@
         <div id="menu" class="menu" dl-test="menu-site">
             <button type="button" class="close menu_close">&times;</button>
             <div class="menu__main_section" >
-                <div class="menu__login__banner">SkyDict <br> Login</div>
+                <div class="menu__login__banner">SkyDict <br> Login</div>                
                 <form class="menu__login__form" method='POST' onsubmit="event.preventDefault(); return false;" novalidate='novalidate'>
+                    {% csrf_token %}
                     <div class="menu__login__form__email">
                         <input name='username' type='email' dl-attr='value: $0.data_login'
                             autocomplete="username email" placeholder="Email or Username"
@@ -223,6 +228,14 @@
                 <a class="sky_header_menu__nav_link menu__login" href="#">Back into Login</a>
                 <div class="menu__login__banner">SkyDict <br> SignUp</div>
                 <form class="menu__sign__form" method='POST' onsubmit="event.preventDefault(); return false;" novalidate='novalidate'>
+                    {% csrf_token %}
+
+                    <div class="menu__sign__form__email">
+                        <input class="" name='sign_email' type='email'
+                            autocomplete="email" placeholder="Email"
+                            tabindex="10" autofocus="autofocus" spellcheck="false"
+                            id='sign_email' required>
+                    </div>
                     <div class="menu__login__form__name">
                         <input class="" name='sign_username' type='text' placeholder="Username"
                             tabindex="10" spellcheck="false" id='sign_username'>
