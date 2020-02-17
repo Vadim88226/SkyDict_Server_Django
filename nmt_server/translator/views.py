@@ -1,14 +1,25 @@
 import re
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
 from django.template import loader
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
-from .models import TransModel
 from .apps import TranslatorConfig
 from translator.translation_model.processing import evaluate
 from translator.translation_model.processing import normalizeString, normalizeString_fix
+from django.contrib.auth import views as auth_views
+from django.views.decorators.csrf import requires_csrf_token
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.core.mail import EmailMessage
+from .forms import SignupForm 
+from .tokens import account_activation_token
+from django.contrib.auth.forms import UserCreationForm
+from django.conf import settings
 
 
 class IndexView(generic.TemplateView):
@@ -74,4 +85,77 @@ def trans_sentences(request):
         }
 
     return JsonResponse(data)
+
+def log_in(request):
+    print(request)
+    print("request")
+    _email = request.GET.get('_email', '')
+    _pwd = request.GET.get('_pwd')
+    user = authenticate(username=_email, password = _pwd)
+    print(user)
+    if user is not None: 
+        login(request, user) 
+        data = {
+            'content' :'ok' 
+        }
+        
+    else: 
+        data = {
+            'content' : 'unregistered'
+        }
+    return JsonResponse(data)
+
+def log_out(request):
+    logout(request)
+    return JsonResponse({'content':'ok'})
+
+def register(request):
+    print(request.method)
+    if request.method == "POST":
+        form = SignupForm(data=request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            current_site = get_current_site(request)
+            # mail_subject = 'Activate your SkyDict account.'
+            # print(mail_subject)
+            message = loader.render_to_string('account_activation_email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+                'token':account_activation_token.make_token(user),
+            })
+            # user.email_user(mail_subject, message)
+            mail = EmailMessage('Django Survey Email Confirmation', message, to=[user.email], from_email=settings.EMAIL_HOST_USER)
+            mail.content_subtype = 'html'
+            mail.send()
+            return JsonResponse({'content':'<p>Please confirm your email address to complete the registration. </p>'})
+        else:
+            return JsonResponse({'content': str(form.errors)})
+        
+    else:
+        form = SignUpForm()
+    return render(request, 'translator/index.html', {'form': form})
+
+def account_activation_sent(request):
+    return render(request, 'account_activation_sent.html')
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.profile.email_confirmed = True
+        user.save()
+        login(request, user)
+        data = {
+            'content' : 'registered'
+        }
+        return JsonResponse(data)
+    else:
+        return render(request, 'account_activation_invalid.html')
 
