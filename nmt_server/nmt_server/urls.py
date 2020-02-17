@@ -15,9 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from translator import views as user_view
-
 from material.admin.sites import site
+from translator import views
 
 admin.site.site_header = "SkyDict Admin"
 admin.site.site_title = "SkyDict Admin Page"
@@ -26,6 +25,8 @@ admin.autodiscover()
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('translator/', include('translator.urls')),
+    path('account_activation_sent/', views.account_activation_sent, name='account_activation_sent'),
+    path('activate/<uidb64>/<token>/', views.activate, name='activate'),
 ]
 
 
