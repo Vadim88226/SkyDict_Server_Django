@@ -81,14 +81,12 @@ def trans_sentences(request):
 
     else:
         data = {
-            'content' : "no supported"
+            'content' : "unsupported"
         }
 
     return JsonResponse(data)
 
 def log_in(request):
-    print(request)
-    print("request")
     _email = request.GET.get('_email', '')
     _pwd = request.GET.get('_pwd')
     user = authenticate(username=_email, password = _pwd)
