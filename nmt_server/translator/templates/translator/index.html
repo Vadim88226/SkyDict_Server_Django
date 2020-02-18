@@ -202,7 +202,7 @@
                         <input name='username' type='email' dl-attr='value: $0.data_login'
                             autocomplete="username email" tabindex="10" autofocus="autofocus"
                             spellcheck="false" id='login_email' required>
-                            <label>Email or Username</label>
+                            <label>Username</label>
                     </div>
                     <div class="text_input menu__login__form__pass">
                         <input name='password' type='password' autocomplete="current-password" dl-attr='value: $0.data_password'
@@ -212,14 +212,14 @@
                     </div>
                     <button class="menu__login__form__submit sky_button" tabindex="10"
                         >Log in</button>
-                    <div class="menu__login__form__rememberme">
+                    <!-- <div class="menu__login__form__rememberme">
                         <label for="login_rememberme">
                             <input type="checkbox" name="login_rememberme" id="login_rememberme" dl-attr='value: $0.data_keepLogin' tabindex="10">
                             <span class="sky_form__checkbox"></span>
                             <span class="menu__login__form__rememberme__title">
                                 Remember me                    </span>
                         </label>
-                    </div>
+                    </div> -->
                 </form>
                 <div class='menu__error' id = "menu__error"></div>
             </div>
@@ -243,7 +243,7 @@
                 <div class="menu__login__banner">SkyDict <br> SignUp</div>
                 <form class="menu__sign__form" method='POST' onsubmit="event.preventDefault(); return false;" novalidate='novalidate'>
                     {% csrf_token %}
-                    <div class="text_input menu__login__form__name">
+                    <div class="text_input menu__login__form__signname">
                         <input class="" name='sign_username' type='text'
                             tabindex="10" autofocus="autofocus" spellcheck="false" id='sign_username' required>
                         <label>Username</label>
@@ -275,17 +275,17 @@
                         <label>Password Confirm</label>
                     </div>
                     <button class="menu__sign__form__submit sky_button" tabindex="10">Sign Up</button>
-                    <div class="menu__sign__form__rememberme">
+                    <!-- <div class="menu__sign__form__rememberme">
                         <label for="login_rememberme">
                             <input type="checkbox" name="sign_rememberme" id="sign_rememberme" tabindex="10">
                             <span class="sky_form__checkbox"></span>
                             <span class="menu__sign__form__rememberme__title"> Remember me </span>
                         </label>
-                    </div>
+                    </div> -->
                 </form>
                 <div class='menu__error' id="menu__error"></div>
             </div>
-            <div class="menu__footer_section"></div>
+            <!-- <div class="menu__footer_section"></div> -->
         </div>
     </div>
 </template>
