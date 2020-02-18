@@ -20,48 +20,63 @@ from .forms import SignupForm
 from .tokens import account_activation_token
 from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
-import deepcut
+from nltk.corpus import words
 
 
 class IndexView(generic.TemplateView):
     template_name = 'translator/index.html'
 
-def query_dict(request):
-    selectedText = request.GET.get('seltext', None)
-    dict = TranslatorConfig.en_th_dict    
+def search_dict(word, lang):
+    dict = TranslatorConfig.en_th_dict
+    if lang == 'th':
+        dict = TranslatorConfig.th_en_dict
     try:
-        response = dict.dict[selectedText]
+        response = dict.dict[word]
     except KeyError:
         response = ""
+    return response
+# query word for Lexitron dictionary
+def query_dict(request):
+    selectedText = request.GET.get('seltext', None)
+    s_lang = request.GET.get('sl', '')
+    t_lang = request.GET.get('tl', '')
+    response = search_dict(selectedText, s_lang)
     print(response)
     data = {
         'content' : response
     }
     return JsonResponse(data)
 
+# translate the senteces
 def trans_sentences(request):
     sentences = request.GET.get('seltext', '')
     s_lang = request.GET.get('sl', '')
     t_lang = request.GET.get('tl', '')
 
+    if s_lang == t_lang:
+        selectedText = sentences.strip()
+        data = {
+            'content' : selectedText
+        }
+        return JsonResponse(data)
     # if senteces has only one word, display the content of dictionary
     if len(sentences.split()) == 1:
         selectedText = sentences.strip()
-        dict = TranslatorConfig.en_th_dict
-        if s_lang == 'th':
-            dict = TranslatorConfig.th_en_dict
-        try:
-            response = dict.dict[selectedText]
+        response = search_dict(selectedText, s_lang)
+        if not response:
             response = re.search('<dtrn>.+</dtrn>', response).group()
             response = response.replace("<dtrn>", "").replace("</dtrn>", "")
-        except KeyError:
-            response = ""
-            # if s_lang == 'th' and len(deepcut.tokenize(sentences)) == 1:
         data = {
             'content' : response
         }
         return JsonResponse(data)
     # if sentences is valid, display the translated senteces
+    if s_lang==t_lang:
+        data = {
+            'content' : sentences
+        }
+        return JsonResponse(data)
+
     if s_lang=='en' and t_lang=='th':
         output_sentences = sentences
         nlp = TranslatorConfig.en_nlp
@@ -105,6 +120,7 @@ def trans_sentences(request):
 
     return JsonResponse(data)
 
+# log in function
 def log_in(request):
     _email = request.GET.get('_email', '')
     _pwd = request.GET.get('_pwd')
@@ -122,10 +138,12 @@ def log_in(request):
         }
     return JsonResponse(data)
 
+# log out function
 def log_out(request):
     logout(request)
     return JsonResponse({'content':'ok'})
 
+# sign up function
 def register(request):
     print(request.method)
     if request.method == "POST":
@@ -155,9 +173,11 @@ def register(request):
         form = SignUpForm()
     return render(request, 'translator/index.html', {'form': form})
 
+# display send mail of user sign up
 def account_activation_sent(request):
     return render(request, 'account_activation_sent.html')
 
+# user sign up mail activation
 def activate(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
@@ -175,4 +195,25 @@ def activate(request, uidb64, token):
         return JsonResponse(data)
     else:
         return render(request, 'account_activation_invalid.html')
+
+# query matched words list
+def detect_similar_word(request):
+    query = request.GET.get('seltext', None)
+    s_lang = request.GET.get('sl', None)
+    dict = TranslatorConfig.en_th_dict
+    if s_lang == 'th':
+        dict = TranslatorConfig.th_en_dict
+    cnt = 0
+    responses = []
+    for word in words.words():
+        response = search_dict(word)
+        if word.startswith(query) and not response:
+            cnt += 1
+            responses.append([word, response])
+            if cnt >= 4:
+                print(responses)
+                return JsonResponse({'content':responses})
+    print(responses)
+    return JsonResponse({'content': responses})         
+
 

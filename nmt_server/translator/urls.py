@@ -11,6 +11,6 @@ urlpatterns = [
     path('log_in/', views.log_in, name='index'),
     path('sign_up/', views.register, name ='register'), 
     path('log_out/', views.log_out, name='index'),
-    # path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/', views.activate, name='activate'),
+    path('detect_similar_word/', views.detect_similar_word, name='index'),
     
 ]
