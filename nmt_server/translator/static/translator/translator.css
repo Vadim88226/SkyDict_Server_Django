@@ -61,9 +61,9 @@ body{
     line-height: 200px;
 }
 .main_menu{
-    font-size: 24px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    font-size: large;
+    /* padding-top: 10px;
+    padding-bottom: 10px; */
 }
 .normal_menu{
     font-size: 20px;
@@ -581,6 +581,32 @@ a:link, a:link:hover {
 }
 .text_input {
     position: relative;
+}
+#wordDict_help_popup
+{
+    position: absolute;
+    top: 50px;
+    width: -webkit-fill-available;
+    box-shadow: 0 2px 3px -1px rgba(0,0,0,0.5);
+    background-color: #fff;
+    border: 1px solid #aaa;
+    display: none;
+}
+#wordDict_help_popup ul{
+    list-style: none;
+    border-bottom: 1px solid #aaa;
+    padding: 5px 5px 5px 10px;
+    font-weight: 400;
+    font-size: medium;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+#wordDict_help_popup ul:hover {
+    background-color: #eee;
+    cursor: pointer;
+}
+#wordDict_help_popup a{
+    color: #090909;
 }
 @media (max-width: 768px) {
     .container{
