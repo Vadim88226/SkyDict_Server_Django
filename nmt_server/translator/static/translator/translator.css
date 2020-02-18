@@ -416,19 +416,6 @@ k{
     display: flex;
     flex-direction: column;
 }
-.menu__login__form input[type=text], .menu__login__form input[type=email], .menu__login__form input[type=password] {
-    /* font-size: 16px;
-    line-height: 24px;
-    height: 28px;
-    font-family: inherit;
-    padding: 4px;
-    box-sizing: border-box;
-    width: 100%;
-    color: black;
-    transition: border-color 75ms ease-out;
-    font-weight: 400; */
-
-}
 input[type=text], input[type=email], input[type=password]{
     padding: 10px 15px;
     border: 2px solid #666;
