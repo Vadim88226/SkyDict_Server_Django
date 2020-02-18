@@ -7,6 +7,7 @@ var detect_similar_words = "detect_similar_words"
 var log_in = 'log_in';
 var log_out = 'log_out';
 var reset_password = 'reset_password';
+var s_text = "";
 var wait, wait1;
 $('.nav li').on('click', function(){
     alert('.nav li')
@@ -63,7 +64,8 @@ function ShowSelection()
 function ShowSentence()
 {
     var selectedText = $('#ta_source').val().trim();
-    if (selectedText.length == 0) return;
+    if (s_text == selectedText) return;
+    s_text = selectedText;
     $.ajax({
         // type: "POST",
         url: trans_sentences,
@@ -91,13 +93,17 @@ function swap_language(){
     ShowSentence();
 }
 function source_textarea_change() {
+    var selectedText = $('.source_textarea').val();
+    if (selectedText.length > 5000){
+            $('.source_textarea').val($('.source_textarea').val().substr(0, 5000));
+    } 
     $('.source_textarea').css('height', 'auto');
     // if( $('.source_textarea').val() ) 
     //     $('.textarea_placeholder_text').css("display", "none");
     // else
     //     $('.textarea_placeholder_text').css("display", "block");
     var len = $('.source_textarea').val().length.toString();
-    document.getElementById("docTrans_char_count").innerHTML = $('.source_textarea').val().length.toString() + "/5000";
+    document.getElementById("docTrans_char_count").innerHTML = len + "/5000";
     var height = document.getElementById('ta_source').scrollHeight;
     var fontSize = 23;
     if ($("body").width() < 768) {
@@ -111,20 +117,25 @@ function source_textarea_change() {
     $('.target_textarea').css('height', height);
     $('.textarea_separator').css('height', height+150);
 }
-function detect_similar_words() {
+function similar_words() {
 	var selectedText = $('.source_textarea').val().trim();
-	if(selectedText.split(" ").length > 1) return;
+    if (s_text == selectedText) return;
+    if(selectedText.split(" ").length > 1) return;
 	$.ajax({
         // type: "POST",
         url: detect_similar_words,
         data: {
           'seltext': selectedText,
-          'sl' : source_language.toLowerCase().substr(0,2),
-          'tl' : target_language.toLowerCase().substr(0,2)
+          'sl' : source_language.toLowerCase().substr(0,2)
         },
         dataType: 'json',
         success: function (data) {  //console.log(data);
-            // $("#ta_target").val(data.content);
+            if(data.content) {
+                document.getElementById('wordDict_help_popup').innerHTML = data.content; 
+                document.getElementById('wordDict_help_popup').style.display = "block";
+            } else {
+                document.getElementById('wordDict_help_popup').style.display = "none";
+            }
         },
     });
 }
@@ -154,11 +165,10 @@ $(function(){
         ShowSelection();
     });
     $('.source_textarea').on('keyup', function(e) {
-        // if (e.which == 13 ) console.log("enter");
         clearTimeout(wait);
         wait = setTimeout(ShowSentence, 500);
         clearTimeout(wait1);
-        wait1 = setTimeout(detect_similar_words, 100);
+        wait1 = setTimeout(similar_words, 100);
     });
     $('.docTrans_translator_upload_button__inner_button').on('click', function (e) {
         $('#docTrans').click();
@@ -328,5 +338,11 @@ $(function(){
                 }
             }
         });
+    });
+    $(document).on('click',"#wordDict_help_popup ul", function(e){
+        var _content = e.currentTarget.children[0];
+        $('#ta_source').val(_content.textContent);
+        ShowSentence();
+        document.getElementById('wordDict_help_popup').style.display = "none";
     });
 });
