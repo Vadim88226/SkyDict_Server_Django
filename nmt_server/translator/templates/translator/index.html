@@ -198,16 +198,16 @@
                 <div class="menu__login__banner">SkyDict <br> Login</div>                
                 <form class="menu__login__form" method='POST' onsubmit="event.preventDefault(); return false;" novalidate='novalidate'>
                     {% csrf_token %}
-                    <div class="menu__login__form__email">
+                    <div class="text_input menu__login__form__email">
                         <input name='username' type='email' dl-attr='value: $0.data_login'
-                            autocomplete="username email" placeholder="Email or Username"
-                            tabindex="10" autofocus="autofocus" spellcheck="false"
-                            id='login_email' required>
+                            autocomplete="username email" tabindex="10" autofocus="autofocus"
+                            spellcheck="false" id='login_email' required>
+                            <label>Email or Username</label>
                     </div>
-                    <div class="menu__login__form__pass">
+                    <div class="text_input menu__login__form__pass">
                         <input name='password' type='password' autocomplete="current-password" dl-attr='value: $0.data_password'
-                            placeholder="Password" tabindex="10"
-                            id='login_password' required>
+                            tabindex="10" id='login_password' required>
+                        <label>Password</label>
                         <button type="button" class="menu__login__form__pass__forgot" tabindex="10" >Forgot your password?</button>
                     </div>
                     <button class="menu__login__form__submit sky_button" tabindex="10"
@@ -243,33 +243,36 @@
                 <div class="menu__login__banner">SkyDict <br> SignUp</div>
                 <form class="menu__sign__form" method='POST' onsubmit="event.preventDefault(); return false;" novalidate='novalidate'>
                     {% csrf_token %}
-                    <div class="menu__login__form__name">
-                        <input class="" name='sign_username' type='text' placeholder="Username"
+                    <div class="text_input menu__login__form__name">
+                        <input class="" name='sign_username' type='text'
                             tabindex="10" autofocus="autofocus" spellcheck="false" id='sign_username' required>
+                        <label>Username</label>
                     </div>
-                    <div class="menu__login__form__name">
-                        <input class="" name='firstname' type='text' placeholder="First name"
+                    <div class="text_input menu__login__form__name">
+                        <input class="" name='firstname' type='text'
                             tabindex="10" spellcheck="false" id='firstname' >
+                        <label>First name</label>
                     </div>
-                    <div class="menu__login__form__name">
-                        <input class="" name='lastname' type='text' placeholder="Last name"
+                    <div class="text_input menu__login__form__name">
+                        <input class="" name='lastname' type='text'
                             tabindex="10" spellcheck="false" id='lastname'>
+                        <Label>Last name</Label>
                     </div>
-                    <div class="menu__sign__form__email">
+                    <div class="text_input menu__sign__form__email">
                         <input class="" name='sign_email' type='email'
-                            autocomplete="email" placeholder="Email"
-                            tabindex="10" spellcheck="false"
+                            autocomplete="email" tabindex="10" spellcheck="false"
                             id='sign_email' required>
+                        <label>Email address</label>
                     </div>
-                    <div class="menu__login__form__pass">
+                    <div class="text_input menu__login__form__pass">
                         <input name='sign_password' type='password' dl-attr='value: $0.data_password'
-                            placeholder="Password" tabindex="10"
-                            id='sign_password' required>
+                           tabindex="10" id='sign_password' required>
+                        <label>Password</label>
                     </div>
-                    <div class="menu__login__form__pass">
+                    <div class="text_input menu__login__form__pass">
                         <input name='sign_confirm' type='password' dl-attr='value: $0.data_password'
-                            placeholder="Password Confirm" tabindex="10"
-                            id='sign_confirm' required>
+                            tabindex="10" id='sign_confirm' required>
+                        <label>Password Confirm</label>
                     </div>
                     <button class="menu__sign__form__submit sky_button" tabindex="10">Sign Up</button>
                     <div class="menu__sign__form__rememberme">
@@ -296,10 +299,11 @@
                 <a class="sky_header_menu__nav_link menu__login" href="#">Back into Login</a>
                 <div class="menu__login__banner">Password <br> reset</div>
                 <form class="menu__reset__form" method='POST' onsubmit="event.preventDefault(); return false;" novalidate='novalidate'>
-                    <div class="menu__login__form__email">
-                        <input class="" name='reset_email' type='email' autocomplete="username email" placeholder="Email"
+                    <div class="text_input menu__login__form__email">
+                        <input class="" name='reset_email' type='email' autocomplete="username email"
                             tabindex="10" autofocus="autofocus" spellcheck="false"
                             id='reset_email' required>
+                        <label>Email address</label>
                     </div>
                     <button class="menu__reset__form__submit sky_button">Reset password</button>
                 </form>
