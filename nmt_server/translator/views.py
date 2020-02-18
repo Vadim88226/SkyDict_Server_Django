@@ -52,11 +52,11 @@ def trans_sentences(request):
             dict = TranslatorConfig.th_en_dict
         try:
             response = dict.dict[selectedText]
+            response = re.search('<dtrn>.+</dtrn>', response).group()
+            response = response.replace("<dtrn>", "").replace("</dtrn>", "")
         except KeyError:
             response = ""
             # if s_lang == 'th' and len(deepcut.tokenize(sentences)) == 1:
-        response = re.search('<dtrn>.+</dtrn>', response).group()
-        response = response.replace("<dtrn>", "").replace("</dtrn>", "")
         data = {
             'content' : response
         }
