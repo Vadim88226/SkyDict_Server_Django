@@ -57,7 +57,11 @@ function ShowSelection()
             } else {
                 $(".dict_area").css('display', 'none');
             }
-        }
+        },
+        error: function() {
+            $(".dict_area").css('display', 'none');
+        },
+        timeout: 2000
     });
 }
 
@@ -78,7 +82,10 @@ function ShowSentence()
         success: function (data) {  //console.log(data);
             $("#ta_target").val(data.content);
         },
-        
+        error: function() {
+            $("#ta_target").val("Translate error!");
+        },
+        timeout: 2000
     });
 }
 function swap_language(){
@@ -139,6 +146,10 @@ function similar_words() {
                 document.getElementById('wordDict_help_popup').style.display = "none";
             }
         },
+        error: function() {
+            document.getElementById('wordDict_help_popup').style.display = "none";
+        },
+        timeout: 1000
     });
 }
 $(function(){
@@ -280,7 +291,12 @@ $(function(){
 				err = err.replace(/password2/g, "Password confirm")
 				document.getElementById('menu__error').innerHTML = err;
 				document.getElementById('menu__error').style.display = "block";
-            }
+            },
+            error: function() {
+                document.getElementById('menu__error').innerHTML = "Sign-up error!";
+				document.getElementById('menu__error').style.display = "block";
+            },
+            timeout: 3000
         });
     });
     $(document).on('click',".menu__login__form__submit", function(){
@@ -309,7 +325,12 @@ $(function(){
 					document.getElementById('menu__error').innerHTML = err;
 					document.getElementById('menu__error').style.display = "block";
                 }
-            }
+            },
+            error: function() {
+                document.getElementById('menu__error').innerHTML = "Login Error!";
+                document.getElementById('menu__error').style.display = "block";
+            },
+            timeout: 3000
         });
     });
     $(document).on('click',"#menu_logout", function(){
@@ -339,7 +360,12 @@ $(function(){
 					document.getElementById('menu__error').innerHTML = data.content;
 					document.getElementById('menu__error').style.display = "block";
                 }
-            }
+            },
+            error: function() {
+                document.getElementById('menu__error').innerHTML = "Password reset error!";
+                document.getElementById('menu__error').style.display = "block";
+            },
+            timeout: 3000
         });
     });
     $(document).on('click',"#wordDict_help_popup ul", function(e){
