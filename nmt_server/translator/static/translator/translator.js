@@ -236,7 +236,7 @@ $(function(){
         var csrftoken = $("[name=csrfmiddlewaretoken]").val();
 
         $.ajax({
-            // type: "POST",
+            type: "POST",
             url: signup_url,
             headers:{
                 "X-CSRFToken": csrftoken
