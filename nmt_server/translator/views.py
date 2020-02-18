@@ -45,7 +45,7 @@ def trans_sentences(request):
     t_lang = request.GET.get('tl', '')
 
     # if senteces has only one word, display the content of dictionary
-    if (s_lang == 'en' and len(sentences.split()) == 1) or (s_lang=='th' and len(deepcut.tokenize(sentences)) == 1):
+    if len(sentences.split()) == 1:
         selectedText = sentences.strip()
         dict = TranslatorConfig.en_th_dict
         if s_lang == 'th':
@@ -54,6 +54,7 @@ def trans_sentences(request):
             response = dict.dict[selectedText]
         except KeyError:
             response = ""
+            # if s_lang == 'th' and len(deepcut.tokenize(sentences)) == 1:
         response = re.search('<dtrn>.+</dtrn>', response).group()
         response = response.replace("<dtrn>", "").replace("</dtrn>", "")
         data = {
