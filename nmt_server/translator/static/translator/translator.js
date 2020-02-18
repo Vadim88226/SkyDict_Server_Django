@@ -121,6 +121,8 @@ function similar_words() {
 	var selectedText = $('.source_textarea').val().trim();
     if (s_text == selectedText) return;
     if(selectedText.split(" ").length > 1) return;
+    if(selectedText.split("\n").length > 1) return;
+    if(selectedText.split(",").length > 1) return;
 	$.ajax({
         // type: "POST",
         url: detect_similar_words,
@@ -165,6 +167,7 @@ $(function(){
         ShowSelection();
     });
     $('.source_textarea').on('keyup', function(e) {
+        
         clearTimeout(wait);
         wait = setTimeout(ShowSentence, 500);
         clearTimeout(wait1);
