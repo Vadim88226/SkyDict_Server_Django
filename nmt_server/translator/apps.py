@@ -125,14 +125,17 @@ decoder_file = SITE_ROOT + "/translation_model/testdata.orig_trim.60_vocab.10000
 
 
 
-dict_name = "LexitronEnTh"
-dict_path = os.path.join(SITE_ROOT, 'dictionary', dict_name)
+en_th_dict_name = "LexitronEnTh"
+th_en_dict_name = 'LexitronThEn'
+en_th_dict_path = os.path.join(SITE_ROOT, 'dictionary', en_th_dict_name, en_th_dict_name)
+th_en_dict_path = os.path.join(SITE_ROOT, 'dictionary', th_en_dict_name, th_en_dict_name)
 class TranslatorConfig(AppConfig):
     input_lang, output_lang, train_pairs, test_pairs = prepareData(input_lang_name, output_lang_name, raw_data_file_path, max_vocab_size=max_vocab_size, reverse=reverse, trim=trim, 
     start_filter=start_filter, perc_train_set=perc_train_set, print_to=None, tagging=tagging)
 
     name = 'translator'    
-    en_th_dict = Dictionary(dict_path)
+    en_th_dict = Dictionary(en_th_dict_path)
+    th_en_dict = Dictionary(th_en_dict_path)
     """create the Encoder"""
     encoder = EncoderRNN(input_lang.vocab_size, hidden_size, layers=layers, 
                         dropout=dropout, bidirectional=bidirectional)

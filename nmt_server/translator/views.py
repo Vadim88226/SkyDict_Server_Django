@@ -20,6 +20,7 @@ from .forms import SignupForm
 from .tokens import account_activation_token
 from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
+import deepcut
 
 
 class IndexView(generic.TemplateView):
@@ -43,6 +44,24 @@ def trans_sentences(request):
     s_lang = request.GET.get('sl', '')
     t_lang = request.GET.get('tl', '')
 
+    # if senteces has only one word, display the content of dictionary
+    if len(sentences.split()) == 1:
+        selectedText = sentences.strip()
+        dict = TranslatorConfig.en_th_dict
+        if s_lang == 'th':
+            dict = TranslatorConfig.th_en_dict
+        try:
+            response = dict.dict[selectedText]
+        except KeyError:
+            response = ""
+            # if s_lang == 'th' and len(deepcut.tokenize(sentences)) == 1:
+        response = re.search('<dtrn>.+</dtrn>', response).group()
+        response = response.replace("<dtrn>", "").replace("</dtrn>", "")
+        data = {
+            'content' : response
+        }
+        return JsonResponse(data)
+    # if sentences is valid, display the translated senteces
     if s_lang=='en' and t_lang=='th':
         output_sentences = sentences
         nlp = TranslatorConfig.en_nlp
@@ -81,14 +100,12 @@ def trans_sentences(request):
 
     else:
         data = {
-            'content' : "no supported"
+            'content' : "unsupported"
         }
 
     return JsonResponse(data)
 
 def log_in(request):
-    print(request)
-    print("request")
     _email = request.GET.get('_email', '')
     _pwd = request.GET.get('_pwd')
     user = authenticate(username=_email, password = _pwd)
