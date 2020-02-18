@@ -417,7 +417,7 @@ k{
     flex-direction: column;
 }
 .menu__login__form input[type=text], .menu__login__form input[type=email], .menu__login__form input[type=password] {
-    font-size: 16px;
+    /* font-size: 16px;
     line-height: 24px;
     height: 28px;
     font-family: inherit;
@@ -426,13 +426,63 @@ k{
     width: 100%;
     color: black;
     transition: border-color 75ms ease-out;
-    font-weight: 400;
+    font-weight: 400; */
+
 }
 input[type=text], input[type=email], input[type=password]{
+    padding: 10px 15px;
+    border: 2px solid #666;
+    border-radius: 5px;
+    line-height: 1;
+    font-size: 1em;
+    transition: 0.3s;
+    background-position: right 5px top 5px;
+/*     
     border: none;
     border-bottom: 1px solid #dee2e5;
     border-radius: 0;
-    width: 100%;
+    width: 100%; */
+}
+input[type=text]:placeholder-shown[required], input[type=email]:placeholder-shown[required], input[type=number]:placeholder-shown[required], input[type=password]:placeholder-shown[required] {
+    background-image: url(../icons/asterisk.svg);
+    background-size: 8px;
+    background-repeat: no-repeat;
+    background-position: right 5px top 5px;
+}
+input[type=text]:focus, input[type=email]:focus, input[type=password]:focus {
+    /* border-bottom: 1px solid #006494; */
+    outline: none;
+}
+.text_input label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 15px;
+    line-height: 1;
+    font-size: 1em;
+    color: #333;
+    transition: 0.2s;
+}
+.text_input input + label {
+    padding: 5px;
+    transform-origin: left;
+    transform: translate(3px, -50%) scale(0.8);
+    color: #004c03;
+    opacity: 1;
+}
+.text_input input + label:after {
+    opacity: 1;
+}
+.text_input label:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 22%;
+    height: calc(28% + 3px);
+    background-color: #FFFFFF;
+    z-index: -1;
+    opacity: 0;
 }
 .menu__login__form__pass, .menu__login__form__name, .menu__sign__form__email {
     position: relative;
@@ -494,20 +544,6 @@ a:link, a:link:hover {
     right: -10px;
     top: 0px;
 }
-input[type=text]:placeholder-shown[required], input[type=email]:placeholder-shown[required], input[type=number]:placeholder-shown[required], input[type=password]:placeholder-shown[required] {
-    background-image: url(../icons/asterisk.svg);
-    background-size: 8px;
-    background-repeat: no-repeat;
-    background-position: right 5px top 5px;
-}
-.menu__login__form input[type=text]:focus, .menu__login__form input[type=email]:focus, .menu__login__form input[type=password]:focus {
-    border-bottom: 1px solid #006494;
-    outline: none;
-}
-.menu__sign__form input[type=text]:focus, .menu__sign__form input[type=email]:focus, .menu__sign__form input[type=password]:focus {
-    border-bottom: 1px solid #006494;
-    outline: none;
-}
 .docTrans_translator_upload_button:hover ~ .docTrans__help_popup, .docTrans_translator_upload_button:focus ~ .docTrans__help_popup, .docTrans_translator_upload_button:active ~ .docTrans__help_popup {
     opacity: 0.9;
     z-index: 0;
@@ -538,6 +574,20 @@ input[type=text]:placeholder-shown[required], input[type=email]:placeholder-show
     font-size: 40px;
     line-height: 60px;
     margin: 0 15px;
+}
+.menu__error {
+    font-size: x-larger;
+    background: bisque;
+    color: #006494;
+}
+.menu__error ul li ul{
+    list-style: none;
+    padding-left: 10px;
+    font-size: smaller;
+    color: #090909;
+}
+.text_input {
+    position: relative;
 }
 @media (max-width: 768px) {
     .container{

@@ -2,7 +2,7 @@ var source_language = "English";
 var target_language = "Thai";
 var api_url = "trans_sentences";
 var dict_url = 'query_dict'
-var signup_url = 'sign_up/';
+var signup_url = 'sign_up/ ';
 var login_url = 'log_in';
 var logout_url = 'log_out';
 var forgot_url = 'forgot';
@@ -225,16 +225,7 @@ $(function(){
         var pwd = $("#sign_password").val();
         var sign_confirm = $("#sign_confirm").val();
         var rememberme = $("#sign_rememberme").val();
-        if(!email || !firstname || !lastname)  {
-            document.getElementById("menu__error").innerHTML  = "Input correct data!";
-            return;
-        }
-        if(pwd != sign_confirm || pwd == "") {
-            document.getElementById("menu__error").innerHTML = "Incorrect Password!";
-            return;
-        }
         var csrftoken = $("[name=csrfmiddlewaretoken]").val();
-
         $.ajax({
             type: "POST",
             url: signup_url,
@@ -252,7 +243,10 @@ $(function(){
             dataType: 'json',
             cache: true,
             success: function (data, status) {
-                document.getElementById('menu__error').innerHTML = data.content;
+				var err = data.content;
+				err = err.replace(/password1/g, "Password");
+				err = err.replace(/password2/g, "Password confirm")
+				document.getElementById('menu__error').innerHTML = err;
             }
         });
     });
@@ -260,10 +254,6 @@ $(function(){
         var email = $("#login_email").val();
         var pwd = $("#login_password").val();
         var rememberme = $("#sign_rememberme").val();
-        if(!email || !pwd)  {
-            document.getElementById("menu__error").innerHTML  = "Input correct data!";
-            return;
-        }
         var csrftoken = $("[name=csrfmiddlewaretoken]").val();
         $.ajax({
             url: login_url,
@@ -281,7 +271,10 @@ $(function(){
 					$(".PopupMenu").remove();
 					window.location.assign("/translator");
                 } else {
-                    document.getElementById('menu__error').innerHTML = data.content;
+					var err = data.content;
+					err = err.replace(/password1/g, "Password");
+					err = err.replace(/password2/g, "Password confirm")
+					document.getElementById('menu__error').innerHTML = err;
                 }
             }
         });
