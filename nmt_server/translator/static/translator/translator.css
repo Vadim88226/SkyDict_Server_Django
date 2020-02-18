@@ -437,6 +437,7 @@ input[type=text], input[type=email], input[type=password]{
     font-size: 1em;
     transition: 0.3s;
     background-position: right 5px top 5px;
+    width: -webkit-fill-available;
 /*     
     border: none;
     border-bottom: 1px solid #dee2e5;
@@ -530,7 +531,7 @@ a:link, a:link:hover {
 }
 .menu__login__signup_link {
     position: relative;
-    font-size: 12px;
+    /* font-size: 12px; */
     font-weight: 600;
     line-height: 15px;
     color: #006494;
@@ -579,6 +580,11 @@ a:link, a:link:hover {
     font-size: x-larger;
     background: bisque;
     color: #006494;
+    padding : 10px 10px;
+    display: none;
+}
+.menu__error ul{
+    padding-left: 20px;
 }
 .menu__error ul li ul{
     list-style: none;

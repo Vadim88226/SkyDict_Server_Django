@@ -5,8 +5,8 @@ var dict_url = 'query_dict'
 var signup_url = 'sign_up/ ';
 var login_url = 'log_in';
 var logout_url = 'log_out';
-var forgot_url = 'forgot';
-var wait;
+var reset_url = 'reset_password';
+var wait, wait1;
 $('.nav li').on('click', function(){
     alert('.nav li')
     $('.nav li').removeClass('active');
@@ -111,6 +111,23 @@ function source_textarea_change() {
     $('.target_textarea').css('height', height);
     $('.textarea_separator').css('height', height+150);
 }
+function detect_similar_words() {
+	var selectedText = $('.source_textarea').val().trim();
+	if(selectedText.split(" ").length > 1) return;
+	$.ajax({
+        // type: "POST",
+        url: similar_url,
+        data: {
+          'seltext': selectedText,
+          'sl' : source_language.toLowerCase().substr(0,2),
+          'tl' : target_language.toLowerCase().substr(0,2)
+        },
+        dataType: 'json',
+        success: function (data) {  //console.log(data);
+            // $("#ta_target").val(data.content);
+        },
+    });
+}
 $(function(){
     $('a[href*="#"]').on('click', function(e) {
         e.preventDefault()    	
@@ -131,14 +148,16 @@ $(function(){
         // $('.textarea_placeholder_text').css("display", "block");
     });
     $('.source_textarea').on('keydown keyup paste mouseup change input', function (e) {
-        setTimeout(source_textarea_change, 100);
+		setTimeout(source_textarea_change, 100);
     });
     $('.source_textarea').on('select', function(e) {
         ShowSelection();
     });
     $('.source_textarea').on('keyup', function(e) {
         clearTimeout(wait);
+        clearTimeout(wait1);
         wait = setTimeout(ShowSentence, 500);
+        wait1 = setTimeout(detect_similar_words, 100);
     });
     $('.docTrans_translator_upload_button__inner_button').on('click', function (e) {
         $('#docTrans').click();
@@ -224,7 +243,6 @@ $(function(){
         var lastname = $("#lastname").val();
         var pwd = $("#sign_password").val();
         var sign_confirm = $("#sign_confirm").val();
-        var rememberme = $("#sign_rememberme").val();
         var csrftoken = $("[name=csrfmiddlewaretoken]").val();
         $.ajax({
             type: "POST",
@@ -247,13 +265,13 @@ $(function(){
 				err = err.replace(/password1/g, "Password");
 				err = err.replace(/password2/g, "Password confirm")
 				document.getElementById('menu__error').innerHTML = err;
+				document.getElementById('menu__error').style.display = "block";
             }
         });
     });
     $(document).on('click',".menu__login__form__submit", function(){
         var email = $("#login_email").val();
         var pwd = $("#login_password").val();
-        var rememberme = $("#sign_rememberme").val();
         var csrftoken = $("[name=csrfmiddlewaretoken]").val();
         $.ajax({
             url: login_url,
@@ -275,6 +293,7 @@ $(function(){
 					err = err.replace(/password1/g, "Password");
 					err = err.replace(/password2/g, "Password confirm")
 					document.getElementById('menu__error').innerHTML = err;
+					document.getElementById('menu__error').style.display = "block";
                 }
             }
         });
@@ -287,5 +306,26 @@ $(function(){
 				window.location.assign("/translator");
 			}
 		});
+	});
+	$(document).on('click',".menu__reset__form__submit", function(){
+        var email = $("#reset_email").val();
+        var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            url: reset_url,
+            headers:{
+                "X-CSRFToken": csrftoken
+            },
+            data: {
+                '_email': email,
+            },
+            cache: true,
+            dataType: 'json',
+            success: function (data, status) {
+                if (data.content == "ok") {
+					document.getElementById('menu__error').innerHTML = data.content;
+					document.getElementById('menu__error').style.display = "block";
+                }
+            }
+        });
     });
 });
