@@ -41,7 +41,7 @@ def query_dict(request):
     s_lang = request.GET.get('sl', '')
     t_lang = request.GET.get('tl', '')
     response = search_dict(selectedText, s_lang)
-    print(response)
+    # print(response)
     data = {
         'content' : response
     }
@@ -63,7 +63,7 @@ def trans_sentences(request):
     if len(sentences.split()) == 1:
         selectedText = sentences.strip()
         response = search_dict(selectedText, s_lang)
-        if not response:
+        if response != "":
             response = re.search('<dtrn>.+</dtrn>', response).group()
             response = response.replace("<dtrn>", "").replace("</dtrn>", "")
         data = {
@@ -105,7 +105,7 @@ def trans_sentences(request):
 
 
 
-        print(pre_sentences)
+        # print(pre_sentences)
         for i, sent in enumerate(pre_sentences):
             output_sentences = output_sentences.replace(sent,predicted_sentences[i])
         data = {
@@ -197,23 +197,23 @@ def activate(request, uidb64, token):
         return render(request, 'account_activation_invalid.html')
 
 # query matched words list
-def detect_similar_word(request):
+def detect_similar_words(request):
     query = request.GET.get('seltext', None)
     s_lang = request.GET.get('sl', None)
     dict = TranslatorConfig.en_th_dict
     if s_lang == 'th':
         dict = TranslatorConfig.th_en_dict
     cnt = 0
-    responses = []
+    responses = ""
     for word in words.words():
-        response = search_dict(word)
-        if word.startswith(query) and not response:
+        response = search_dict(word, s_lang)
+        if word.startswith(query) and response != "":
             cnt += 1
-            responses.append([word, response])
+            response = re.search('<dtrn>.+</dtrn>', response).group()
+            response = response.replace("<dtrn>", "").replace("</dtrn>", "")
+            responses += "<ul><li>" + word + "</li><li>" + response + "</li></ul>"
             if cnt >= 4:
-                print(responses)
                 return JsonResponse({'content':responses})
-    print(responses)
-    return JsonResponse({'content': responses})         
+    return JsonResponse({'content': responses})
 
 
