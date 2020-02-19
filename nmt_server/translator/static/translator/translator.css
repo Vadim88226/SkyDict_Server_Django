@@ -533,7 +533,7 @@ a:link, a:link:hover {
     top: 0px;
 }
 .docTrans_translator_upload_button:hover ~ .docTrans__help_popup, .docTrans_translator_upload_button:focus ~ .docTrans__help_popup, .docTrans_translator_upload_button:active ~ .docTrans__help_popup {
-    opacity: 0.9;
+    opacity: 0.98;
     z-index: 0;
     transition: opacity 0.25s 0.5s ease-out;
 }
@@ -565,8 +565,8 @@ a:link, a:link:hover {
 }
 .menu__error {
     font-size: x-larger;
-    background: bisque;
-    color: #006494;
+    /* background: bisque; */
+    color: red;
     padding : 10px 10px;
     display: none;
 }
@@ -595,7 +595,7 @@ a:link, a:link:hover {
 #wordDict_help_popup ul{
     list-style: none;
     border-bottom: 1px solid #aaa;
-    padding: 5px 5px 5px 10px;
+    padding: 5px 5px 5px 40px;
     font-weight: 400;
     font-size: medium;
     cursor: pointer;

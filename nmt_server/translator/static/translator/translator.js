@@ -19,7 +19,6 @@ function ShowSelection()
 {
     var ta_source = document.getElementById('ta_source');
     var selectedText;
-
     if (ta_source.selectionStart !== undefined)
     {// Standards Compliant Version
         var startPos = ta_source.selectionStart;
@@ -126,10 +125,12 @@ function source_textarea_change() {
 }
 function similar_words() {
 	var selectedText = $('.source_textarea').val().trim();
-    if (s_text == selectedText) return;
-    if(selectedText.split(" ").length > 1) return;
-    if(selectedText.split("\n").length > 1) return;
-    if(selectedText.split(",").length > 1) return;
+    if (s_text == selectedText) return;    
+    if(selectedText == "" || selectedText.split(" ").length > 1 
+        || selectedText.split("\n").length > 1 || selectedText.split(",").length > 1) {
+        document.getElementById('wordDict_help_popup').style.display = "none";
+        return;
+    }
 	$.ajax({
         // type: "POST",
         url: detect_similar_words,
@@ -143,11 +144,11 @@ function similar_words() {
                 document.getElementById('wordDict_help_popup').innerHTML = data.content; 
                 document.getElementById('wordDict_help_popup').style.display = "block";
             } else {
-                document.getElementById('wordDict_help_popup').style.display = "none";
+                document.getElementById('wordDict_help_popup').style.display = "none"; console.log("empty");
             }
         },
         error: function() {
-            document.getElementById('wordDict_help_popup').style.display = "none";
+            document.getElementById('wordDict_help_popup').style.display = "none"; console.log("error");
         },
         timeout: 1000
     });
@@ -178,11 +179,12 @@ $(function(){
         ShowSelection();
     });
     $('.source_textarea').on('keyup', function(e) {
-        
+        var keycode = (e.keyCode ? e.keyCode : e.which);
+        if(keycode==13) document.getElementById('wordDict_help_popup').style.display = "none";
         clearTimeout(wait);
         wait = setTimeout(ShowSentence, 500);
         clearTimeout(wait1);
-        wait1 = setTimeout(similar_words, 100);
+        wait1 = setTimeout(similar_words, 200);
     });
     $('.docTrans_translator_upload_button__inner_button').on('click', function (e) {
         $('#docTrans').click();
@@ -372,6 +374,9 @@ $(function(){
         var _content = e.currentTarget.children[0];
         $('#ta_source').val(_content.textContent);
         ShowSentence();
+        document.getElementById('wordDict_help_popup').style.display = "none";
+    });
+    $(document).on('click',"html", function(e){
         document.getElementById('wordDict_help_popup').style.display = "none";
     });
 });
