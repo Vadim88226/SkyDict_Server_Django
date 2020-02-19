@@ -9,6 +9,8 @@ var log_out = 'log_out';
 var reset_password = 'reset_password';
 var s_text = "";
 var wait, wait1;
+var _ajax_communication;
+
 $('.nav li').on('click', function(){
     alert('.nav li')
     $('.nav li').removeClass('active');
@@ -131,26 +133,34 @@ function similar_words() {
         document.getElementById('wordDict_help_popup').style.display = "none";
         return;
     }
-	$.ajax({
+    if (_ajax_communication) return; 
+    _ajax_communication = true;
+    $.ajax({
         // type: "POST",
         url: detect_similar_words,
         data: {
-          'seltext': selectedText,
-          'sl' : source_language.toLowerCase().substr(0,2)
+        'seltext': selectedText,
+        'sl' : source_language.toLowerCase().substr(0,2)
         },
         dataType: 'json',
         success: function (data) {  //console.log(data);
             if(data.content) {
                 document.getElementById('wordDict_help_popup').innerHTML = data.content; 
                 document.getElementById('wordDict_help_popup').style.display = "block";
+                _ajax_communication = false;
             } else {
-                document.getElementById('wordDict_help_popup').style.display = "none"; console.log("empty");
+                document.getElementById('wordDict_help_popup').style.display = "none"; //console.log("empty");
+                _ajax_communication = false;
             }
         },
         error: function() {
-            document.getElementById('wordDict_help_popup').style.display = "none"; console.log("error");
+            document.getElementById('wordDict_help_popup').style.display = "none"; //console.log("error");
+            _ajax_communication = false;
         },
-        timeout: 1000
+        timeout: 1000,
+    }).always(function(e){
+        // console.log(_ajax_communication);
+        _ajax_communication = false;
     });
 }
 $(function(){
