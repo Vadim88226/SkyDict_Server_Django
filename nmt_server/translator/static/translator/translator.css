@@ -130,13 +130,6 @@ textarea{
 textarea::placeholder {
     font-size: xx-large;
 }
-.textarea_container {
-    box-shadow: 0px 14px 16px rgba(0, 0, 0, 0.06) !important;
-    border: 2px solid transparent !important;
-    background-color: #fff;
-    position: relative;
-    font-size: 100%;
-}
 .clear_text_button {
     top: 4px;
     right: 6px;
@@ -324,18 +317,6 @@ textarea::placeholder {
     float: left;
     font-size: 20px;
     line-height: 20px;
-}
-.dict_area{
-    display: none;
-    width:50%;
-    margin-bottom: 60px;
-}
-#translator_dict {
-    padding: 16px 32px 16px 24px;
-}
-k{
-    color: #265180;
-    font-size: 20px;
 }
 #menu{
     box-sizing: border-box;
@@ -582,35 +563,24 @@ a:link, a:link:hover {
 .text_input {
     position: relative;
 }
-#wordDict_help_popup
-{
-    position: absolute;
-    top: 50px;
-    width: -webkit-fill-available;
-    box-shadow: 0 2px 3px -1px rgba(0,0,0,0.5);
+.textarea_container {
+    box-shadow: 0px 14px 16px rgba(0, 0, 0, 0.06) !important;
+    border: 2px solid transparent !important;
     background-color: #fff;
-    border: 1px solid #aaa;
+    position: relative;
+    font-size: 100%;
+}
+.dict_area{
     display: none;
-    z-index: 10;
-}
-#wordDict_help_popup ul{
-    list-style: none;
-    border-bottom: 1px solid #aaa;
-    padding: 5px 5px 5px 40px;
-    font-weight: 400;
-    font-size: medium;
-    cursor: pointer;
-    margin-bottom: 0;
-}
-#wordDict_help_popup ul:hover {
-    background-color: #eee;
-    cursor: pointer;
-}
-#wordDict_help_popup a{
-    color: #090909;
+    width:50%;
+    margin-bottom: 60px;
 }
 @media (max-width: 768px) {
-    .container{
+    .container, .dict_area{
+        display: none;
+        width:50%;
+        margin-bottom: 60px;
+    }{
         width: 99%;
     }
     .textarea_separator{
@@ -625,7 +595,6 @@ a:link, a:link:hover {
         font-size: x-large;
     }
     .side_container--target {margin-left: 0;}
-    .dict_area { width: 100%;}
 }
 @media (max-width: 400px) {
     #menu_login, .nav-left {

@@ -3,22 +3,18 @@ var log_in = '../translator/log_in';
 var log_out = '../translator/log_out';
 var reset_password = '../translator/reset_password';
 
-function ShowSelection()
+var source_language = "English";
+var target_language = "Thai";
+var trans_sentences = "../translator/trans_sentences";
+var query_dict = '../translator/query_dict'
+var detect_similar_words = "../translator/detect_similar_words"
+var s_text = "";
+var wait, wait1;
+var _ajax_communication;
+
+
+function ShowSelection(selectedText)
 {
-    var ta_source = document.getElementById('ta_source');
-    var selectedText;
-    if (ta_source.selectionStart !== undefined)
-    {// Standards Compliant Version
-        var startPos = ta_source.selectionStart;
-        var endPos = ta_source.selectionEnd;
-        selectedText = ta_source.value.substring(startPos, endPos);
-    }
-    else if (document.selection !== undefined)
-    {// IE Version
-        ta_source.focus();
-        var sel = document.selection.createRange();
-        selectedText = sel.text;
-    }
     selectedText = selectedText.trim();
     var sel = selectedText.split(' ');
     if (sel.length > 1) {$(".dict_area").css('display', 'none');return;}

@@ -304,6 +304,40 @@ a:link, a:link:hover {
     font-size: smaller;
     color: #090909;
 }
+#wordDict_help_popup
+{
+    position: absolute;
+    top: 50px;
+    width: -webkit-fill-available;
+    box-shadow: 0 2px 3px -1px rgba(0,0,0,0.5);
+    background-color: #fff;
+    border: 1px solid #aaa;
+    display: none;
+    z-index: 10;
+}
+#wordDict_help_popup ul{
+    list-style: none;
+    border-bottom: 1px solid #aaa;
+    padding: 5px 5px 5px 40px;
+    font-weight: 400;
+    font-size: medium;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+#wordDict_help_popup ul:hover {
+    background-color: #eee;
+    cursor: pointer;
+}
+#wordDict_help_popup a{
+    color: #090909;
+}
+#translator_dict {
+    padding: 16px 32px 16px 24px;
+}
+k{
+    color: #265180;
+    font-size: 20px;
+}
 @media (max-width: 768px) {
     .container{
         width: 99%;

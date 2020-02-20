@@ -1,70 +1,8 @@
-var source_language = "English";
-var target_language = "Thai";
-var trans_sentences = "trans_sentences";
-var query_dict = 'query_dict'
-var sign_up = 'sign_up/';
-var detect_similar_words = "detect_similar_words"
-var log_in = 'log_in';
-var log_out = 'log_out';
-var reset_password = 'reset_password';
-var s_text = "";
-var wait, wait1;
-var _ajax_communication;
-
 $('.nav li').on('click', function(){
     alert('.nav li')
     $('.nav li').removeClass('active');
     $(this).addClass('active');
 });
-
-function ShowSelection()
-{
-    var ta_source = document.getElementById('ta_source');
-    var selectedText;
-    if (ta_source.selectionStart !== undefined)
-    {// Standards Compliant Version
-        var startPos = ta_source.selectionStart;
-        var endPos = ta_source.selectionEnd;
-        selectedText = ta_source.value.substring(startPos, endPos);
-    }
-    else if (document.selection !== undefined)
-    {// IE Version
-        ta_source.focus();
-        var sel = document.selection.createRange();
-        selectedText = sel.text;
-    }
-    selectedText = selectedText.trim();
-    var sel = selectedText.split(' ');
-    if (sel.length > 1) {$(".dict_area").css('display', 'none');return;}
-    sel = sel[0].split(',');
-    if (sel.length > 1 || selectedText.length == 0) {$(".dict_area").css('display', 'none');return;}
-    selectedText = sel[0];
-    $.ajax({
-        // type: "POST",
-        url: query_dict,
-        data: {
-          'seltext': selectedText,
-          'sl' : source_language.toLowerCase().substr(0,2),
-          'tl' : target_language.toLowerCase().substr(0,2)
-        },
-        dataType: 'json',
-        success: function (data) {
-            if (data.content != "") {
-                $(".dict_area").css('display', 'block');
-                var dText = data.content;
-                dText = dText.replace(/\n/g, "<br>");
-                dText = dText.replace(/  /g, "&nbsp;"); //console.log(dText);
-                document.getElementById('translator_dict').innerHTML = dText;
-            } else {
-                $(".dict_area").css('display', 'none');
-            }
-        },
-        error: function() {
-            $(".dict_area").css('display', 'none');
-        },
-        timeout: 2000
-    });
-}
 
 function ShowSentence()
 {
@@ -186,7 +124,21 @@ $(function(){
 		setTimeout(source_textarea_change, 100);
     });
     $('.source_textarea').on('select', function(e) {
-        ShowSelection();
+        var ta_source = document.getElementById("ta_source");
+        var selectedText;
+        if (ta_source.selectionStart !== undefined)
+        {// Standards Compliant Version
+            var startPos = ta_source.selectionStart;
+            var endPos = ta_source.selectionEnd;
+            selectedText = ta_source.value.substring(startPos, endPos);
+        }
+        else if (document.selection !== undefined)
+        {// IE Version
+            ta_source.focus();
+            var sel = document.selection.createRange();
+            selectedText = sel.text;
+        }
+        ShowSelection(selectedText);
     });
     $('.source_textarea').on('keyup', function(e) {
         var keycode = (e.keyCode ? e.keyCode : e.which);
@@ -399,5 +351,4 @@ $(function(){
     $(document).on('click',"html", function(e){
         document.getElementById('wordDict_help_popup').style.display = "none";
     });
-    
 });

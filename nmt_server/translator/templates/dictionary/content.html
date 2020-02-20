@@ -1,8 +1,17 @@
 {% extends 'dictionary/index.html' %}
-{% block content %}
 <!-- ============================== Dictionary ============================== -->
-<div id='ET_Dictionary' class='ET ET--empty_source sky_top_element--wide ET--web'>
-    This is Dictionary page
+{% block content %}
+<div class='DictSearch'>
+    <!-- <form action="" method="post"> -->
+        {% csrf_token %}
+        {{ form }}
+        <button type='button' class='btn_search'></button>
+    <!-- </form> -->
+    <div id="wordDict_help_popup"></div>
+</div>
+<div class="dict_area">
+    <div id="translator_dict"></div>
+    <!-- <button type='button' class='clear_text_button clear_dict_text'><span>×</span></button> -->
 </div>
 {% endblock content %}
 <!-- =============================== -->

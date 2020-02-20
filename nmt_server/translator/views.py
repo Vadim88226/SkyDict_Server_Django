@@ -16,7 +16,7 @@ from django.views.decorators.csrf import requires_csrf_token
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
-from .forms import SignupForm 
+from .forms import SignupForm, DictForm
 from .tokens import account_activation_token
 from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
@@ -29,7 +29,8 @@ class IndexView(generic.TemplateView):
 
 # display Dictionary Page
 def DictionaryView(request):
-    return render(request, 'dictionary/content.html')
+    form = DictForm();
+    return render(request, 'dictionary/content.html', {'form': form})
 
 def search_dict(word, lang):
     dict = TranslatorConfig.en_th_dict

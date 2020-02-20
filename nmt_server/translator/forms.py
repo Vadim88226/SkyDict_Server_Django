@@ -7,3 +7,5 @@ class SignupForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('email', 'username', 'first_name', 'last_name', 'password1','password2')
+class DictForm(forms.Form):
+    find_word = forms.CharField(label='', max_length=30)

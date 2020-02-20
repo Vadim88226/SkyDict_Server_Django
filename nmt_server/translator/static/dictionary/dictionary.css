@@ -1,0 +1,60 @@
+.DictSearch {
+    border-radius: 5px;
+    border: 1px solid #d2d2d2;
+    background: #fff;
+    position: relative;
+    margin: 10px;
+    width: fit-content;
+    box-sizing: border-box;
+}
+.DictSearch>input{
+    font-size: x-large;
+}
+.DictSearch>button {
+    background-color: #3f556b !important;
+    color: white;
+    border-radius: 0;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border: 0;
+    width: 44px;
+    position: absolute;
+    top: 1px;
+    bottom: 1px;
+    height: auto;
+    right: 0;
+    cursor: pointer;
+}
+.DictSearch>button::before {
+    width: 1em;
+    height: 1em;
+    border-radius: 1em;
+    transform: translate(-50%,-50%);
+    border: 2px solid;
+}
+.DictSearch>button::before, .DictSearch>button::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 45%;
+    left: 45%;
+}
+.DictSearch>button::after {
+    width: 2px;
+    height: 1em;
+    transform-origin: 0 0;
+    transform: rotate(-45deg) translate(-0.5px,0.5em);
+    background-color: white;
+}
+.DictSearch>button::before, .DictSearch>button::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 45%;
+    left: 45%;
+}
+.dict_area {
+    width: 100%;
+    background-color: #fff;
+    display: none;
+}
