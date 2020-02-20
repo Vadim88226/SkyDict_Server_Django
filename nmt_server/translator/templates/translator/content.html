@@ -1,0 +1,119 @@
+{% extends 'translator/index.html' %}
+{% block content %}
+<!-- ============================== Translator ============================== -->
+<div id='ET_translator' class='ET ET--empty_source sky_top_element--wide ET--web'>
+    <div class='sides_container'>
+        <div class='side_container side_container--source'>
+          <div class='language_container'>
+              <div class='language_select language_select--source dropdown'>
+                  <button class="btn btn-default dropdown-toggle" id="btn_source" data-toggle="dropdown">
+                      <span class="language_select__active__title"><span class="translate_from">Translate from </span><strong>English</strong> <span class="caret"></span></span>
+                      <div class='language_select__opener'></div>
+                  </button>
+                  <ul class='dropdown-menu' id='source_menu' role="menu">
+                    <li role="sourceLang"><a role="menuitem" tabindex="-1" href="#">English</a></li>
+                    <li role="sourceLang"><a role="menuitem" tabindex="-1" href="#">Thai</a></li>
+                  </ul>
+              </div>
+            </div>
+            <div class='textarea_container'>
+              <div class='inner_textarea_container'>
+                    <textarea class='textarea source_textarea textarea_base_style' id="ta_source" placeholder="Type, paste text, &#13;&#10; or drop document here"></textarea>
+                  <!-- <span class='visible_desktop_only'><span class='textarea_placeholder_text'>Type, paste text, <br>or drop document here.<span class="sky_addition"><br>(English, Thai)</span></span></span> -->
+                          <!-- ==== docTrans: UploadButton === -->
+                    <div class='docTrans_translator_upload_button'>
+                        <form class="source_textarea_bottom">
+                            <div class='docTrans_translator_upload_button__inner'>
+                                <button type='button' class="btn docTrans_translator_upload_button__inner_button">
+                                    <span class="glyphicon glyphicon-book"></span>
+                                    Translate document</button>
+                                <input type="file" name='docTrans' id="docTrans" accept=".pptx,.docx"/>
+                            </div>
+                            <div id='docTrans_char_count'>0/5000</div>
+                        </form>
+                    </div>
+                    <div class='docTrans__help_popup'>
+                        <div class="docTrans__help_popup__icons">
+                            <img src='../static/icons/icon_docx_v2.svg' alt='Icon for docx file format' />
+                            <span class="docTrans__help_popup__icons__sep">&amp;</span>
+                            <img src='../static/icons/icon_pptx_v2.svg' alt='Icon for pptx file format' />
+                        </div>
+                        <div class="docTrans__help_popup__desc">
+                            <p class='dl_visible_free_only'>Translate your Word (.docx) and PowerPoint (.pptx) files with SkyDict Translator.</p>
+                        </div>
+                    </div>
+                    <div id="wordDict_help_popup"></div>
+              </div>
+              <button type='button' class='clear_text_button clear_text_source'><span>&times;</span></button>
+            </div>
+        </div>
+        
+        <div class='textarea_separator textarea_separator--left'>
+            <div class='textarea_separator__vertical_line'></div>
+            <div class='textarea_separator__arrow'></div>
+            <div class='textarea_separator__border_inner'></div>
+            <div class='textarea_separator__border_outer'></div>
+            <div class='textarea_separator__busy'></div>
+            <div class='translate_convert' title="Swap language"></div>
+        </div>
+        <div class='side_container side_container--target'>
+            <div class='language_container'>
+            <div class='language_select language_select--target dropdown'>
+                <button class="btn btn-default dropdown-toggle" id="btn_target" data-toggle="dropdown">
+                    <span class="language_select__active__title"><span class="translate_into">Translate into </span><strong>Thai</strong> <span class="caret"></span></span>
+                    <div class='language_select__opener'></div>
+                </button>
+                <ul class='dropdown-menu' id='target_menu' role="menu">
+                <li role="targetLang"><a role="menuitem" tabindex="-1" href="#">Thai</a></li>
+                <li role="targetLang"><a role="menuitem" tabindex="-1" href="#">English</a></li>
+                </ul>
+            </div> 
+            </div>
+            <div dl-attr='content: translator.targetAreaAdditions'></div>
+            <div class='textarea_container'>
+                <div class='inner_textarea_container'>
+                    <textarea class='textarea target_textarea textarea_base_style' id="ta_target"></textarea>
+                </div>
+                <div class='translations_as_text'></div>
+            </div>
+            <div class='target_toolbar'>
+                <div class='target_toolbar__save' title="Save as text file">
+                    <button dl-attr='onClick: $0.doSave'  tabindex="130">
+                        <svg width="20" height="22" viewBox="0 0 11 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5.2666 0V15.472"  stroke-miterlimit="10"/>
+                            <path d="M9.98861 10.8364L5.26579 15.5376L0.542969 10.8364" stroke-miterlimit="10"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class='target_toolbar__share' title="Share translation">
+                    <button dl-attr='onClick: $0.doToggleMenu'  tabindex="130">
+                    <svg width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4.14738 14.7213C6.00913 14.7213 7.51839 13.2115 7.51839 11.3492C7.51839 9.48679 6.00913 7.97705 4.14738 7.97705C2.28562 7.97705 0.776367 9.48679 0.776367 11.3492C0.776367 13.2115 2.28562 14.7213 4.14738 14.7213Z" stroke-miterlimit="10"/>
+                        <path d="M15.3066 7.74421C17.1683 7.74421 18.6776 6.23447 18.6776 4.3721C18.6776 2.50974 17.1683 1 15.3066 1C13.4448 1 11.9355 2.50974 11.9355 4.3721C11.9355 6.23447 13.4448 7.74421 15.3066 7.74421Z" stroke-miterlimit="10"/>
+                        <path d="M15.0741 21.0001C16.9359 21.0001 18.4451 19.4903 18.4451 17.628C18.4451 15.7656 16.9359 14.2559 15.0741 14.2559C13.2124 14.2559 11.7031 15.7656 11.7031 17.628C11.7031 19.4903 13.2124 21.0001 15.0741 21.0001Z" stroke-miterlimit="10"/>
+                        <path d="M7.16992 9.18611L12.1218 6.06982" stroke-miterlimit="10"/>
+                        <path d="M12.1218 16.3956L7.16992 13.2793" stroke-miterlimit="10"/>
+                    </svg>
+                    </button>
+                </div>
+                <div class='target_toolbar__copy' title="Copy to clipboard">
+                    <button dl-attr='onClick: $0.doCopy' tabindex="130">
+                        <svg width="20" height="22" viewBox="0 0 20 22">
+                            <path d="M16.2949 15.7893H8.59364C7.36747 15.7893 6.37793 14.7947 6.37793 13.5623V3.22705C6.37793 1.9946 7.36747 1 8.59364 1H16.3164C17.5425 1 18.5321 1.9946 18.5321 3.22705V13.5839C18.5106 14.7947 17.521 15.7893 16.2949 15.7893Z" fill="white" stroke-miterlimit="10"/>
+                            <path d="M11.1966 20.9997H3.34478C2.05408 20.9997 1 19.9402 1 18.6429V7.35629C1 6.05898 2.05408 4.99951 3.34478 4.99951H11.1966C12.4873 4.99951 13.5414 6.05898 13.5414 7.35629V18.6645C13.5414 19.9402 12.4873 20.9997 11.1966 20.9997Z" fill="white" stroke-miterlimit="10"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================ -->
+<div class="textarea_container dict_area">
+    <div id="translator_dict"></div>
+    <!-- <button type='button' class='clear_text_button clear_dict_text'><span>×</span></button> -->
+</div>
+</div>
+{% endblock content %}
+<!-- =============================== -->

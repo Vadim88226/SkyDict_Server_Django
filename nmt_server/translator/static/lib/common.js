@@ -1,21 +1,7 @@
-var source_language = "English";
-var target_language = "Thai";
-var trans_sentences = "trans_sentences";
-var query_dict = 'query_dict'
-var sign_up = 'sign_up/';
-var detect_similar_words = "detect_similar_words"
-var log_in = 'log_in';
-var log_out = 'log_out';
-var reset_password = 'reset_password';
-var s_text = "";
-var wait, wait1;
-var _ajax_communication;
-
-$('.nav li').on('click', function(){
-    alert('.nav li')
-    $('.nav li').removeClass('active');
-    $(this).addClass('active');
-});
+var sign_up = '../translator/sign_up/';
+var log_in = '../translator/log_in';
+var log_out = '../translator/log_out';
+var reset_password = '../translator/reset_password';
 
 function ShowSelection()
 {
@@ -175,80 +161,6 @@ $(function(){
         $(this).css('background-color','transparent'); //set active clas background to red
         $(this).css('color','black');
     });
-    $('.clear_text_source').click( function (e) {
-        $('.source_textarea').val("");
-        $('.target_textarea').val("");
-        $('.source_textarea').css('height', 'auto');
-        source_textarea_change();
-        // $('.textarea_placeholder_text').css("display", "block");
-    });
-    $('.source_textarea').on('keydown keyup paste mouseup change input', function (e) {
-		setTimeout(source_textarea_change, 100);
-    });
-    $('.source_textarea').on('select', function(e) {
-        ShowSelection();
-    });
-    $('.source_textarea').on('keyup', function(e) {
-        var keycode = (e.keyCode ? e.keyCode : e.which);
-        if(keycode==13) document.getElementById('wordDict_help_popup').style.display = "none";
-        clearTimeout(wait);
-        wait = setTimeout(ShowSentence, 500);
-        clearTimeout(wait1);
-        wait1 = setTimeout(similar_words, 200);
-    });
-    $('.docTrans_translator_upload_button__inner_button').on('click', function (e) {
-        $('#docTrans').click();
-    });
-    $('#docTrans').change(function(e) {
-        var _filename = this.files[0].name; 
-        var _filetype = _filename.substr(_filename.length - 5, 5).toLowerCase;
-        if(_filetype == ".docx") {
-            
-        } else if (_filetype == ".pptx") {
-            
-        }
-    })
-    $("#source_menu li a").on("click", function(event){
-        if (source_language != event.currentTarget.text) {
-            target_language = source_language;
-            source_language = event.currentTarget.text;
-            $("#btn_source strong").html(source_language);
-            $("#btn_target strong").html(target_language);
-            source_textarea_change();
-            s_text = ""; ShowSentence();
-        }
-    });
-    $("#target_menu li a").on("click", function(event){
-        if (target_language != event.currentTarget.text) {
-            target_language = source_language;
-            source_language = event.currentTarget.text;
-            $("#btn_source strong").html(source_language);
-            $("#btn_target strong").html(target_language);
-            source_textarea_change();
-            s_text = ""; ShowSentence();
-        }
-    });
-    $(".translate_convert").on("click", swap_language);
-    $(".target_toolbar__copy").on('click', function(e){
-        var $temp = $("<textarea>");
-        $("body").append($temp);
-        $temp.val($("#ta_target").val()).select();
-        document.execCommand("copy");
-        $temp.remove();
-    });
-    $(".target_toolbar__save").click(function(e){
-        $("<a />", {
-            download: $.now() + ".txt",
-            href: URL.createObjectURL(
-            new Blob([$("#ta_target").val()], {
-                type: "text/plain"
-            }))
-        })
-        .appendTo("body")[0].click();
-        $(window).one("focus", function() {
-            $("a").last().remove()
-        })
-    });
     $("#menu_any").click(function(){
         $(".PopupMenu").remove();
         var t = document.querySelector('#dlMainPopup');
@@ -360,7 +272,7 @@ $(function(){
         $.ajax({
             url: log_out,
             success: function (data, status) {
-				window.location.assign("/translator");
+				window.location.reload();
 			}
 		});
 	});
@@ -390,14 +302,4 @@ $(function(){
             timeout: 3000
         });
     });
-    $(document).on('click',"#wordDict_help_popup ul", function(e){
-        var _content = e.currentTarget.children[0];
-        $('#ta_source').val(_content.textContent);
-        ShowSentence();
-        document.getElementById('wordDict_help_popup').style.display = "none";
-    });
-    $(document).on('click',"html", function(e){
-        document.getElementById('wordDict_help_popup').style.display = "none";
-    });
-    
 });
