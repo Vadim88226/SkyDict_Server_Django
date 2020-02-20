@@ -1,26 +1,29 @@
 .DictSearch {
-    border-radius: 5px;
+    border-radius: 20px;
     border: 1px solid #d2d2d2;
     background: #fff;
     position: relative;
     margin: 10px;
-    width: fit-content;
     box-sizing: border-box;
 }
 .DictSearch>input{
     font-size: x-large;
+    padding: 5px 0px;
+    margin-left: 20px;
+    margin-right:44px;
+    border: 0;
 }
 .DictSearch>button {
     background-color: #3f556b !important;
     color: white;
     border-radius: 0;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
     border: 0;
     width: 44px;
     position: absolute;
-    top: 1px;
-    bottom: 1px;
+    top: -1px;
+    bottom: -1px;
     height: auto;
     right: 0;
     cursor: pointer;

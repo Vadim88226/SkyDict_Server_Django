@@ -576,11 +576,7 @@ a:link, a:link:hover {
     margin-bottom: 60px;
 }
 @media (max-width: 768px) {
-    .container, .dict_area{
-        display: none;
-        width:50%;
-        margin-bottom: 60px;
-    }{
+    .dict_area{
         width: 99%;
     }
     .textarea_separator{
@@ -597,13 +593,6 @@ a:link, a:link:hover {
     .side_container--target {margin-left: 0;}
 }
 @media (max-width: 400px) {
-    #menu_login, .nav-left {
-        display: none;
-    }
-    .navbar-nav{
-        display: block;
-        text-align: right;
-    }
     textarea::placeholder, .btn{
         font-size: medium;
     }

@@ -9,9 +9,7 @@
                 <!-- <div class="login_info"><span class="glyphicon glyphicon-user"></span> <span id="login_user">Unknown User</span></div> -->
                 <nav>
                     <a class="sky_header_menu__nav_link sky_header_menu__nav_link--translator" href="/translator" tabindex="10">Translator</a>
-                    {% if request.user.is_authenticated %}
                     <a class="sky_header_menu__nav_link sky_header_menu__nav_link--translator" href="/dictionary" tabindex="10">Dictionary</a>
-                    {% endif %}
                     <a class="sky_header_menu__nav_link sky_header_menu__nav_link--about" href="/about" tabindex="10">About</a>
                     <hr>
                     <a class="sky_header_menu__nav_link" tabindex="10" href="/pro.html#pricing">Plans and pricing</a>
