@@ -22,6 +22,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
 from nltk.corpus import words
 
+words_list = list(set(words.words()))
 
 class IndexView(generic.TemplateView):
     template_name = 'translator/index.html'
@@ -199,13 +200,14 @@ def activate(request, uidb64, token):
 # query matched words list
 def detect_similar_words(request):
     query = request.GET.get('seltext', None)
+    print(query)
     s_lang = request.GET.get('sl', None)
     dict = TranslatorConfig.en_th_dict
     if s_lang == 'th':
         dict = TranslatorConfig.th_en_dict
     cnt = 0
     responses = ""
-    for word in words.words():
+    for word in words_list:
         response = search_dict(word, s_lang)
         if word.startswith(query) and response != "":
             cnt += 1
