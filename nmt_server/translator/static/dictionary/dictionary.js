@@ -3,7 +3,7 @@ var _ajax_communication;
 
 function similar_words() {
 	var selectedText = $('#id_find_word').val().trim();
-    if (s_text == selectedText) return;    
+    if (s_text == selectedText) return; s_text = selectedText;
     if(selectedText == "" || selectedText.split(" ").length > 1 || selectedText.split(",").length > 1) {
         document.getElementById('wordDict_help_popup').style.display = "none";
         return;
@@ -58,5 +58,10 @@ $(function(){
     $(".btn_search").on('click', function(){
         ShowSelection($('#id_find_word').val());
         document.getElementById('wordDict_help_popup').style.display = "none"
+    })
+    $(document).on('dblclick', "kref", function(e){
+        var _content = e.currentTarget;
+        $('#id_find_word').val(_content.textContent);
+        $(".btn_search").click();
     })
 })
