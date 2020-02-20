@@ -41,7 +41,7 @@
                     {% csrf_token %}
                     <div class="text_input menu__login__form__email">
                         <input name='username' type='email'
-                            autocomplete="username email" tabindex="10" autofocus="autofocus"
+                            autocomplete="username email" tabindex="10"
                             spellcheck="false" id='login_email' placeholder=" " required>
                             <label>Username</label>
                     </div>
@@ -86,7 +86,7 @@
                     {% csrf_token %}
                     <div class="text_input menu__login__form__signname">
                         <input class="" name='sign_username' type='text' placeholder=" "
-                            tabindex="10" autofocus="autofocus" spellcheck="false" id='sign_username' required>
+                            tabindex="10" spellcheck="false" id='sign_username' required>
                         <label>Username</label>
                     </div>
                     <div class="text_input menu__login__form__name">
@@ -141,8 +141,8 @@
                 <div class="menu__login__banner">Password <br> reset</div>
                 <form class="menu__reset__form" method='POST' onsubmit="event.preventDefault(); return false;" novalidate='novalidate'>
                     <div class="text_input menu__login__form__email">
-                        <input class="" name='reset_email' type='email' autocomplete="username email"
-                            tabindex="10" autofocus="autofocus" spellcheck="false"
+                        <input name='reset_email' type='email' autocomplete="username email"
+                            tabindex="10" spellcheck="false"
                             id='reset_email' placeholder=" " required>
                         <label>Email address</label>
                     </div>

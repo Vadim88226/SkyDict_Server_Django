@@ -179,6 +179,7 @@ $(function(){
         var t = document.querySelector('#login_MainSection');
         var clone = document.importNode(t.content, true);
         document.body.appendChild(clone);
+        setTimeout(function(){ document.getElementById("login_email").focus();} , 0);
     });
     $(document).on('click',".menu__login", function() { 
         $("#menu_login").click();
@@ -188,12 +189,14 @@ $(function(){
         var t = document.querySelector('#sign_MainSection');
         var clone = document.importNode(t.content, true);
         document.body.appendChild(clone);
+        setTimeout(function(){ document.getElementById("sign_username").focus();} , 0);
     });
     $(document).on('click',".menu__login__form__pass__forgot", function(){
         $(".PopupMenu").remove();
         var t = document.querySelector('#ForgotPasswordSection');
         var clone = document.importNode(t.content, true);
         document.body.appendChild(clone);
+        setTimeout(function(){ document.getElementById("reset_email").focus();} , 0);
     });
     $(document).on('click',".menu__sign__form__submit", function(){
         var email = $("#sign_email").val();
