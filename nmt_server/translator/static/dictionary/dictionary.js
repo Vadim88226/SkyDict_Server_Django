@@ -55,9 +55,6 @@ $(function(){
     $(document).on('click',"html", function(e){
         document.getElementById('wordDict_help_popup').style.display = "none";
     });
-    $('#id_find_word').on('change', function(){
-        $(".btn_search").click()
-    });
     $(".btn_search").on('click', function(){
         ShowSelection($('#id_find_word').val());
         document.getElementById('wordDict_help_popup').style.display = "none"
