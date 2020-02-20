@@ -24,7 +24,11 @@ from nltk.corpus import words
 
 
 class IndexView(generic.TemplateView):
-    template_name = 'translator/index.html'
+    template_name = 'translator/content.html'
+
+# display Dictionary Page
+def DictionaryView(request):
+    return render(request, 'dictionary/content.html')
 
 def search_dict(word, lang):
     dict = TranslatorConfig.en_th_dict
