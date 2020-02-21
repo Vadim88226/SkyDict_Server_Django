@@ -18,6 +18,7 @@ from translator.translation_model.processing import EncoderRNN
 from translator.translation_model.processing import DecoderAttn
 
 import spacy
+from nltk.corpus import words
 
 
 
@@ -166,5 +167,8 @@ class TranslatorConfig(AppConfig):
         encoder = encoder.cuda()
         decoder = decoder.cuda()
     en_nlp = spacy.load("en_core_web_sm")
+    words_list = list(set(words.words()))
+    words_list.sort()
+
 
 

@@ -21,8 +21,6 @@ from .forms import SignupForm, DictForm
 from .tokens import account_activation_token
 from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
-from nltk.corpus import words
-words_list = list(set(words.words()))
 
 
 class IndexView(generic.TemplateView):
@@ -240,7 +238,7 @@ def detect_similar_words(request):
         dict = TranslatorConfig.th_en_dict
     cnt = 0
     responses = ""
-    for word in words_list:
+    for word in TranslatorConfig.words_list:
         response = search_dict(word, s_lang)
         if word.startswith(query) and response != "":
             cnt += 1
