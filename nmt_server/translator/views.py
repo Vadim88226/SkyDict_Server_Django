@@ -114,7 +114,7 @@ def trans_sentences(request):
     if s_lang=='en' and t_lang=='th':
         output_sentences = sentences
         nlp = TranslatorConfig.en_nlp
-        tokens = nlp(sentences)
+        tokens = nlp(sentences.lower())
         predicted_sentences = []
         pre_sentences = []
         encoder = TranslatorConfig.encoder
