@@ -38,9 +38,8 @@ function ShowSelection(selectedText)
                 document.getElementById('translator_dict').innerHTML = dText;
                 
                 dText = data.sentences;
-                // dText = dText.replace(/\n/g, "<br>");
-                // dText = dText.replace(/  /g, "&nbsp;"); //
-                document.getElementById('translator_sentences').innerHTML = dText;
+                if(dText)
+                    document.getElementById('translator_sentences').innerHTML = dText;
             } else {
                 $(".dict_area").css('display', 'none');
             }
