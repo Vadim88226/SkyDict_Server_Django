@@ -37,6 +37,11 @@ function ShowSelection(selectedText)
                 dText = dText.replace(/\n/g, "<br>");
                 dText = dText.replace(/  /g, "&nbsp;"); //console.log(dText);
                 document.getElementById('translator_dict').innerHTML = dText;
+                
+                var dText = data.sentences;
+                dText = dText.replace(/\n/g, "<br>");
+                dText = dText.replace(/  /g, "&nbsp;"); //console.log(dText);
+                document.getElementById('translator_sentences').innerHTML = dText;
             } else {
                 $(".dict_area").css('display', 'none');
             }

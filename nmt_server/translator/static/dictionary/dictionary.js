@@ -41,7 +41,7 @@ function similar_words() {
 $(function(){
     $('#id_find_word').on('keyup', function(e) {
         var keycode = (e.keyCode ? e.keyCode : e.which);
-        if(keycode==13) {
+        if(keycode==13 || keycode==32) {
             $(".btn_search").click(); return;
         }
         clearTimeout(wait1);
