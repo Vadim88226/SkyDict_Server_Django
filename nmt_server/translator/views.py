@@ -56,7 +56,7 @@ def query_example_sentences(word, s_lang):
     example_sentences = ""
     with open(dataset_file, encoding="utf8") as fp:
         cnt = 0
-        index = 0
+        index = 1
         for line in fp:
             if match.search(line):
                 ref_sentences = linecache.getline(ref_file, index)
