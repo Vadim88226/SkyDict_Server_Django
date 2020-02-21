@@ -45,7 +45,7 @@ function ShowSelection(selectedText)
                     $(".sentence_area").css('display', 'block');
                     document.getElementById('translator_sentences').innerHTML = dText;
                 }
-                dText = data.sentences1;
+                dText = data.sentences_more;
                 if(dText) {
                     document.getElementById('translator_sentences1').innerHTML = dText;
                     $("#more_sentences").css('display', 'black');
