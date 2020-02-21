@@ -1,66 +1,128 @@
 .DictSearch {
-    border-radius: 20px;
+    border-radius: 50px;
     border: 1px solid #d2d2d2;
     background: #fff;
     position: relative;
-    margin: 10px;
+    /* margin: 0 10px; */
     box-sizing: border-box;
 }
 .DictSearch>input{
     font-size: x-large;
     padding: 5px 0px;
-    margin-left: 20px;
-    margin-right:44px;
+    margin: 0 20px;
     border: 0;
+    line-height: 38px;
 }
 .DictSearch>button {
     background-color: #3f556b !important;
     color: white;
-    border-radius: 0;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
     border: 0;
     width: 44px;
     position: absolute;
     top: -1px;
     bottom: -1px;
     height: auto;
-    right: 0;
     cursor: pointer;
 }
-.DictSearch>button::before {
+.btn_search {
+    right: 0;
+    border-radius: 0;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+}
+.btn_search::before {
     width: 1em;
-    height: 1em;
     border-radius: 1em;
     transform: translate(-50%,-50%);
     border: 2px solid;
 }
-.DictSearch>button::before, .DictSearch>button::after {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 45%;
-    left: 45%;
-}
-.DictSearch>button::after {
+.btn_search::after {
     width: 2px;
-    height: 1em;
     transform-origin: 0 0;
     transform: rotate(-45deg) translate(-0.5px,0.5em);
     background-color: white;
 }
-.DictSearch>button::before, .DictSearch>button::after {
+.btn_search::before, .btn_search::after {
     content: "";
+    height: 1em;
     display: block;
     position: absolute;
     top: 45%;
-    left: 45%;
+    left: 40%;
 }
-.dict_area {
-    width: 100%;
-    background-color: #fff;
+.btn_sound{
+    right:44px;
+}
+.btn_sound span{
+    position: absolute;
+    right: 10px;
+    top: 13px;
+    background-repeat: no-repeat;
+    height: 24px!important;
+    width: 24px!important;
+    background-position: 0px -360px;
+    color: white;
+    background-image: -webkit-image-set(url(../icons/1x_mobile.png) 1x,url(../icons/2x_mobile.png) 2x);
+}
+#translator_dict,#translator_sentences,#translator_sentences1 {
+    padding: 16px 32px 1px 24px;
+    /* margin:3px; */
+    width:100%;
+    background: white;
+    display: block;
+}
+.dictionary_dict_area ul {
+    list-style-type: none;
+    padding: 0;
+}
+#more_sentences, #few_sentences {
+    position: absolute;
+    z-index: 15;
+    right: 5px;
+    bottom: 5px;
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 24px!important;
+    width: 24px!important;
+    border-radius: 24px;
+    background-image: -webkit-image-set(url(../icons/1x_mobile.png) 1x,url(../icons/2x_mobile.png) 2x);
+    background-color: antiquewhite;
+    transition: background-color 0.15s ease-out, color 0.15s ease-out, color 0.15s ease-out, color 0.15s ease-out, border 0.15s ease-out, color 0.15s ease-out;
+}
+#more_sentences:hover {
+    background-color: cadetblue;
+}
+.sentence_area{
+    position: relative;
+}
+.sentence_more{
     display: none;
+    position: relative;
+}
+#more_sentences {
+    background-position: 0px -215px;
+}
+#few_sentences {
+    background-position: 0px -336px;
+}
+#more_sentences:hover, #few_sentences:hover {
+    background-color: cadetblue;
 }
 kref {
     color:#990000
+}
+.dictionary_dict_area{
+    width: 100%;
+    margin-top: 10px;
+}
+@media (max-width: 400px) {
+    .DictSearch>Button{
+        width: 35px;
+    }
+    .DictSearch>Button.btn_sound{
+        right: 35px;
+    }
+    .DictSearch>Button.btn_sound>span{
+        right: 4px;
+    }
 }

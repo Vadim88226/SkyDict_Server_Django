@@ -5,14 +5,23 @@
     <!-- <form action="" method="post"> -->
         {% csrf_token %}
         {{ form }}
+        <button type='button' class='btn_sound'><span></span></button>
         <button type='button' class='btn_search'></button>
     <!-- </form> -->
     <div id="wordDict_help_popup"></div>
 </div>
 <div class="dict_area">
-    <div id="translator_dict"></div>
-    <div id="translator_sentences"></div>
-    <!-- <button type='button' class='clear_text_button clear_dict_text'><span>×</span></button> -->
+    <dic class="dictionary_dict_area">
+        <div id="translator_dict"></div>
+        <div class="sentence_area">
+            <div id="translator_sentences"></div>
+            <div id="more_sentences"></div>
+        </div>
+        <div class="sentence_more">
+            <div id="translator_sentences1"></div>
+            <div id="few_sentences"></div>
+        </div>
+    </dic>
 </div>
 {% endblock content %}
 <!-- =============================== -->

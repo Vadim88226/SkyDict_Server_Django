@@ -20,6 +20,9 @@ function ShowSelection(selectedText)
     sel = sel[0].split(',');
     if (sel.length > 1 || selectedText.length == 0) {$(".dict_area").css('display', 'none');return;}
     selectedText = sel[0];
+    $(".dict_area").css('display', 'none');
+    $(".sentence_area").css('display', 'none');
+    $(".sentence_more").css('display', 'none');
     $.ajax({
         // type: "POST",
         url: query_dict,
@@ -34,15 +37,21 @@ function ShowSelection(selectedText)
                 $(".dict_area").css('display', 'flex');
                 var dText = data.content;
                 dText = dText.replace(/\n/g, "<br>");
-                dText = dText.replace(/  /g, "&nbsp;"); console.log(dText);
+                dText = dText.replace(/  /g, "&nbsp;");
                 document.getElementById('translator_dict').innerHTML = dText;
                 
                 dText = data.sentences;
-                // dText = dText.replace(/\n/g, "<br>");
-                // dText = dText.replace(/  /g, "&nbsp;"); //
-                document.getElementById('translator_sentences').innerHTML = dText;
-            } else {
-                $(".dict_area").css('display', 'none');
+                if(dText) {
+                    $(".sentence_area").css('display', 'block');
+                    document.getElementById('translator_sentences').innerHTML = dText;
+                }
+                dText = data.sentences1;
+                if(dText) {
+                    document.getElementById('translator_sentences1').innerHTML = dText;
+                    $("#more_sentences").css('display', 'black');
+                } else {
+                    $("#more_sentences").css('display', 'none');
+                }
             }
         },
         error: function() {
@@ -51,7 +60,6 @@ function ShowSelection(selectedText)
         timeout: 2000
     });
 }
-
 function ShowSentence()
 {
     var selectedText = $('#ta_source').val().trim();

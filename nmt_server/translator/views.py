@@ -51,15 +51,15 @@ def query_example_sentences(word, s_lang):
         dataset_file = TranslatorConfig.raw_data_file_path[1]
         ref_file = TranslatorConfig.raw_data_file_path[0]
 
-    example_sentences = []
+    example_sentences = ""
     with open(dataset_file, encoding="utf8") as fp:
         cnt = 0
-        index = 0
+        index = 1
         for line in fp:
             if match.search(line):
                 ref_sentences = linecache.getline(ref_file, index)
-                example_sentences.append([line, ref_sentences])
-                if cnt > 30:
+                example_sentences+="<ul><li>" + line +  "</li><li>" + ref_sentences + "</li></ul>"
+                if cnt > 10:
                     break
                 cnt += 1
             index += 1
@@ -73,6 +73,7 @@ def query_dict(request):
     response = search_dict(selectedText, s_lang)
 
     sentences = query_example_sentences(selectedText, s_lang)
+    print(sentences)
     data = {
         'content' : response,
         'sentences' : sentences
