@@ -64,16 +64,49 @@
     color: white;
     background-image: -webkit-image-set(url(../icons/1x_mobile.png) 1x,url(../icons/2x_mobile.png) 2x);
 }
-#translator_dict,#translator_sentences {
-    padding: 16px 32px 16px 24px;
-    margin:3px;
+#translator_dict,#translator_sentences,#translator_sentences1 {
+    padding: 16px 32px 1px 24px;
+    /* margin:3px; */
     width:100%;
     background: white;
     display: block;
 }
-#translator_sentences ul {
+.dictionary_dict_area ul {
     list-style-type: none;
     padding: 0;
+}
+#more_sentences, #few_sentences {
+    position: absolute;
+    z-index: 15;
+    right: 5px;
+    bottom: 5px;
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 24px!important;
+    width: 24px!important;
+    border-radius: 24px;
+    background-image: -webkit-image-set(url(../icons/1x_mobile.png) 1x,url(../icons/2x_mobile.png) 2x);
+    background-color: antiquewhite;
+    transition: background-color 0.15s ease-out, color 0.15s ease-out, color 0.15s ease-out, color 0.15s ease-out, border 0.15s ease-out, color 0.15s ease-out;
+}
+#more_sentences:hover {
+    background-color: cadetblue;
+}
+.sentence_area{
+    position: relative;
+}
+.sentence_more{
+    display: none;
+    position: relative;
+}
+#more_sentences {
+    background-position: 0px -215px;
+}
+#few_sentences {
+    background-position: 0px -336px;
+}
+#more_sentences:hover, #few_sentences:hover {
+    background-color: cadetblue;
 }
 kref {
     color:#990000

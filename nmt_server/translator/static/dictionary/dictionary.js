@@ -71,4 +71,12 @@ $(function(){
         $("#sound_src").attr("src", "../static/sound.mp3");
 	    $(".my_audio").trigger('load');$(".my_audio").trigger('play');
     })
+    $("#more_sentences").on('click', function(){
+        $(".sentence_more").css('display', 'block'); console.log("more");
+        $("#more_sentences").css('display', 'none');
+    })
+    $("#few_sentences").on('click', function(){
+        $(".sentence_more").css('display', 'none');console.log("few");
+        $("#more_sentences").css('display', 'block');
+    })
 })
