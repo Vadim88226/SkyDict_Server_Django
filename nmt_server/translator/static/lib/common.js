@@ -12,7 +12,6 @@ var s_text = "";
 var wait, wait1;
 var _ajax_communication;
 
-
 function ShowSelection(selectedText)
 {
     selectedText = selectedText.trim();
@@ -32,15 +31,15 @@ function ShowSelection(selectedText)
         dataType: 'json',
         success: function (data) {
             if (data.content != "") {
-                $(".dict_area").css('display', 'block');
+                $(".dict_area").css('display', 'flex');
                 var dText = data.content;
                 dText = dText.replace(/\n/g, "<br>");
-                dText = dText.replace(/  /g, "&nbsp;"); //console.log(dText);
+                dText = dText.replace(/  /g, "&nbsp;"); console.log(dText);
                 document.getElementById('translator_dict').innerHTML = dText;
                 
-                var dText = data.sentences;
-                dText = dText.replace(/\n/g, "<br>");
-                dText = dText.replace(/  /g, "&nbsp;"); //console.log(dText);
+                dText = data.sentences;
+                // dText = dText.replace(/\n/g, "<br>");
+                // dText = dText.replace(/  /g, "&nbsp;"); //
                 document.getElementById('translator_sentences').innerHTML = dText;
             } else {
                 $(".dict_area").css('display', 'none');

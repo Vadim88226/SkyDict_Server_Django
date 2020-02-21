@@ -46,7 +46,10 @@ $(function(){
         }
         clearTimeout(wait1);
         wait1 = setTimeout(similar_words, 200);
-    });    
+    });
+    $('#id_find_word').on('change', function(e) {
+        ShowSelection($('#id_find_word').val());
+    });
     $(document).on('click',"#wordDict_help_popup ul", function(e){
         var _content = e.currentTarget.children[0];
         $('#id_find_word').val(_content.textContent);
