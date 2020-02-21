@@ -331,14 +331,11 @@ a:link, a:link:hover {
 #wordDict_help_popup a{
     color: #090909;
 }
-#translator_dict,#translator_sentences {
-    padding: 16px 32px 16px 24px;
-    margin:10px;
-    width:50%;
-}
-#translator_sentences ul {
-    list-style-type: none;
-    padding: 0;
+.dict_area{
+    background: transparent;
+    display: none;
+    width:100%;
+    margin-bottom: 60px;
 }
 k{
     color: #265180;

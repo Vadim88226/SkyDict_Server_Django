@@ -56,10 +56,16 @@
     top: 45%;
     left: 45%;
 }
-.dict_area {
-    width: 100%;
-    background-color: #fff;
-    display: none;
+#translator_dict,#translator_sentences {
+    padding: 16px 32px 16px 24px;
+    margin:3px;
+    width:100%;
+    background: white;
+    display: inline-table;
+}
+#translator_sentences ul {
+    list-style-type: none;
+    padding: 0;
 }
 kref {
     color:#990000

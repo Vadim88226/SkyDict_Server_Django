@@ -203,7 +203,7 @@ textarea::placeholder {
     min-height: 530px;
 }
 .textarea_separator .textarea_separator__vertical_line {
-    display: block;
+    display: none;
     position: absolute;
     width: 6px;
     height: calc(100% - 130px);
@@ -570,10 +570,16 @@ a:link, a:link:hover {
     position: relative;
     font-size: 100%;
 }
-.dict_area{
-    display: none;
-    width:100%;
-    margin-bottom: 60px;
+#translator_dict,#translator_sentences {
+    padding: 16px 32px 16px 24px;
+    margin:3px;
+    width:50%;
+    background: white;
+    display: inline-table;
+}
+#translator_sentences ul {
+    list-style-type: none;
+    padding: 0;
 }
 @media (max-width: 768px) {
     .dict_area{
