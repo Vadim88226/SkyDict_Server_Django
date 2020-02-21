@@ -67,4 +67,8 @@ $(function(){
         $('#id_find_word').val(_content.textContent);
         $(".btn_search").click();
     })
+    $(".btn_sound").on('click', function(){
+        $("#sound_src").attr("src", "../static/sound.mp3");
+	    $(".my_audio").trigger('load');$(".my_audio").trigger('play');
+    })
 })

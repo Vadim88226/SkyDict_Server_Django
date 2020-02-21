@@ -1,9 +1,3 @@
-$('.nav li').on('click', function(){
-    alert('.nav li')
-    $('.nav li').removeClass('active');
-    $(this).addClass('active');
-});
-
 function ShowSentence()
 {
     var selectedText = $('#ta_source').val().trim();
@@ -141,7 +135,7 @@ $(function(){
         ShowSelection(selectedText);
     });
     $('.source_textarea').on('keyup', function(e) {
-        var keycode = (e.keyCode ? e.keyCode : e.which);console.log(keycode);
+        var keycode = (e.keyCode ? e.keyCode : e.which);//console.log(keycode);
         if(keycode==13 || keycode==32) document.getElementById('wordDict_help_popup').style.display = "none";
         clearTimeout(wait);
         wait = setTimeout(ShowSentence, 500);
