@@ -572,7 +572,7 @@ a:link, a:link:hover {
 }
 .dict_area{
     display: none;
-    width:50%;
+    width:100%;
     margin-bottom: 60px;
 }
 @media (max-width: 768px) {
