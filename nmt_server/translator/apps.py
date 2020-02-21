@@ -20,6 +20,7 @@ from translator.translation_model.processing import DecoderAttn
 import spacy
 
 
+
 input_lang_name = 'en'
 output_lang_name = 'th'
 
@@ -27,9 +28,11 @@ output_lang_name = 'th'
 dataset = 'orig'
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
-"""file path of dataset in the form of a tuple. If translated sentences are
-stored in two files, this tuple will have two elements"""
-raw_data_file_path = (SITE_ROOT + '/dataset/train.tags.th-en1.en', SITE_ROOT + '/dataset/train.tags.th-en1.th')
+DATASET_DIR = os.path.join(SITE_ROOT, "dataset\\")
+en_dataset = "train.tags.th-en1.en"
+th_dataset = "train.tags.th-en1.th"
+
+
 # raw_data_file_path = ('eng-fra_orig.txt',)
 
 """True if you want to reverse the order of the sentence pairs. For example, 
@@ -130,6 +133,11 @@ th_en_dict_name = 'LexitronThEn'
 en_th_dict_path = os.path.join(SITE_ROOT, 'dictionary', en_th_dict_name, en_th_dict_name)
 th_en_dict_path = os.path.join(SITE_ROOT, 'dictionary', th_en_dict_name, th_en_dict_name)
 class TranslatorConfig(AppConfig):
+
+    """file path of dataset in the form of a tuple. If translated sentences are
+    stored in two files, this tuple will have two elements"""
+    raw_data_file_path = (DATASET_DIR + en_dataset, DATASET_DIR + th_dataset)
+
     input_lang, output_lang, train_pairs, test_pairs = prepareData(input_lang_name, output_lang_name, raw_data_file_path, max_vocab_size=max_vocab_size, reverse=reverse, trim=trim, 
     start_filter=start_filter, perc_train_set=perc_train_set, print_to=None, tagging=tagging)
 

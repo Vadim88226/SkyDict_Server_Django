@@ -1,4 +1,5 @@
 import re
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
 from django.template import loader
@@ -21,8 +22,8 @@ from .tokens import account_activation_token
 from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
 from nltk.corpus import words
-
 words_list = list(set(words.words()))
+
 
 class IndexView(generic.TemplateView):
     template_name = 'translator/content.html'
@@ -32,6 +33,7 @@ def DictionaryView(request):
     form = DictForm();
     return render(request, 'dictionary/content.html', {'form': form})
 
+# query word for Lexitron dictionary
 def search_dict(word, lang):
     dict = TranslatorConfig.en_th_dict
     if lang == 'th':
@@ -41,15 +43,41 @@ def search_dict(word, lang):
     except KeyError:
         response = ""
     return response
-# query word for Lexitron dictionary
+
+# query example sentences contains with query word
+def query_example_sentences(word, s_lang):
+    match = re.compile(r'\b({0})\b'.format(word), flags=re.IGNORECASE)
+    dataset_file = TranslatorConfig.raw_data_file_path[0]
+    ref_file = TranslatorConfig.raw_data_file_path[1]
+    if s_lang == 'th':
+        dataset_file = TranslatorConfig.raw_data_file_path[1]
+        ref_file = TranslatorConfig.raw_data_file_path[0]
+
+    example_sentences = []
+    with open(dataset_file, encoding="utf8") as fp:
+        cnt = 0
+        index = 0
+        for line in fp:
+            if match.search(line):
+                ref_sentences = linecache.getline(ref_file, index)
+                example_sentences.append([line, ref_sentences])
+                if cnt > 30:
+                    break
+                cnt += 1
+            index += 1
+    return example_sentences
+
+# query word for query language
 def query_dict(request):
     selectedText = request.GET.get('seltext', None)
     s_lang = request.GET.get('sl', '')
     t_lang = request.GET.get('tl', '')
     response = search_dict(selectedText, s_lang)
-    # print(response)
+
+    sentences = query_example_sentences(selectedText, s_lang)
     data = {
-        'content' : response
+        'content' : response,
+        'sentences' : sentences
     }
     return JsonResponse(data)
 
