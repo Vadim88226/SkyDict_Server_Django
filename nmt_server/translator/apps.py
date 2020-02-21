@@ -143,8 +143,14 @@ class TranslatorConfig(AppConfig):
     """create the Decoder"""
     decoder = DecoderAttn(hidden_size, output_lang.vocab_size, layers=layers, 
                         dropout=dropout, bidirectional=bidirectional)
-    encoder.load_state_dict(torch.load(encoder_file))
-    decoder.load_state_dict(torch.load(decoder_file))
+                        
+    if use_cuda:
+        encoder.load_state_dict(torch.load(encoder_file))
+        decoder.load_state_dict(torch.load(decoder_file))
+    else:
+        encoder.load_state_dict(torch.load(encoder_file, map_location='cpu'))
+        decoder.load_state_dict(torch.load(decoder_file, map_location='cpu'))
+        
     encoder.eval()
     decoder.eval()
     if use_cuda:
