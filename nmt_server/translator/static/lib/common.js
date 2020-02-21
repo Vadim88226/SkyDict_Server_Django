@@ -34,12 +34,16 @@ function ShowSelection(selectedText)
                 $(".dict_area").css('display', 'flex');
                 var dText = data.content;
                 dText = dText.replace(/\n/g, "<br>");
-                dText = dText.replace(/  /g, "&nbsp;"); console.log(dText);
+                dText = dText.replace(/  /g, "&nbsp;");
                 document.getElementById('translator_dict').innerHTML = dText;
                 
                 dText = data.sentences;
-                if(dText)
+                if(dText) {
+                    $("#translator_sentences").css('display', 'block');
                     document.getElementById('translator_sentences').innerHTML = dText;
+                } else 
+                    $("#translator_sentences").css('display', 'none');
+
             } else {
                 $(".dict_area").css('display', 'none');
             }

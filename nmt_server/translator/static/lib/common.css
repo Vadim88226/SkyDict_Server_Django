@@ -318,7 +318,7 @@ a:link, a:link:hover {
 #wordDict_help_popup ul{
     list-style: none;
     border-bottom: 1px solid #aaa;
-    padding: 5px 5px 5px 40px;
+    padding: 5px 5px 5px 5%;
     font-weight: 400;
     font-size: medium;
     cursor: pointer;

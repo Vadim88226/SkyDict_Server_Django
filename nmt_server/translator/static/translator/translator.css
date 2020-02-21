@@ -89,7 +89,7 @@ button {
     outline:0;
 }
 .language_select {
-    text-align:center;
+    margin:0 18%;
 }
 #source_menu, #target_menu {
     left: 50% !important;

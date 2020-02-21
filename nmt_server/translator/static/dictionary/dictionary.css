@@ -1,17 +1,17 @@
 .DictSearch {
-    border-radius: 20px;
+    border-radius: 50px;
     border: 1px solid #d2d2d2;
     background: #fff;
     position: relative;
-    margin: 10px;
+    /* margin: 0 10px; */
     box-sizing: border-box;
 }
 .DictSearch>input{
     font-size: x-large;
     padding: 5px 0px;
-    margin-left: 20px;
-    margin-right:44px;
+    margin: 0 20px;
     border: 0;
+    line-height: 38px;
 }
 .DictSearch>button {
     background-color: #3f556b !important;
@@ -27,8 +27,8 @@
 .btn_search {
     right: 0;
     border-radius: 0;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
 }
 .btn_search::before {
     width: 1em;
@@ -56,7 +56,7 @@
 .btn_sound span{
     position: absolute;
     right: 10px;
-    top: 8px;
+    top: 13px;
     background-repeat: no-repeat;
     height: 24px!important;
     width: 24px!important;
@@ -80,4 +80,16 @@ kref {
 }
 .dictionary_dict_area{
     width: 100%;
+    margin-top: 10px;
+}
+@media (max-width: 400px) {
+    .DictSearch>Button{
+        width: 35px;
+    }
+    .DictSearch>Button.btn_sound{
+        right: 35px;
+    }
+    .DictSearch>Button.btn_sound>span{
+        right: 4px;
+    }
 }
