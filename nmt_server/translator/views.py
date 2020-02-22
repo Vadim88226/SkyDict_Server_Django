@@ -42,6 +42,8 @@ def search_dict(word, lang):
         response = dict.dict[word]
     except KeyError:
         response = ""
+    except UnicodeDecodeError:
+        response = ""
     return response
 
 # query example sentences contains with query word
@@ -144,7 +146,7 @@ def trans_sentences(request):
                 pre_sentences.append(sent1)
                 sentence = re.sub(' +', ' ', sent1)
                 # sentence = normalizeString_fix(sentence, True)
-                print(sentence)
+                # print(sentence)
                 predicted = evaluate(input_lang, output_lang, encoder, decoder, sentence, False, cutoff_length=30)
                 predicted = predicted.replace(" ", "")
                 predicted = predicted.replace("<EOS>", "")
@@ -247,7 +249,7 @@ def activate(request, uidb64, token):
 # query matched words list
 def detect_similar_words(request):
     query = request.GET.get('seltext', None)
-    print(query)
+    # print(query)
     s_lang = request.GET.get('sl', None)
     dict = TranslatorConfig.en_th_dict
     if s_lang == 'th':
