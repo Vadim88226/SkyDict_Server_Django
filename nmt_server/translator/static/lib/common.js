@@ -12,54 +12,6 @@ var s_text = "";
 var wait, wait1;
 var _ajax_communication;
 
-function ShowSelection(selectedText)
-{
-    selectedText = selectedText.trim();
-    var sel = selectedText.split(' ');
-    if (sel.length > 1) {$(".dict_area").css('display', 'none');return;}
-    sel = sel[0].split(',');
-    if (sel.length > 1 || selectedText.length == 0) {$(".dict_area").css('display', 'none');return;}
-    selectedText = sel[0];
-    $(".dict_area").css('display', 'none');
-    $(".sentence_area").css('display', 'none');
-    $(".sentence_more").css('display', 'none');
-    $.ajax({
-        // type: "POST",
-        url: query_dict,
-        data: {
-          'seltext': selectedText,
-          'sl' : source_language.toLowerCase().substr(0,2),
-          'tl' : target_language.toLowerCase().substr(0,2)
-        },
-        dataType: 'json',
-        success: function (data) {
-            if (data.content != "") {
-                $(".dict_area").css('display', 'flex');
-                var dText = data.content;
-                dText = dText.replace(/\n/g, "<br>");
-                dText = dText.replace(/  /g, "&nbsp;");
-                document.getElementById('translator_dict').innerHTML = dText;
-                
-                dText = data.sentences;
-                if(dText) {
-                    $(".sentence_area").css('display', 'block');
-                    document.getElementById('translator_sentences').innerHTML = dText;
-                }
-                dText = data.sentences_more;
-                if(dText) {
-                    document.getElementById('translator_sentences1').innerHTML = dText;
-                    $("#more_sentences").css('display', 'black');
-                } else {
-                    $("#more_sentences").css('display', 'none');
-                }
-            }
-        },
-        error: function() {
-            $(".dict_area").css('display', 'none');
-        },
-        timeout: 2000
-    });
-}
 function ShowSentence()
 {
     var selectedText = $('#ta_source').val().trim();
@@ -156,6 +108,40 @@ function similar_words() {
         // console.log(_ajax_communication);
         _ajax_communication = false;
     });
+}
+// arrow keycode event function
+var _suggest_wordposition = -1;
+function suggest_navigation_keys_check(e) {
+    var keycode = (e.keyCode ? e.keyCode : e.which);
+    var nodes = document.getElementById('wordDict_help_popup');
+    //console.log(e.currentTarget.value);
+    if(document.getElementById('wordDict_help_popup').style.display != "none"){
+      switch(keycode) {
+        case 40: //down arrow
+            if(_suggest_wordposition > -1) nodes.childNodes[_suggest_wordposition].style.background = "";
+            _suggest_wordposition++;
+            if(_suggest_wordposition == nodes.childElementCount) _suggest_wordposition = 0;
+            nodes.childNodes[_suggest_wordposition].style.background = "#eee";
+            break;
+        case 37: //left arrow
+        break;
+        case 39: //right arrow
+        break;
+        case 38: //up arrow
+            if(_suggest_wordposition > -1) nodes.childNodes[_suggest_wordposition].style.background = "";
+            _suggest_wordposition--;
+            if(_suggest_wordposition < 0) _suggest_wordposition = nodes.childElementCount - 1;
+            nodes.childNodes[_suggest_wordposition].style.background = "#eee";
+            break;
+        case 13://enter
+            if(_suggest_wordposition == -1 || _suggest_wordposition >= nodes.childElementCount) _suggest_wordposition = 0;
+            e.currentTarget.value = nodes.childNodes[_suggest_wordposition].children[0].textContent;
+        case 27://esc
+            document.getElementById('wordDict_help_popup').style.display != "none";
+        default :
+            _suggest_wordposition = -1;
+      }
+    }
 }
 $(function(){
     $('a[href*="#"]').on('click', function(e) {

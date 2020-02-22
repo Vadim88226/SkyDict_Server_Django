@@ -5,6 +5,7 @@
     position: relative;
     /* margin: 0 10px; */
     box-sizing: border-box;
+    max-width: 500px;
 }
 .DictSearch>input{
     font-size: x-large;
@@ -76,17 +77,13 @@
     padding: 0;
 }
 #more_sentences, #few_sentences {
-    position: absolute;
-    z-index: 15;
-    right: 5px;
-    bottom: 5px;
     background-repeat: no-repeat;
-    display: inline-block;
-    height: 24px!important;
-    width: 24px!important;
-    border-radius: 24px;
+    padding-left: 5%;
+    color: aliceblue;
+    width: 100%;
     background-image: -webkit-image-set(url(../icons/1x_mobile.png) 1x,url(../icons/2x_mobile.png) 2x);
-    background-color: antiquewhite;
+    background-color: grey;
+    border: 1px solid #d2d2d2;
     transition: background-color 0.15s ease-out, color 0.15s ease-out, color 0.15s ease-out, color 0.15s ease-out, border 0.15s ease-out, color 0.15s ease-out;
 }
 #more_sentences:hover {
@@ -100,10 +97,10 @@
     position: relative;
 }
 #more_sentences {
-    background-position: 0px -215px;
+    background-position: 10px -217px;
 }
 #few_sentences {
-    background-position: 0px -336px;
+    background-position: 10px -336px;
 }
 #more_sentences:hover, #few_sentences:hover {
     background-color: cadetblue;
