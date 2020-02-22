@@ -74,7 +74,9 @@
 }
 .dictionary_dict_area ul {
     list-style-type: none;
-    padding: 0;
+    padding: 1%;
+    border: 1px solid #ddd;
+    background-color: aliceblue;
 }
 #more_sentences, #few_sentences {
     background-repeat: no-repeat;

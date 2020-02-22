@@ -63,7 +63,7 @@ function ShowSelection(selectedText)
                 $(".dict_area").css('display', 'flex');
                 var dText = data.content;
                 dText = dText.replace(/\n/g, "<br>");
-                dText = dText.replace(/  /g, "&nbsp;");
+                dText = dText.replace(/  /g, "&nbsp; ");
                 document.getElementById('translator_dict').innerHTML = dText;
                 
                 dText = data.sentences;
