@@ -3,7 +3,8 @@ var _ajax_communication;
 
 function similar_words() {
 	var selectedText = $('#id_find_word').val().trim();
-    if (s_text == selectedText) return; s_text = selectedText;
+    if (s_text == selectedText) return; 
+    s_text = selectedText;
     if(selectedText == "" || selectedText.split(" ").length > 1 || selectedText.split(",").length > 1) {
         document.getElementById('wordDict_help_popup').style.display = "none";
         return;
@@ -38,14 +39,68 @@ function similar_words() {
         _ajax_communication = false;
     });
 }
+
+function ShowSelection(selectedText)
+{
+    selectedText = selectedText.trim();
+    var sel = selectedText.split(' ');
+    if (sel.length > 1 || selectedText.length == 0) {$(".dict_area").css('display', 'none');return;}
+    sel = sel[0].split(',');
+    if (sel.length > 1) {$(".dict_area").css('display', 'none');return;}
+    selectedText = sel[0];
+
+    $.ajax({
+        // type: "POST",
+        url: query_dict,
+        data: {
+          'seltext': selectedText,
+          'sl' : source_language.toLowerCase().substr(0,2),
+          'tl' : target_language.toLowerCase().substr(0,2)
+        },
+        dataType: 'json',
+        success: function (data) {
+            if (data.content != "") {
+                $(".dict_area").css('display', 'flex');
+                var dText = data.content;
+                dText = dText.replace(/\n/g, "<br>");
+                dText = dText.replace(/  /g, "&nbsp;");
+                document.getElementById('translator_dict').innerHTML = dText;
+                
+                dText = data.sentences;
+                if(dText) {
+                    $(".sentence_area").css('display', 'block');
+                    document.getElementById('translator_sentences').innerHTML = dText;
+                    var dText1 = data.sentences_more;
+                    if(dText1) {
+                        document.getElementById('translator_sentences1').innerHTML = dText1;
+                        $("#more_sentences").css('display', 'block');
+                    } else {
+                        $("#more_sentences").css('display', 'none');
+                        $(".sentence_more").css('display', 'none');
+                    }
+                } else {
+                    $(".sentence_area").css('display', 'none');
+                }
+            } else  {
+                $(".dict_area").css('display', 'none');
+            }
+        },
+        error: function() {
+            $(".dict_area").css('display', 'none');
+        },
+        timeout: 2000
+    });
+}
 $(function(){
     $('#id_find_word').on('keyup', function(e) {
         var keycode = (e.keyCode ? e.keyCode : e.which);
-        if(keycode==13 || keycode==32) {
-            $(".btn_search").click(); return;
+        suggest_navigation_keys_check(e);
+        if(keycode != 13 && keycode != 32) { //console.log(keycode);
+            clearTimeout(wait1);
+            wait1 = setTimeout(similar_words, 200);
+        } else {
+            $(".btn_search").click();
         }
-        clearTimeout(wait1);
-        wait1 = setTimeout(similar_words, 200);
     });
     $('#id_find_word').on('change', function(e) {
         ShowSelection($('#id_find_word').val());
@@ -59,7 +114,8 @@ $(function(){
         document.getElementById('wordDict_help_popup').style.display = "none";
     });
     $(".btn_search").on('click', function(){
-        ShowSelection($('#id_find_word').val());
+        s_text = $('#id_find_word').val()
+        ShowSelection(s_text);
         document.getElementById('wordDict_help_popup').style.display = "none"
     })
     $(document).on('dblclick', "kref", function(e){
@@ -72,11 +128,11 @@ $(function(){
 	    $(".my_audio").trigger('load');$(".my_audio").trigger('play');
     })
     $("#more_sentences").on('click', function(){
-        $(".sentence_more").css('display', 'block'); console.log("more");
+        $(".sentence_more").css('display', 'block');
         $("#more_sentences").css('display', 'none');
     })
     $("#few_sentences").on('click', function(){
-        $(".sentence_more").css('display', 'none');console.log("few");
+        $(".sentence_more").css('display', 'none');
         $("#more_sentences").css('display', 'block');
     })
 })

@@ -117,30 +117,34 @@ $(function(){
     $('.source_textarea').on('keydown keyup paste mouseup change input', function (e) {
 		setTimeout(source_textarea_change, 100);
     });
-    $('.source_textarea').on('select', function(e) {
-        var ta_source = document.getElementById("ta_source");
-        var selectedText;
-        if (ta_source.selectionStart !== undefined)
-        {// Standards Compliant Version
-            var startPos = ta_source.selectionStart;
-            var endPos = ta_source.selectionEnd;
-            selectedText = ta_source.value.substring(startPos, endPos);
-        }
-        else if (document.selection !== undefined)
-        {// IE Version
-            ta_source.focus();
-            var sel = document.selection.createRange();
-            selectedText = sel.text;
-        }
-        ShowSelection(selectedText);
-    });
+    // $('.source_textarea').on('select', function(e) {
+    //     var ta_source = document.getElementById("ta_source");
+    //     var selectedText;
+    //     if (ta_source.selectionStart !== undefined)
+    //     {// Standards Compliant Version
+    //         var startPos = ta_source.selectionStart;
+    //         var endPos = ta_source.selectionEnd;
+    //         selectedText = ta_source.value.substring(startPos, endPos);
+    //     }
+    //     else if (document.selection !== undefined)
+    //     {// IE Version
+    //         ta_source.focus();
+    //         var sel = document.selection.createRange();
+    //         selectedText = sel.text;
+    //     }
+    //     ShowSelection(selectedText);
+    // });
     $('.source_textarea').on('keyup', function(e) {
         var keycode = (e.keyCode ? e.keyCode : e.which);//console.log(keycode);
-        if(keycode==13 || keycode==32) document.getElementById('wordDict_help_popup').style.display = "none";
+        suggest_navigation_keys_check(e);
+        if(keycode==13 || keycode==32) {
+            document.getElementById('wordDict_help_popup').style.display = "none";
+        } else {
+            clearTimeout(wait1);
+            wait1 = setTimeout(similar_words, 200);
+        }
         clearTimeout(wait);
         wait = setTimeout(ShowSentence, 500);
-        clearTimeout(wait1);
-        wait1 = setTimeout(similar_words, 200);
     });
     $('.docTrans_translator_upload_button__inner_button').on('click', function (e) {
         $('#docTrans').click();
