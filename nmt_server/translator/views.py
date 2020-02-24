@@ -18,7 +18,7 @@ from django.views.decorators.csrf import requires_csrf_token
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
-from .forms import SignupForm, DictForm
+from .forms import SignupForm, DictForm, AddWordsForm
 from .tokens import account_activation_token
 from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
@@ -30,8 +30,9 @@ class IndexView(generic.TemplateView):
 
 # display Dictionary Page
 def DictionaryView(request):
-    form = DictForm();
-    return render(request, 'dictionary/content.html', {'form': form})
+    search_input_form = DictForm()
+    add_words_form = AddWordsForm()
+    return render(request, 'dictionary/content.html', {'search_input_form': search_input_form, 'add_words_form': add_words_form})
 
 # query word for Lexitron dictionary
 def search_dict(word, lang):

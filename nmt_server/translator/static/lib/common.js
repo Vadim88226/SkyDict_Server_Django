@@ -134,10 +134,11 @@ function suggest_navigation_keys_check(e) {
             nodes.childNodes[_suggest_wordposition].style.background = "#eee";
             break;
         case 13://enter
-            if(_suggest_wordposition == -1 || _suggest_wordposition >= nodes.childElementCount) _suggest_wordposition = 0;
-            e.currentTarget.value = nodes.childNodes[_suggest_wordposition].children[0].textContent;
+            if(_suggest_wordposition > -1 && _suggest_wordposition < nodes.childElementCount) {
+                e.currentTarget.value = nodes.childNodes[_suggest_wordposition].children[0].textContent;
+            }
         case 27://esc
-            document.getElementById('wordDict_help_popup').style.display != "none";
+            document.getElementById('wordDict_help_popup').style.display = "none";
         default :
             _suggest_wordposition = -1;
       }

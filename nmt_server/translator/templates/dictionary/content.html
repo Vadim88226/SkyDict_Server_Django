@@ -3,12 +3,15 @@
 {% block content %}
 <div class='DictSearch'>
     <!-- <form action="" method="post"> -->
-        {% csrf_token %}
-        {{ form }}
+        {{ search_input_form }}
         <button type='button' class='btn_sound'><span></span></button>
         <button type='button' class='btn_search'></button>
     <!-- </form> -->
     <div id="wordDict_help_popup"></div>
+</div>
+<div id="dict_menu_bar">
+    <a href="#" id="view_dict_area">Dictionary</a>
+    <a href="#" id="view_add_word">Add Words</a>
 </div>
 <div class="dict_area">
     <dic class="dictionary_dict_area">
@@ -22,6 +25,13 @@
             <div id="few_sentences">Few sentences</div>
         </div>
     </dic>
+</div>
+<div class="add_words">
+    <!-- <form action="" method="post"> -->
+        {% csrf_token %}
+        {{ add_words_form }}
+        <button type='button' class='btn_save sky_button'>Save</button>
+    <!-- </form> -->
 </div>
 {% endblock content %}
 <!-- =============================== -->
