@@ -6,8 +6,9 @@ var reset_password = '../translator/reset_password';
 var source_language = "English";
 var target_language = "Thai";
 var trans_sentences = "../translator/trans_sentences";
-var query_dict = '../translator/query_dict'
-var detect_similar_words = "../translator/detect_similar_words"
+var query_dict = '../translator/query_dict';
+var detect_similar_words = "../translator/detect_similar_words";
+var add_words_url = "../translator/add_words"
 var s_text = "";
 var wait, wait1;
 var _ajax_communication;
@@ -249,7 +250,7 @@ $(function(){
             success: function (data, status) {
                 if (data.content == "ok") {
 					$(".PopupMenu").remove();
-					window.location.assign("/translator");
+					window.location.reload();
                 } else {
 					var err = data.content;
 					err = err.replace(/password1/g, "Password");

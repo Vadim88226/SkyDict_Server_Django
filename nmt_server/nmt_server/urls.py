@@ -26,6 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('translator/', include('translator.urls')),
     path('dictionary/', views.DictionaryView, name="dictionary_view"),
+    path('user_words/', views.User_WordsView, name="user_words_view"),
     path('account_activation_sent/', views.account_activation_sent, name='account_activation_sent'),
     path('activate/<uidb64>/<token>/', views.activate, name='activate'),
 ]

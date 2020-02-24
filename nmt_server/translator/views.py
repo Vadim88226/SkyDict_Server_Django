@@ -31,8 +31,13 @@ class IndexView(generic.TemplateView):
 # display Dictionary Page
 def DictionaryView(request):
     search_input_form = DictForm()
+    return render(request, 'dictionary/content.html', {'search_input_form': search_input_form})
+
+# display User_Words Page
+def User_WordsView(request):
+    search_input_form = DictForm()
     add_words_form = AddWordsForm()
-    return render(request, 'dictionary/content.html', {'search_input_form': search_input_form, 'add_words_form': add_words_form})
+    return render(request, 'user_words/content.html', {'search_input_form': search_input_form, 'add_words_form': add_words_form})
 
 # query word for Lexitron dictionary
 def search_dict(word, lang):

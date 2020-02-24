@@ -67,22 +67,24 @@ function ShowSelection(selectedText)
                 document.getElementById('translator_dict').innerHTML = dText;
                 $(".dictionary_dict_area").css('display' ,  'block');
                 dText = data.sentences;
+                document.getElementById('translator_sentences').innerHTML = "";
+                $(".sentence_more").css('display', 'none');
+                $("#more_sentences").css('display', 'none');
                 if(dText) {
-                    $(".sentence_area").css('display', 'block');
                     document.getElementById('translator_sentences').innerHTML = dText;
+                    $(".sentence_area").css('display', 'block');
                     var dText1 = data.sentences_more;
                     if(dText1) {
                         document.getElementById('translator_sentences1').innerHTML = dText1;
                         $("#more_sentences").css('display', 'block');
-                    } else {
-                        $("#more_sentences").css('display', 'none');
-                        $(".sentence_more").css('display', 'none');
                     }
-                } else {
-                    $(".sentence_area").css('display', 'none');
                 }
             } else  {
                 $(".dict_area").css('display', 'none');
+                document.getElementById('translator_dict').innerHTML = "";
+                document.getElementById('translator_sentences').innerHTML = "";
+                $("#more_sentences").css('display', 'none');
+                $(".sentence_more").css('display', 'none');
             }
         },
         error: function() {
@@ -135,33 +137,5 @@ $(function(){
     $("#few_sentences").on('click', function(){
         $(".sentence_more").css('display', 'none');
         $("#more_sentences").css('display', 'block');
-    })
-    $("#view_dict_area").on('click', function(){
-        $(".dict_area").css('display', 'block');
-        $(".add_words").css('display', 'none');
-    })
-    $("#view_add_word").on('click', function(){
-        $(".dict_area").css('display', 'none');
-        $(".add_words").css('display', 'block');
-    })
-    $("#id_chk_box li").on('click', function(e){
-        if(e.target.type != 'checkbox') return;
-        console.log(e);
-        var name = 'txt_' + e.currentTarget.textContent.trim();
-        if(e.target.checked == true) {
-            var input = document.createElement("textarea");
-            input.id = name;
-            if(name == "txt_other") {
-                var tInput = document.createElement('input')
-                tInput.id = 'key_' + name;
-                e.currentTarget.appendChild(tInput)
-            }
-            e.currentTarget.appendChild(document.createElement("br"));
-            e.currentTarget.appendChild(input);
-        } else {
-            e.currentTarget.removeChild(e.currentTarget.lastChild);
-            e.currentTarget.removeChild(e.currentTarget.lastChild);
-            if(name == "txt_other") e.currentTarget.removeChild(e.currentTarget.lastChild);
-        }
     })
 })
