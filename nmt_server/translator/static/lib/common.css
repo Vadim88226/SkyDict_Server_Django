@@ -85,7 +85,10 @@ body{
 }
 button {
     border: none !important;
-    background: transparent !important;
+    /* background: transparent !important; */
+}
+button:focus {
+    outline: -webkit-focus-ring-color auto 0px;
 }
 .btn{
     font-size: 20px;
@@ -356,15 +359,15 @@ k{
     .nav-right{
         display: block;
     }
+    .navbar-left{
+        display: none;
+    }
 }
 @media (max-width: 400px) {
-    #menu_login, .nav-left {
+    .nav-left {
         display: none;
     }
     .navbar-nav{
         display: block;
-    }
-    .navbar-left{
-        display: none;
     }
 }

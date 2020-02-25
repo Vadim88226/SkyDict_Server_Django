@@ -1,6 +1,7 @@
 {% extends 'dictionary/index.html' %}
 <!-- ============================== Dictionary ============================== -->
 {% block content %}
+{% csrf_token %}
 <div class='DictSearch'>
     <!-- <form action="" method="post"> -->
         {{ search_input_form }}
@@ -11,7 +12,11 @@
 </div>
 <div id="dict_menu_bar">
     <a href="#" id="view_dict_area">Dictionary</a>
-    <a href="#" id="view_add_word">Add Words</a>
+    {% if not request.user.is_authenticated %}
+    <a class="menu__login" href="#">Add Words</a>
+    {% else %}
+    <a href="/user_words" id="view_add_word">Add Words</a>
+    {% endif %}
 </div>
 <div class="dict_area">
     <dic class="dictionary_dict_area">
@@ -25,13 +30,6 @@
             <div id="few_sentences">Few sentences</div>
         </div>
     </dic>
-</div>
-<div class="add_words">
-    <!-- <form action="" method="post"> -->
-        {% csrf_token %}
-        {{ add_words_form }}
-        <button type='button' class='btn_save sky_button'>Save</button>
-    <!-- </form> -->
 </div>
 {% endblock content %}
 <!-- =============================== -->
