@@ -63,6 +63,7 @@ def query_example_sentences(word, s_lang):
         index = 1
         for line in fp:
             if match.search(line):
+                line = re.sub(r'\b({0})\b'.format(word), "<b>" + word + "</b>", line)
                 if cnt < 5:
                     ref_sentences = linecache.getline(ref_file, index)
                     example_sentences += "<ul><li>" + line +  "</li><li>" + ref_sentences + "</li></ul>"
@@ -252,19 +253,22 @@ def detect_similar_words(request):
     query = request.GET.get('seltext', None)
     # print(query)
     s_lang = request.GET.get('sl', None)
+    s_lang = detect_source_language(query)
     dict = TranslatorConfig.en_th_dict
+    words_list = TranslatorConfig.en_words_list
     if s_lang == 'th':
         dict = TranslatorConfig.th_en_dict
+        words_list = TranslatorConfig.th_words_list
     cnt = 0
     responses = ""
-    for word in TranslatorConfig.words_list:
+    for word in words_list:
         response = search_dict(word, s_lang)
         if word.startswith(query) and response != "":
             cnt += 1
             response = re.search('<dtrn>.+</dtrn>', response).group()
             response = response.replace("<dtrn>", "").replace("</dtrn>", "")
             responses += "<ul><li>" + word + "</li><li>" + response + "</li></ul>"
-            if cnt >= 4:
+            if cnt >= 10:
                 return JsonResponse({'content':responses})
     return JsonResponse({'content': responses})
 

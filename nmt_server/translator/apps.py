@@ -131,8 +131,13 @@ decoder_file = SITE_ROOT + "/translation_model/testdata.orig_trim.60_vocab.10000
 
 en_th_dict_name = "LexitronEnTh"
 th_en_dict_name = 'LexitronThEn'
+th_vocabulary_dir = 'Th_Vocabulary'
+th_vocabulary_file = 'Thai_word_list.txt'
 en_th_dict_path = os.path.join(SITE_ROOT, 'dictionary', en_th_dict_name, en_th_dict_name)
 th_en_dict_path = os.path.join(SITE_ROOT, 'dictionary', th_en_dict_name, th_en_dict_name)
+
+TH_VOCABULARY_PATH = os.path.join(SITE_ROOT, "dictionary", th_vocabulary_dir, th_vocabulary_file)
+
 class TranslatorConfig(AppConfig):
 
     """file path of dataset in the form of a tuple. If translated sentences are
@@ -167,8 +172,13 @@ class TranslatorConfig(AppConfig):
         encoder = encoder.cuda()
         decoder = decoder.cuda()
     en_nlp = spacy.load("en_core_web_sm")
-    words_list = list(set(words.words()))
-    words_list.sort()
+    en_words_list = list(set(words.words()))
+    en_words_list.sort()
+
+    with open(TH_VOCABULARY_PATH, encoding='utf-8') as f:
+        th_words_list = f.read().splitlines()
+    th_words_list = list(set(th_words_list))
+    th_words_list.sort()
 
 
 
