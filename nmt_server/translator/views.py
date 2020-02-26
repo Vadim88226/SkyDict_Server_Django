@@ -285,5 +285,6 @@ def upload_file(request):
         fs = FileSystemStorage()
         filename = fs.save(source_file.name, source_file)
         uploaded_file_url = fs.url(filename)
+        return JsonResponse({'content': uploaded_file_url})
 
     return JsonResponse({'content': "no"})

@@ -150,9 +150,26 @@ $(function(){
         $('#docTrans').click();
     });
     $('#docTrans').on('change', function(e){
-        event.preventDefault();
-        e.target.form.action= upload_file;
-        e.target.form.submit();
+        e.preventDefault();
+        var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+        var form_data = new FormData();
+        form_data.append('csrfmiddlewaretoken', csrftoken);
+        form_data.append('docTrans', this.files[0]);
+        $.ajax({
+            type: "POST",
+            url: upload_file,
+            data: form_data,
+            processData: false,
+            contentType: false,
+            enctype: "multipart/form-data",
+            success: function (data) {
+                if(data.content) {
+                    console.log(data.content);
+                } else {
+
+                }
+            }
+        })
     });
 
     $("#source_menu li a").on("click", function(event){
