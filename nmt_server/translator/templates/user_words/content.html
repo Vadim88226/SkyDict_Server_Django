@@ -1,0 +1,77 @@
+{% extends 'user_words/index.html' %}
+<!-- ============================== Dictionary ============================== -->
+{% block content %}
+<div class='DictSearch'>
+    <!-- <form action="" method="post"> -->
+        {{ search_input_form }}
+        <button type='button' class='btn_sound'><span></span></button>
+        <button type='button' class='btn_search'></button>
+    <!-- </form> -->
+    <div id="wordDict_help_popup"></div>
+</div>
+<div id="dict_menu_bar">
+    <a href="/dictionary" id="view_dict_area">Dictionary</a>
+    <a href="#" id="view_add_word">Add Words</a>
+</div>
+<div class="dict_area">
+    <dic class="dictionary_dict_area">
+        <div id="translator_dict"></div>
+        <div class="sentence_area">
+            <div id="translator_sentences"></div>
+            <div id="more_sentences">More sentences</div>
+        </div>
+        <div class="sentence_more">
+            <div id="translator_sentences1"></div>
+            <div id="few_sentences">Few sentences</div>
+        </div>
+    </dic>
+</div>
+<div style="text-align: -webkit-center;">
+    <div class="add_words" style="text-align:left;">
+        <!-- <form action="" method="post"> -->
+            {% csrf_token %}
+            <div> Translate from {{ add_words_form.s_lang}} to {{ add_words_form.t_lang}}</div>
+            <div> Vocabulary: {{ add_words_form.Vocabulary}} type <button id="btn_vtype" class=''>please select</button>(can select more than 1 item)</div>
+            <div id='clear'>
+                <div class='word_type'>{{ add_words_form.chk_box1 }}</div>
+                <div class='word_type'>{{ add_words_form.chk_box2 }}</div>
+                <div class='word_type'>{{ add_words_form.chk_box3 }}</div>
+            </div>
+            <div id='word_vocabulary'></div>
+            <div>
+                {{ add_words_form.chk_agree }}
+                <label>I have read the agreement and are happy to comply with conditions.</label>
+            </div>
+        <!-- </form> -->
+            <button type='button' class='btn_save sky_button'>Save</button>
+        <div style="text-align:right;">    You can see more suggestions. About how to enter words Including various examples
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id="modal-title">Please Enter Example Sentence</h4>
+          <input type="hidden" id='request_frm' value=""/>
+        </div>
+        <div class="modal-body">
+            Origin Sentence
+            <textarea id='first_exam'></textarea>
+            Translation Sentence
+            <textarea id='second_exam'></textarea>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-add">Add Example</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+{% endblock content %}
+<!-- =============================== -->

@@ -1,0 +1,18 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include "common/header.html" %}
+<link rel="stylesheet" type="text/css" href="{% static 'user_words/user_words.css' %}">
+<script src="{% static 'user_words/user_words.js' %}"></script>
+</head>
+<body>
+{% include "common/menu.html" %}
+<div class="container">
+{% block content %}
+<p>Placeholder text in base template. Replace with page content.</p>
+{% endblock content %}
+{% include "common/popup_template.html" %}
+</div>
+</body>
+</html>
