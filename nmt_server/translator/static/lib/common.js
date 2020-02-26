@@ -2,6 +2,7 @@ var sign_up = '../translator/sign_up/';
 var log_in = '../translator/log_in';
 var log_out = '../translator/log_out';
 var reset_password = '../translator/reset_password';
+var upload_file = 'upload_file';
 
 var source_language = "English";
 var target_language = "Thai";
@@ -250,7 +251,8 @@ $(function(){
             success: function (data, status) {
                 if (data.content == "ok") {
 					$(".PopupMenu").remove();
-					window.location.reload();
+                    //window.location.reload();
+                    window.location = window.location;
                 } else {
 					var err = data.content;
 					err = err.replace(/password1/g, "Password");
@@ -267,7 +269,6 @@ $(function(){
         });
     });
     $(document).on('click',"#menu_logout", function(){
-		var csrftoken = $("[name=csrfmiddlewaretoken]").val();
         $.ajax({
             url: log_out,
             success: function (data, status) {

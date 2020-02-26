@@ -252,6 +252,7 @@ $(function(){
         $(".close").click();
     });
     $(document).on('click', "#word_vocabulary .btn_Del", function(e) {
+        if( !confirm("Do you really delete this sentence?") ) return;
         _exam = e.target.parentElement.parentElement;
         _frm = e.target.parentElement.parentElement.parentElement;
         _frm.removeChild(_exam);

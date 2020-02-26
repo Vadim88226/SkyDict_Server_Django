@@ -149,15 +149,12 @@ $(function(){
     $('.docTrans_translator_upload_button__inner_button').on('click', function (e) {
         $('#docTrans').click();
     });
-    $('#docTrans').change(function(e) {
-        var _filename = this.files[0].name; 
-        var _filetype = _filename.substr(_filename.length - 5, 5).toLowerCase;
-        if(_filetype == ".docx") {
-            
-        } else if (_filetype == ".pptx") {
-            
-        }
-    })
+    $('#docTrans').on('change', function(e){
+        event.preventDefault();
+        e.target.form.action= upload_file;
+        e.target.form.submit();
+    });
+
     $("#source_menu li a").on("click", function(event){
         if (source_language != event.currentTarget.text) {
             target_language = source_language;
@@ -306,7 +303,6 @@ $(function(){
         });
     });
     $(document).on('click',"#menu_logout", function(){
-		var csrftoken = $("[name=csrfmiddlewaretoken]").val();
         $.ajax({
             url: log_out,
             success: function (data, status) {

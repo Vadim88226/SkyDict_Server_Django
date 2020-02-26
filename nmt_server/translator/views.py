@@ -22,6 +22,8 @@ from .forms import SignupForm, DictForm, AddWordsForm
 from .tokens import account_activation_token
 from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+
 
 
 
@@ -277,4 +279,11 @@ def detect_similar_words(request):
                 return JsonResponse({'content':responses})
     return JsonResponse({'content': responses})
 
+def upload_file(request):
+    if request.method == 'POST' and request.FILES['docTrans']:
+        source_file = request.FILES['docTrans']
+        fs = FileSystemStorage()
+        filename = fs.save(source_file.name, source_file)
+        uploaded_file_url = fs.url(filename)
 
+    return JsonResponse({'content': "no"})

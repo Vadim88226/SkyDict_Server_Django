@@ -22,7 +22,8 @@
                   <!-- <span class='visible_desktop_only'><span class='textarea_placeholder_text'>Type, paste text, <br>or drop document here.<span class="sky_addition"><br>(English, Thai)</span></span></span> -->
                           <!-- ==== docTrans: UploadButton === -->
                     <div class='docTrans_translator_upload_button'>
-                        <form class="source_textarea_bottom">
+                        <form class="source_textarea_bottom" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
                             <div class='docTrans_translator_upload_button__inner'>
                                 <button type='button' class="btn docTrans_translator_upload_button__inner_button">
                                     <span class="glyphicon glyphicon-book"></span>
@@ -39,7 +40,7 @@
                             <img src='../static/icons/icon_pptx_v2.svg' alt='Icon for pptx file format' />
                         </div>
                         <div class="docTrans__help_popup__desc">
-                            <p class='dl_visible_free_only'>Translate your Word (.docx) and PowerPoint (.pptx) files with SkyDict Translator.</p>
+                            <p class='dl_visible_free_only'>Translate your Text(.txt),  Word (.docx), PowerPoint (.pptx), (.xliff), (.sdlxliff) files with SkyDict Translator.</p>
                         </div>
                     </div>
                     <div id="wordDict_help_popup"></div>
