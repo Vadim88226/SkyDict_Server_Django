@@ -1,4 +1,4 @@
-import re
+import re, json
 import linecache
 from langdetect import detect
 from django.shortcuts import render, get_object_or_404, redirect
@@ -22,8 +22,7 @@ from .tokens import account_activation_token
 from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-from .utils import translate_sentences, translate_file
-
+from .models import DictWords, DictSentences
 
 
 
@@ -259,6 +258,22 @@ def upload_file(request):
         print(uploaded_file_url)
         trans_file_url = translate_file(uploaded_file_url, "en", "th")
 
-        return JsonResponse({'content': trans_file_url})
+    return JsonResponse({'content': "no"})
 
-    return JsonResponse({'content': ""})
+def add_words(request):
+    _s_lang = request.GET.get('sl')
+    _t_lang = request.GET.get('tl')
+    _vocabulary = request.GET.get('vocabulary', None)
+    _content = json.loads(request.GET.get('content', None))
+    
+    for _cont in _content:
+        _part = _cont[0]
+        _trans = _cont[1]
+        _e = DictWords(word=_vocabulary, part= _part, s_lang=_s_lang, t_lang=_t_lang, trans= _trans, user= 'user')
+        _e.save()
+        _w_id = _e.id
+        for _sentence in _cont[2:]:
+            _e = DictSentences(word_id=_w_id, part= _part, s_sentence= _sentence[0], t_sentence = _sentence[1])
+            _e.save()
+
+    return JsonResponse({'content': "Success"})

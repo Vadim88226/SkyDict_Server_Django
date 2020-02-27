@@ -282,47 +282,68 @@ $(function(){
         $(".btn_save").attr('disabled', $(this).is(":not(:checked)"));
     })
     $(".btn_save").on('click', function(){ 
+        if($("#id_s_lang").val() == $("#id_t_lang").val()) {
+            alert("Source Language equal target language. \n please change!");
+            $("#id_t_lang").focus(); return;
+        }
+        if($("#id_Vocabulary").val().trim() == "") {
+            obj_focus("#id_Vocabulary"); return;
+        }
+        var csrftoken = $("[name=csrfmiddlewaretoken]").val();
         var chk_boxes = $('#clear input[type=checkbox]');
         var _data = [];
-        var _sentetnces = [];
+        var data_len = 0;
         for (_chk of chk_boxes) {
             if( $(_chk).is(":not(:checked)")) continue; 
-            var name = $(_chk).val();//console.log($(_chk).parent().text().trim());
-            var _trans = $('#txt_' + name).val();
-            _data[_data.length][0] = name;
-            var _ex = $('#frm_' + name + ' ul');
-            for( i=0; i<_ex.length;i++ ){
-                console.log(_ex[i].children[0].textContent);
-                console.log(_ex[i].children[1].textContent);
+            var _name = $(_chk).val();//console.log($(_chk).parent().text().trim());
+            _data[data_len] = [];
+            _data[data_len][0] = _name;
+            if(_name == "other") {
+                _data[data_len][0] = $("#key_other").val().trim();
+                if(_data[data_len][0] == "") { obj_focus("#key_other"); return;}
             }
-            // console.log(_exam);
-        }   return;
+            var _trans = $('#txt_' + _name).val().trim();
+            if(_trans == "") {
+                obj_focus('#txt_' + _name); return;
+            }
+            _data[data_len][1] = _trans;
+            var _ex = $('#frm_' + _name + ' ul');
+            for( i=0; i<_ex.length;i++ ){
+                _data[data_len][i+2] = []
+                _data[data_len][i+2][0] = _ex[i].children[0].textContent;
+                _data[data_len][i+2][1] = _ex[i].children[1].textContent;
+            }
+            data_len++;
+        }   //console.log(_data); return;
+        if(data_len == 0) {
+            alert("Data is empty! please enter data."); return;
+        }
         $.ajax({
-            type: "POST",
+            // type: "POST",
             url: add_words_url,
+            headers:{
+                "X-CSRFToken": csrftoken
+            },
             data: {
-                // 'seltext': selectedText,
-                // 'sl' : source_language.toLowerCase().substr(0,2)
+                'sl' : $("#id_s_lang").val().toLowerCase().substr(0,2),
+                'tl' : $("#id_t_lang").val().toLowerCase().substr(0,2),
+                'vocabulary': $("#id_Vocabulary").val().trim(),
+                'content' : JSON.stringify(_data)
             },
             dataType: 'json',
-            success: function (data) {  //console.log(data);
-                // if(data.content) {
-                //     document.getElementById('wordDict_help_popup').innerHTML = data.content; 
-                //     document.getElementById('wordDict_help_popup').style.display = "block";
-                //     _ajax_communication = false;
-                // } else {
-                //     document.getElementById('wordDict_help_popup').style.display = "none"; //console.log("empty");
-                //     _ajax_communication = false;
-                // }
+            success: function (data) {  
+                alert(data.content);
             },
             error: function() {
-                // document.getElementById('wordDict_help_popup').style.display = "none"; //console.log("error");
-                // _ajax_communication = false;
+                alert("Server Error!");
             },
-            timeout: 1000,
         }).always(function(e){
-            // console.log(_ajax_communication);
-            // _ajax_communication = false;
+            
         });
-    })
+    });
+    function obj_focus( obj ){
+        $(obj).focus();
+        $(obj).css('border', '2px dotted red');
+        $(obj).attr('placeholder', 'Please Enter');
+    }
 })
