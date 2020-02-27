@@ -17,6 +17,9 @@
     {% else %}
     <a href="/user_words" id="view_add_word">Add Words</a>
     {% endif %}
+    {% if request.user.is_staff %}
+    <a href="#" id="view_user_dict">User Dictionary</a>
+    {% endif %}
 </div>
 <div class="dict_area">
     <dic class="dictionary_dict_area">

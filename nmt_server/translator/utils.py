@@ -17,9 +17,7 @@ def translate_text_file(s_url, t_url, s_lang, t_lang):
     with open(s_url, "r", encoding='utf-8') as file:
         lines = file.readlines()
         for line in lines:
-            print(line)
             translated_line = translate_sentences(line)
-            print(translated_line)
             t_file.write(translated_line)
     file.close()
 
