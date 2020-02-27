@@ -13,4 +13,5 @@ urlpatterns = [
     path('log_out/', views.log_out, name='index'),
     path('detect_similar_words/', views.detect_similar_words, name='index'),
     path('upload_file', views.upload_file, name='index'),
+    path('add_words', views.add_words, name='index'),
 ]

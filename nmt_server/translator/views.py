@@ -1,4 +1,4 @@
-import re
+import re, json
 import linecache
 from langdetect import detect
 from django.shortcuts import render, get_object_or_404, redirect
@@ -288,3 +288,22 @@ def upload_file(request):
         return JsonResponse({'content': uploaded_file_url})
 
     return JsonResponse({'content': "no"})
+
+def add_words(request):
+    _s_lang = request.GET.get('sl')
+    _t_lang = request.GET.get('tl')
+    _vocabulary = request.GET.get('vocabulary', None)
+    _content = json.loads(request.GET.get('content', None))
+    
+    for _cont in _content:
+        _part = _cont[0]
+        _trans = _cont[1]
+        _e = DictWords(word=_vocabulary, part= _part, s_lang=_s_lang, t_lang=_t_lang, trans= _trans, register= 'user')
+        _e.save()
+        print("wordpart - " + _e)
+        for _sentence in _cont[2:]:
+            _e = DictSentences(word=_vocabulary, part= _part, s_sentence= _sentence[0], t_sentence = _sentence[1], register= 'user')
+            _e.save()
+            print("sentences - " + _e)
+
+    return JsonResponse({'content': "Success"})
