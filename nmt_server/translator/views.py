@@ -12,7 +12,6 @@ from django.views import generic
 from django.utils import timezone
 from .apps import TranslatorConfig
 from translator.translation_model.processing import evaluate
-from translator.translation_model.processing import normalizeString, normalizeString_fix
 from django.contrib.auth import views as auth_views
 from django.views.decorators.csrf import requires_csrf_token
 from django.contrib.auth import authenticate, login, logout
@@ -24,6 +23,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from .models import DictWords, DictSentences
+from .utils import translate_sentences, translate_file
 
 
 
@@ -137,36 +137,7 @@ def trans_sentences(request):
         return JsonResponse(data)
 
     if s_lang=='en' and t_lang=='th':
-        output_sentences = sentences
-        nlp = TranslatorConfig.en_nlp
-        tokens = nlp(sentences.lower())
-        predicted_sentences = []
-        pre_sentences = []
-        encoder = TranslatorConfig.encoder
-        decoder = TranslatorConfig.decoder
-        input_lang = TranslatorConfig.input_lang
-        output_lang = TranslatorConfig.output_lang
-
-        for sent in tokens.sents:
-            pre_sentence = sent.string.strip()
-            for sent1 in pre_sentence.splitlines():
-                if sent1=='':
-                    continue
-                pre_sentences.append(sent1)
-                sentence = re.sub(' +', ' ', sent1)
-                # sentence = normalizeString_fix(sentence, True)
-                # print(sentence)
-                predicted = evaluate(input_lang, output_lang, encoder, decoder, sentence, False, cutoff_length=30)
-                predicted = predicted.replace(" ", "")
-                predicted = predicted.replace("<EOS>", "")
-
-                predicted_sentences.append(predicted)
-
-
-
-        # print(pre_sentences)
-        for i, sent in enumerate(pre_sentences):
-            output_sentences = output_sentences.replace(sent,predicted_sentences[i])
+        output_sentences = translate_sentences(sentences)
         data = {
             'content' : output_sentences
         }
@@ -284,10 +255,11 @@ def upload_file(request):
         source_file = request.FILES['docTrans']
         fs = FileSystemStorage()
         filename = fs.save(source_file.name, source_file)
-        uploaded_file_url = fs.url(filename)
-        return JsonResponse({'content': uploaded_file_url})
-
-    return JsonResponse({'content': "no"})
+        uploaded_file_url = fs.path(filename)
+        print(uploaded_file_url)
+        trans_file_url = translate_file(uploaded_file_url, "en", "th")
+        return JsonResponse({'content': trans_file_url})
+    return JsonResponse({'content': ""})
 
 def add_words(request):
     _user = request.GET.get('user')
