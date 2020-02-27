@@ -123,7 +123,7 @@ function suggest_navigation_keys_check(e) {
             if(_suggest_wordposition > -1) nodes.childNodes[_suggest_wordposition].style.background = "";
             _suggest_wordposition++;
             if(_suggest_wordposition == nodes.childElementCount) _suggest_wordposition = 0;
-            nodes.childNodes[_suggest_wordposition].style.background = "#eee";
+            nodes.childNodes[_suggest_wordposition].style.background = "#ddd";
             break;
         case 37: //left arrow
         break;
@@ -133,7 +133,7 @@ function suggest_navigation_keys_check(e) {
             if(_suggest_wordposition > -1) nodes.childNodes[_suggest_wordposition].style.background = "";
             _suggest_wordposition--;
             if(_suggest_wordposition < 0) _suggest_wordposition = nodes.childElementCount - 1;
-            nodes.childNodes[_suggest_wordposition].style.background = "#eee";
+            nodes.childNodes[_suggest_wordposition].style.background = "#ddd";
             break;
         case 13://enter
             if(_suggest_wordposition > -1 && _suggest_wordposition < nodes.childElementCount) {

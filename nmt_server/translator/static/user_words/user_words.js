@@ -208,10 +208,13 @@ $(function(){
     $(document).on('click', "#word_vocabulary .btn_add", function(e) {
         $("#request_frm").val(e.target.offsetParent.id);
         $("#modal-title").html("Please enter example sentence for " + e.target.offsetParent.children[0].textContent);
+        $('#first_exam').val("");
+        $('#second_exam').val("");
         setTimeout(function(){ document.getElementById("first_exam").focus();} , 500);
     });
-    $(document).on('click', "#word_vocabulary .btn_Edit", function(e) {
+    $(document).on('click', ".frame .btn_Edit", function(e) { 
         $("#request_frm").val(e.target.offsetParent.id);
+        e.target.parentElement.parentElement.classList.add("EditStatus");
         $("#modal-title").html("Please enter example sentence for " + e.target.offsetParent.children[0].textContent);
         _so = e.target.parentElement.parentElement;
         $('#first_exam').val(e.target.parentElement.parentElement.childNodes[0].children[0].textContent);
@@ -220,7 +223,7 @@ $(function(){
     });
     $('.btn-add').on('click', function(){
         // var target = $('#'+$('#request_frm').val()); 
-        var target = document.getElementById($('#request_frm').val()); 
+        var target = document.getElementById($('#request_frm').val());
         var f_text = $('#first_exam').val();
         var s_text = $('#second_exam').val();
         if(!f_text || !s_text) return;
@@ -242,13 +245,19 @@ $(function(){
         _btnDel.setAttribute('class', 'btn_Del glyphicon glyphicon-remove');
         _divtool.appendChild(_btnEdit);
         _divtool.appendChild(_btnDel);
-        _divtool.setAttribute('style', 'width:10%;');
-        _div.appendChild(_ul);
-        _div.appendChild(_divtool);
-        _div.setAttribute('style', 'display:flex;');
-        target.appendChild(_div);
-        $('#first_exam').val("");
-        $('#second_exam').val("");
+        _divtool.setAttribute('style', 'width:10%; padding:2px;');
+
+        if($(".EditStatus").length) {
+            target = document.getElementsByClassName("EditStatus")[0];
+            target.innerHTML = "";
+            target.appendChild(_ul);
+            target.appendChild(_divtool);
+        } else {
+            _div.appendChild(_ul);
+            _div.appendChild(_divtool);
+            _div.setAttribute('style', 'display:flex;padding: 0;margin-bottom:5px;background: aliceblue;');
+            target.appendChild(_div);
+        }
         $(".close").click();
     });
     $(document).on('click', "#word_vocabulary .btn_Del", function(e) {
@@ -269,7 +278,25 @@ $(function(){
             document.getElementById('btn_vtype').style.backgroundPosition = 'center top';
         }
     });
-    $(".btn_save").on('click', function(){ alert("yet not!"); return;
+    $("#id_chk_agree").on('change', function(e){
+        $(".btn_save").attr('disabled', $(this).is(":not(:checked)"));
+    })
+    $(".btn_save").on('click', function(){ 
+        var chk_boxes = $('#clear input[type=checkbox]');
+        var _data = [];
+        var _sentetnces = [];
+        for (_chk of chk_boxes) {
+            if( $(_chk).is(":not(:checked)")) continue; 
+            var name = $(_chk).val();//console.log($(_chk).parent().text().trim());
+            var _trans = $('#txt_' + name).val();
+            _data[_data.length][0] = name;
+            var _ex = $('#frm_' + name + ' ul');
+            for( i=0; i<_ex.length;i++ ){
+                console.log(_ex[i].children[0].textContent);
+                console.log(_ex[i].children[1].textContent);
+            }
+            // console.log(_exam);
+        }   return;
         $.ajax({
             type: "POST",
             url: add_words_url,

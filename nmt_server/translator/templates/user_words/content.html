@@ -4,7 +4,6 @@
 <div class='DictSearch'>
     <!-- <form action="" method="post"> -->
         {{ search_input_form }}
-        <button type='button' class='btn_sound'><span></span></button>
         <button type='button' class='btn_search'></button>
     <!-- </form> -->
     <div id="wordDict_help_popup"></div>
@@ -40,10 +39,11 @@
             <div id='word_vocabulary'></div>
             <div>
                 {{ add_words_form.chk_agree }}
-                <label>I have read the agreement and are happy to comply with conditions.</label>
+                <label style="font-weight: normal;">
+                    I have read the agreement and are happy to comply with conditions.</label>
             </div>
         <!-- </form> -->
-            <button type='button' class='btn_save sky_button'>Save</button>
+            <button type='button' class='btn_save sky_button' disabled='true'>Submit</button>
         <div style="text-align:right;">    You can see more suggestions. About how to enter words Including various examples
         </div>
     </div>
@@ -66,7 +66,7 @@
             <textarea id='second_exam'></textarea>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-default btn-add">Add Example</button>
+            <button type="button" class="btn btn-default btn-add">Save</button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
