@@ -23,7 +23,7 @@ from .tokens import account_activation_token
 from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-
+from .models import DictWords, DictSentences
 
 
 
@@ -298,12 +298,11 @@ def add_words(request):
     for _cont in _content:
         _part = _cont[0]
         _trans = _cont[1]
-        _e = DictWords(word=_vocabulary, part= _part, s_lang=_s_lang, t_lang=_t_lang, trans= _trans, register= 'user')
+        _e = DictWords(word=_vocabulary, part= _part, s_lang=_s_lang, t_lang=_t_lang, trans= _trans, user= 'user')
         _e.save()
-        print("wordpart - " + _e)
+        _w_id = _e.id
         for _sentence in _cont[2:]:
-            _e = DictSentences(word=_vocabulary, part= _part, s_sentence= _sentence[0], t_sentence = _sentence[1], register= 'user')
+            _e = DictSentences(word_id=_w_id, part= _part, s_sentence= _sentence[0], t_sentence = _sentence[1])
             _e.save()
-            print("sentences - " + _e)
 
     return JsonResponse({'content': "Success"})

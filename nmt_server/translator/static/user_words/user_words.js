@@ -282,6 +282,10 @@ $(function(){
         $(".btn_save").attr('disabled', $(this).is(":not(:checked)"));
     })
     $(".btn_save").on('click', function(){ 
+        if($("#id_s_lang").val() == $("#id_t_lang").val()) {
+            alert("Source Language equal target language. \n please change!");
+            return;
+        }
         var csrftoken = $("[name=csrfmiddlewaretoken]").val();
         var chk_boxes = $('#clear input[type=checkbox]');
         var _data = [];
@@ -289,9 +293,18 @@ $(function(){
         for (_chk of chk_boxes) {
             if( $(_chk).is(":not(:checked)")) continue; 
             var _name = $(_chk).val();//console.log($(_chk).parent().text().trim());
-            var _trans = $('#txt_' + _name).val();
+            var _trans = $('#txt_' + _name).val().trim();
+            if(_trans == "") {
+                $('#txt_' + _name).focus;
+                $('#txt_' + _name).attr('placeholder', "please enter"); return;
+            }
             _data[data_len] = [];
             _data[data_len][0] = _name;
+            if(_name == "other") {
+                _data[data_len][0] = $("#key_other").val().trim();
+                $("#key_other").focus;
+                $("#key_other").attr('placeholder', "please enter"); return;
+            }
             _data[data_len][1] = _trans;
             var _ex = $('#frm_' + _name + ' ul');
             for( i=0; i<_ex.length;i++ ){
@@ -301,6 +314,9 @@ $(function(){
             }
             data_len++;
         }   //console.log(_data); return;
+        if(data_len == 0) {
+            alert("Data is empty! please enter data."); return;
+        }
         $.ajax({
             // type: "POST",
             url: add_words_url,
@@ -315,7 +331,7 @@ $(function(){
             },
             dataType: 'json',
             success: function (data) {  
-                console.log(data);
+                alert(data.content);
             },
             error: function() {
                 alert("Server Error!");
