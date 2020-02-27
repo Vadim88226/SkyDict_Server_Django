@@ -290,6 +290,7 @@ def upload_file(request):
     return JsonResponse({'content': "no"})
 
 def add_words(request):
+    _user = request.GET.get('user')
     _s_lang = request.GET.get('sl')
     _t_lang = request.GET.get('tl')
     _vocabulary = request.GET.get('vocabulary', None)
@@ -298,11 +299,11 @@ def add_words(request):
     for _cont in _content:
         _part = _cont[0]
         _trans = _cont[1]
-        _e = DictWords(word=_vocabulary, part= _part, s_lang=_s_lang, t_lang=_t_lang, trans= _trans, user= 'user')
+        _e = DictWords(word=_vocabulary, part= _part, s_lang=_s_lang, t_lang=_t_lang, trans= _trans, user= _user)
         _e.save()
         _w_id = _e.id
         for _sentence in _cont[2:]:
             _e = DictSentences(word_id=_w_id, part= _part, s_sentence= _sentence[0], t_sentence = _sentence[1])
             _e.save()
 
-    return JsonResponse({'content': "Success"})
+    return JsonResponse({'content': "Successfuly Registry!"})

@@ -272,7 +272,7 @@ $(function(){
         $.ajax({
             url: log_out,
             success: function (data, status) {
-				window.location.reload();
+				window.location.href ='/translator';
 			}
 		});
 	});

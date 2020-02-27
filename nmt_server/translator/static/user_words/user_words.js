@@ -282,6 +282,7 @@ $(function(){
         $(".btn_save").attr('disabled', $(this).is(":not(:checked)"));
     })
     $(".btn_save").on('click', function(){ 
+        if(!$("#U_name").val()) {window.location.href = "/translator"; return;}
         if($("#id_s_lang").val() == $("#id_t_lang").val()) {
             alert("Source Language equal target language. \n please change!");
             $("#id_t_lang").focus(); return;
@@ -325,6 +326,7 @@ $(function(){
                 "X-CSRFToken": csrftoken
             },
             data: {
+                'user' : $("#U_name").val(),
                 'sl' : $("#id_s_lang").val().toLowerCase().substr(0,2),
                 'tl' : $("#id_t_lang").val().toLowerCase().substr(0,2),
                 'vocabulary': $("#id_Vocabulary").val().trim(),
@@ -332,7 +334,7 @@ $(function(){
             },
             dataType: 'json',
             success: function (data) {  
-                alert(data.content);
+                alert(data.content); window.location = window.location;
             },
             error: function() {
                 alert("Server Error!");
