@@ -284,7 +284,10 @@ $(function(){
     $(".btn_save").on('click', function(){ 
         if($("#id_s_lang").val() == $("#id_t_lang").val()) {
             alert("Source Language equal target language. \n please change!");
-            return;
+            $("#id_t_lang").focus(); return;
+        }
+        if($("#id_Vocabulary").val().trim() == "") {
+            obj_focus("#id_Vocabulary"); return;
         }
         var csrftoken = $("[name=csrfmiddlewaretoken]").val();
         var chk_boxes = $('#clear input[type=checkbox]');
@@ -293,17 +296,15 @@ $(function(){
         for (_chk of chk_boxes) {
             if( $(_chk).is(":not(:checked)")) continue; 
             var _name = $(_chk).val();//console.log($(_chk).parent().text().trim());
-            var _trans = $('#txt_' + _name).val().trim();
-            if(_trans == "") {
-                $('#txt_' + _name).focus;
-                $('#txt_' + _name).attr('placeholder', "please enter"); return;
-            }
             _data[data_len] = [];
             _data[data_len][0] = _name;
             if(_name == "other") {
                 _data[data_len][0] = $("#key_other").val().trim();
-                $("#key_other").focus;
-                $("#key_other").attr('placeholder', "please enter"); return;
+                if(_data[data_len][0] == "") { obj_focus("#key_other"); return;}
+            }
+            var _trans = $('#txt_' + _name).val().trim();
+            if(_trans == "") {
+                obj_focus('#txt_' + _name); return;
             }
             _data[data_len][1] = _trans;
             var _ex = $('#frm_' + _name + ' ul');
@@ -326,7 +327,7 @@ $(function(){
             data: {
                 'sl' : $("#id_s_lang").val().toLowerCase().substr(0,2),
                 'tl' : $("#id_t_lang").val().toLowerCase().substr(0,2),
-                'vocabulary': $("#id_Vocabulary").val(),
+                'vocabulary': $("#id_Vocabulary").val().trim(),
                 'content' : JSON.stringify(_data)
             },
             dataType: 'json',
@@ -339,5 +340,10 @@ $(function(){
         }).always(function(e){
             
         });
-    })
+    });
+    function obj_focus( obj ){
+        $(obj).focus();
+        $(obj).css('border', '2px dotted red');
+        $(obj).attr('placeholder', 'Please Enter');
+    }
 })
