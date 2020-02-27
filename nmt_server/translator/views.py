@@ -23,6 +23,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from .models import DictWords, DictSentences
+from .utils import translate_sentences, translate_file
 
 
 
@@ -257,8 +258,8 @@ def upload_file(request):
         uploaded_file_url = fs.path(filename)
         print(uploaded_file_url)
         trans_file_url = translate_file(uploaded_file_url, "en", "th")
-
-    return JsonResponse({'content': "no"})
+        return JsonResponse({'content': trans_file_url})
+    return JsonResponse({'content': ""})
 
 def add_words(request):
     _s_lang = request.GET.get('sl')
