@@ -163,7 +163,6 @@ class Lang:
 '''prepares both the input and output Lang classes from the passed dataset'''
 
 def prepareLangs(lang1, lang2, file_path, reverse=False, tagging = False):
-    print("Reading lines...")
 
     if len(file_path) == 2:
         lang1_lines = open(file_path[0], encoding='utf-8').\
@@ -220,7 +219,7 @@ def prepareData(lang1, lang2, file_path, max_vocab_size=50000,
     
     if trim != 0:
         pairs = filterPairs(pairs, trim, start_filter)
-        print("Trimmed to %s sentence pairs" % len(pairs))
+        # print("Trimmed to %s sentence pairs" % len(pairs))
         if print_to:
             with open(print_to,'a') as f:
                 f.write("Read %s sentence pairs \n" % len(pairs))
