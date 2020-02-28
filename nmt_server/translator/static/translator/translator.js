@@ -151,10 +151,20 @@ $(function(){
     });
     $('#docTrans').on('change', function(e){
         e.preventDefault();
+        $('.docTrans__help_popup').css('opacity', 1);
+        $('.docTrans__help_popup').css('z-index', 1);
+        $('#docTrans_loading').css('display', 'block');
+        // $('#docTrans_source').css('display', 'none');
+        // $('#docTrans_target').css('display', 'none');
+        // $('#docTrans_cancel').css('display', 'none');
+        $('#docTrans_source').html(this.files[0].name);
         var csrftoken = $("[name=csrfmiddlewaretoken]").val();
         var form_data = new FormData();
         form_data.append('csrfmiddlewaretoken', csrftoken);
         form_data.append('docTrans', this.files[0]);
+        form_data.append('sl', source_language.toLowerCase().substr(0,2)),
+        form_data.append('tl', target_language.toLowerCase().substr(0,2)),
+
         $.ajax({
             type: "POST",
             url: upload_file,
@@ -164,14 +174,27 @@ $(function(){
             enctype: "multipart/form-data",
             success: function (data) {
                 if(data.content) {
-                    console.log(data.content);
-                } else {
-
+                    // console.log(data.content);
+                    fileUrl = "../static/media/" + data.content;
+                    var file = new File(["aa"], fileUrl);
+                    var link = document.createElement("a");
+                    link.download =file.name;
+                    link.href = fileUrl;
+                    link.textContent = data.content;
+                    link.click();
+                    $('#docTrans_target').html(link);
+                    $('#docTrans_loading').css('display', 'none');
                 }
+            },
+            error: function() {
+                $("#btn_trans_cancel").click();
             }
         })
     });
-
+    $("#btn_trans_cancel").on('click', function(){
+        $('.docTrans__help_popup').css('opacity', 0);
+        $('.docTrans__help_popup').css('z-index', -1);
+    })
     $("#source_menu li a").on("click", function(event){
         if (source_language != event.currentTarget.text) {
             target_language = source_language;

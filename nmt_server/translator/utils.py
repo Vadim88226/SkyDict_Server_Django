@@ -53,8 +53,7 @@ def translate_sentences(sentences):
 # translate file and return traslated file url
 def translate_file(uploaded_file_url, s_lang, t_lang):
     filename, extention = get_nameNextention(uploaded_file_url)
-    print(filename)
-    print(extention)
+
     trans_file_url = filename + "_" + t_lang + extention
     if extention == '.txt':
         translate_text_file(uploaded_file_url, trans_file_url, s_lang, t_lang)
@@ -68,7 +67,7 @@ def translate_file(uploaded_file_url, s_lang, t_lang):
         translate_sdlxliff_file(uploaded_file_url, trans_file_url, s_lang, t_lang)
     else:
         pass
-    return trans_file_url
+    return trans_file_url, os.path.basename(trans_file_url)
 
 # translate docx file
 def translate_docx_file(s_url, t_url, s_lang, t_lang):

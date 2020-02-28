@@ -146,6 +146,10 @@ $(function(){
         $(".dict_area").css('display', 'none');
         $(".add_words").css('display', 'block');
     })
+    $("#view_user_dict").on('click', function(){
+        $(".add_words").css('display', 'none');
+        $(".user_vocabulary").css('display', 'block');
+    })
     $(".add_words li").on('click', function(e){
         if(e.target.type != 'checkbox') return;
         _parent = document.getElementById('word_vocabulary');

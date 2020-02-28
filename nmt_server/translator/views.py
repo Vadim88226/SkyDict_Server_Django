@@ -26,7 +26,6 @@ from .models import DictWords, DictSentences
 from .utils import translate_sentences, translate_file
 
 
-
 class IndexView(generic.TemplateView):
     template_name = 'translator/content.html'
 
@@ -252,13 +251,15 @@ def detect_similar_words(request):
 
 def upload_file(request):
     if request.method == 'POST' and request.FILES['docTrans']:
+        s_lang = request.POST.get('sl', None)
+        t_lang = request.POST.get('tl', None)
         source_file = request.FILES['docTrans']
         fs = FileSystemStorage()
         filename = fs.save(source_file.name, source_file)
         uploaded_file_url = fs.path(filename)
-        print(uploaded_file_url)
-        trans_file_url = translate_file(uploaded_file_url, "en", "th")
-        return JsonResponse({'content': trans_file_url})
+        trans_file_url, tfilename = translate_file(uploaded_file_url, s_lang, t_lang)
+        return JsonResponse({'content': tfilename})
+
     return JsonResponse({'content': ""})
 
 def add_words(request):
