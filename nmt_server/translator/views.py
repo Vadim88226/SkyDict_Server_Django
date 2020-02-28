@@ -154,7 +154,6 @@ def log_in(request):
     _email = request.GET.get('_email', '')
     _pwd = request.GET.get('_pwd')
     user = authenticate(username=_email, password = _pwd)
-    print(user)
     if user is not None: 
         login(request, user) 
         data = {
@@ -174,7 +173,6 @@ def log_out(request):
 
 # sign up function
 def register(request):
-    print(request.method)
     if request.method == "POST":
         form = SignupForm(data=request.POST)
         if form.is_valid():
@@ -182,8 +180,6 @@ def register(request):
             user.is_active = False
             user.save()
             current_site = get_current_site(request)
-            # mail_subject = 'Activate your SkyDict account.'
-            # print(mail_subject)
             message = loader.render_to_string('account_activation_email.html', {
                 'user': user,
                 'domain': current_site.domain,
@@ -228,7 +224,6 @@ def activate(request, uidb64, token):
 # query matched words list
 def detect_similar_words(request):
     query = request.GET.get('seltext', None)
-    # print(query)
     s_lang = request.GET.get('sl', None)
     s_lang = detect_source_language(query)
     dict = TranslatorConfig.en_th_dict

@@ -133,7 +133,6 @@ def translate_xliff_file(s_url, t_url, s_lang, t_lang):
 
     source_lines = []
     for all_tags in root.findall('.//{urn:oasis:names:tc:xliff:document:1.2}source'):
-        # print(all_tags)
         source_lines.append(all_tags.text)
 
 
@@ -161,7 +160,6 @@ def translate_sdlxliff_file(s_url, t_url, s_lang, t_lang):
     for target in root.findall('.//{urn:oasis:names:tc:xliff:document:1.2}target'):
         for e in target:
             if "g" in e.tag:
-                print(e.tag)
                 e.text = translate_sentences(source_lines[cnt])
                 cnt += 1
 
