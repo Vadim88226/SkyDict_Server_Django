@@ -24,6 +24,7 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from .models import DictWords, DictSentences
 from .utils import translate_sentences, translate_file
+from django.db.models import Count
 
 
 class IndexView(generic.TemplateView):
@@ -280,18 +281,18 @@ def vocabulary_list(request):
     _t_lang = request.GET.get('tl')
     _word = request.GET.get('seltext', None)
     _is_allowed = request.GET.get('is_allowed', None)
-    print(_word)
-    print(_is_allowed)
     if len(_word) and _is_allowed is not None:
-        _filter = DictWords.objects.all().filter(word=_word, is_allowed=_is_allowed, s_lang=_s_lang, t_lang=_t_lang)
+        _filter = DictWords.objects.filter(word=_word, is_allowed=_is_allowed, s_lang=_s_lang, t_lang=_t_lang)
     elif len(_word):
-        _filter = DictWords.objects.all().filter(word=_word, s_lang=_s_lang, t_lang=_t_lang)
+        _filter = DictWords.objects.filter(word=_word, s_lang=_s_lang, t_lang=_t_lang)
     elif _is_allowed is not None:
-        _filter = DictWords.objects.all().filter(is_allowed=_is_allowed, s_lang=_s_lang, t_lang=_t_lang)
+        _filter = DictWords.objects.filter(is_allowed=_is_allowed, s_lang=_s_lang, t_lang=_t_lang)
     else:
-        _filter = DictWords.objects.all().filter(is_allowed=0, s_lang=_s_lang, t_lang=_t_lang)
-    data = list(_filter.values())
-    print( data )
+        _filter = DictWords.objects.filter(is_allowed=0, s_lang=_s_lang, t_lang=_t_lang)
+    datas = list(_filter.values("word", "user").annotate(Count('word'), Count('user')))
+    response = {}
+    for i, data in enumerate(datas):
+        response[i] = data
+    print( response )
     
-    return JsonResponse(data)
-    # return JsonResponse({'content': _filter.values()},{'content': _filter.values()})
+    return JsonResponse(response)
