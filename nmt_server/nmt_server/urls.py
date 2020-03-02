@@ -24,6 +24,7 @@ admin.site.index_title = "Welcome to SkyDict Admin Page"
 admin.autodiscover()
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('translator.urls'), name = 'translator'),
     path('translator/', include('translator.urls')),
     path('dictionary/', views.DictionaryView, name="dictionary_view"),
     path('user_words/', views.User_WordsView, name="user_words_view"),

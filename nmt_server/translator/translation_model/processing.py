@@ -163,7 +163,6 @@ class Lang:
 '''prepares both the input and output Lang classes from the passed dataset'''
 
 def prepareLangs(lang1, lang2, file_path, reverse=False, tagging = False):
-    print("Reading lines...")
 
     if len(file_path) == 2:
         lang1_lines = open(file_path[0], encoding='utf-8').\
@@ -213,7 +212,6 @@ def prepareData(lang1, lang2, file_path, max_vocab_size=50000,
     input_lang, output_lang, pairs = prepareLangs(lang1, lang2, 
                                                   file_path, reverse, tagging=tagging)
     
-    print("Read %s sentence pairs" % len(pairs))
     
     if print_to:
         with open(print_to,'a') as f:
@@ -221,14 +219,12 @@ def prepareData(lang1, lang2, file_path, max_vocab_size=50000,
     
     if trim != 0:
         pairs = filterPairs(pairs, trim, start_filter)
-        print("Trimmed to %s sentence pairs" % len(pairs))
+        # print("Trimmed to %s sentence pairs" % len(pairs))
         if print_to:
             with open(print_to,'a') as f:
                 f.write("Read %s sentence pairs \n" % len(pairs))
 
-    print("Read filtered %s sentence pairs" % len(pairs))
 
-    print("Counting words...")
     for pair in pairs:
         input_lang.countSentence(pair[0], tagging)
         output_lang.countSentence(pair[1], tagging)
@@ -245,14 +241,6 @@ def prepareData(lang1, lang2, file_path, max_vocab_size=50000,
     train_pairs = pairs[:math.ceil(perc_train_set*len(pairs))]
     test_pairs = pairs[math.ceil(perc_train_set*len(pairs)):]
 
-    print("Train pairs: %s" % (len(train_pairs)))
-    print("Test pairs: %s" % (len(test_pairs)))
-    print("Counted Words -> Trimmed Vocabulary Sizes (w/ EOS and SOS tags):")
-    print("%s, %s -> %s" % (input_lang.language_name, len(input_lang.word_to_count),
-                            input_lang.vocab_size,))
-    print("%s, %s -> %s" % (output_lang.language_name, len(output_lang.word_to_count), 
-                            output_lang.vocab_size))
-    print()
 
     if print_to:
         with open(print_to,'a') as f:
