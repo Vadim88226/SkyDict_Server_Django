@@ -19,14 +19,10 @@
     {% endif %}
 </div>
 {% csrf_token %}
-<div style="text-align: -webkit-center;"> 
-    <div class="add_words" style="text-align:center;">
-        Translate from {{ add_words_form.s_lang}} to {{ add_words_form.t_lang}}
-    </div>
-</div>
 <div id="content_add_words" style="text-align: -webkit-center;">
     <div class="add_words">
         <!-- <form action="" method="post"> -->
+            Translate from {{ add_words_form.s_lang}} to {{ add_words_form.t_lang}}
             <div> Vocabulary: {{ add_words_form.Vocabulary}} type <button id="btn_vtype" class=''>please select</button>(can select more than 1 item)</div>
             <div id='clear'>
                 <div class='word_type'>{{ add_words_form.chk_box1 }}</div>

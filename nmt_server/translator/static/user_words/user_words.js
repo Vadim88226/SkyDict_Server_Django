@@ -7,8 +7,6 @@ function ShowVocabulary()
     $.ajax({
         url: vocabulary_list,
         data: {
-            'sl' : $("#id_s_lang").val().toLowerCase().substr(0,2),
-            'tl' : $("#id_t_lang").val().toLowerCase().substr(0,2),
             'seltext': selectedText,
             'is_allowed': document.querySelector('input[name="allowed"]:checked').value
         },
