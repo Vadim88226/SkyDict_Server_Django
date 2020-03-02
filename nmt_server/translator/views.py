@@ -289,14 +289,15 @@ def vocabulary_list(request):
     _t_lang = request.GET.get('tl')
     _word = request.GET.get('seltext', None)
     _is_allowed = request.GET.get('is_allowed', None)
-    if len(_word) and _is_allowed is not None:
+    if len(_word) and _is_allowed:
         _filter = DictWords.objects.filter(word=_word, is_allowed=_is_allowed, s_lang=_s_lang, t_lang=_t_lang)
     elif len(_word):
         _filter = DictWords.objects.filter(word=_word, s_lang=_s_lang, t_lang=_t_lang)
-    elif _is_allowed is not None:
+    elif _is_allowed:
         _filter = DictWords.objects.filter(is_allowed=_is_allowed, s_lang=_s_lang, t_lang=_t_lang)
     else:
         _filter = DictWords.objects.filter(is_allowed=0, s_lang=_s_lang, t_lang=_t_lang)
+    print(_filter)
     datas = list(_filter.values("word", "user").annotate(Count('word'), Count('user')))
     response = {}
     for i, data in enumerate(datas):

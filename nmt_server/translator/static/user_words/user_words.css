@@ -136,7 +136,7 @@ kref {
     background-color: transparent;
     color: grey;
 }
-.add_words, .language_bar, #list_vocabulary{
+.add_words, .language_bar, .list_side{
     width:100%;
     background-color: white;
     text-align:left;
@@ -203,8 +203,14 @@ textarea{
     font-size: smaller;
     font-style: italic;
 }
-#list_vocabulary{
+.list_side{
     max-width: 300px;
+    padding: 1%;
+}
+#list_vocabulary{
+    padding-top: 15px;
+    max-height: 100%;
+    overflow: auto;
 }
 #content_user_vocabulary{ 
     display: none;

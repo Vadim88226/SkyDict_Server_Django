@@ -1,25 +1,25 @@
 var wait, wait1;
 var _ajax_communication;
 
-function ShowVocabulary(selectedText)
+function ShowVocabulary()
 {
     var selectedText = $('#id_find_word').val().trim();
     $.ajax({
         url: vocabulary_list,
         data: {
+            'sl' : $("#id_s_lang").val().toLowerCase().substr(0,2),
+            'tl' : $("#id_t_lang").val().toLowerCase().substr(0,2),
             'seltext': selectedText,
-            'sl' : source_language.toLowerCase().substr(0,2),
-            'tl' : target_language.toLowerCase().substr(0,2)
+            'is_allowed': document.querySelector('input[name="allowed"]:checked').value
         },
         dataType: 'json',
         success: function (data) {
             if (data != "") {
-                console.log(data);
                 if(data.length == 0) {
                     return;
                 } else {
+                    document.getElementById("list_vocabulary").innerHTML="";
                     for( _d in data ) {
-                        console.log(_d);
                         _ul = document.createElement("ul");
                         _ul.textContent = data[_d]["word"];
                         _ul.setAttribute('user', data[_d]['user']);
@@ -46,7 +46,10 @@ $(function(){
         }
     });
     $('#id_find_word').on('change', function(e) {
-        ShowVocabulary($('#id_find_word').val());
+        ShowVocabulary();
+    });
+    $('input[type=radio][name=allowed]').change(function() {
+        ShowVocabulary();
     });
     $(document).on('click',"#wordDict_help_popup ul", function(e){
         var _content = e.currentTarget.children[0];
@@ -57,8 +60,7 @@ $(function(){
         document.getElementById('wordDict_help_popup').style.display = "none";
     });
     $(".btn_search").on('click', function(){
-        s_text = $('#id_find_word').val()
-        ShowVocabulary(s_text);
+        ShowVocabulary();
     })
     $(document).on('dblclick', "kref", function(e){
         var _content = e.currentTarget;
@@ -290,7 +292,7 @@ $(function(){
         var csrftoken = $("[name=csrfmiddlewaretoken]").val();
         $.ajax({
             // type: "POST",
-            url: query_vocabulary,
+            url: query_user_dictionary,
             headers:{
                 "X-CSRFToken": csrftoken
             },
