@@ -15,4 +15,5 @@ urlpatterns = [
     path('upload_file', views.upload_file, name='index'),
     path('add_words', views.add_words, name='index'),
     path('vocabulary_list', views.vocabulary_list, name='index'),
+    path('query_vocabulary', views.query_vocabulary, name='index'),
 ]

@@ -293,6 +293,15 @@ def vocabulary_list(request):
     response = {}
     for i, data in enumerate(datas):
         response[i] = data
-    print( response )
+    # print( response )
     
     return JsonResponse(response)
+
+def query_vocabulary(request):
+    _word = request.GET.get('seltext')
+    _user = request.GET.get('user')
+
+    # please add query code in here
+
+    return JsonResponse({'content': "Successfully Query!"})
+

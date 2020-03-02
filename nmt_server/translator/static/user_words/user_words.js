@@ -15,10 +15,16 @@ function ShowVocabulary(selectedText)
         success: function (data) {
             if (data != "") {
                 console.log(data);
-                if(data.length() == 0) {
+                if(data.length == 0) {
                     return;
                 } else {
-                    // for()
+                    for( _d in data ) {
+                        console.log(_d);
+                        _ul = document.createElement("ul");
+                        _ul.textContent = data[_d]["word"];
+                        _ul.setAttribute('user', data[_d]['user']);
+                        document.getElementById("list_vocabulary").appendChild(_ul);
+                    }
                 }
                 $("#content_add_words").css('display', 'none');
                 $("#content_user_vocabulary").css('display', 'flex');
@@ -280,4 +286,29 @@ $(function(){
         $(obj).css('border', '2px dotted red');
         $(obj).attr('placeholder', 'Please Enter');
     }
+    $(document).on('click', "#list_vocabulary ul", function(e) {
+        var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            // type: "POST",
+            url: query_vocabulary,
+            headers:{
+                "X-CSRFToken": csrftoken
+            },
+            data: {
+                'user' : e.target.attributes["user"].value,
+                'seltext': e.target.textContent,
+                'sl' : $("#id_s_lang").val().toLowerCase().substr(0,2),
+                'tl' : $("#id_t_lang").val().toLowerCase().substr(0,2)
+            },
+            dataType: 'json',
+            success: function (data) {  
+                console.log(data)
+            },
+            error: function() {
+                alert("Server Error!");
+            },
+        }).always(function(e){
+            
+        });
+    });
 })
