@@ -64,24 +64,19 @@ def query_example_sentences(word, s_lang):
         ref_file = TranslatorConfig.raw_data_file_path[0]
 
     example_sentences = ""
-    example_sentences_more = ""
     with open(dataset_file, encoding="utf8") as fp:
         cnt = 0
         index = 1
         for line in fp:
             if match.search(line):
                 line = re.sub(r'\b({0})\b'.format(word), "<b>" + word + "</b>", line)
-                if cnt < 5:
-                    ref_sentences = linecache.getline(ref_file, index)
-                    example_sentences += "<ul><li>" + line +  "</li><li>" + ref_sentences + "</li></ul>"
-                elif cnt < 30:
-                    ref_sentences = linecache.getline(ref_file, index)
-                    example_sentences_more += "<ul><li>" + line +  "</li><li>" + ref_sentences + "</li></ul>"
-                else:
+                ref_sentences = linecache.getline(ref_file, index)
+                example_sentences += "<ul><li>" + line +  "</li><li>" + ref_sentences + "</li></ul>"
+                if cnt >= 30:
                     break
                 cnt += 1
             index += 1
-    return example_sentences, example_sentences_more
+    return example_sentences
 
 # detect language of query sentence
 def detect_source_language(sentence):
@@ -96,15 +91,28 @@ def query_dict(request):
     t_lang = request.GET.get('tl', '')
 
     s_lang = detect_source_language(selectedText)
-    response = search_dict(selectedText, s_lang)
-
-    sentences, sentences_more = query_example_sentences(selectedText, s_lang)
-    data = {
-        'content' : response,
-        'sentences' : sentences,
-        'sentences_more' : sentences_more
-    }
-    return JsonResponse(data)
+    lexi_dict_data = search_dict(selectedText, s_lang)
+    user_dict_records = DictWords.objects.filter(word=selectedText, s_lang=s_lang, is_allowed = 1)
+    user_dict_data = ""
+    user_sentences_data = ""
+    for i, data in enumerate(user_dict_records):
+        if i == 0:
+            user_dict_data += "<k>" + getattr(data, 'word') + "</k>\n"
+        user_dict_data += "<i><co><abr>" + getattr(data, 'part') + "</abr></co></i>\n"
+        user_dict_data += "<dtrn>" + getattr(data, 'trans') + "</dtrn>"
+        user_sentences_records = DictSentences.objects.filter(dictwords = data)
+        for j, sentence in enumerate(user_sentences_records):
+            user_sentences_data += "<ul><li>" + getattr(sentence, 's_sentence') + "</li>"
+            user_sentences_data += "<li>" + getattr(sentence, 't_sentence') + "</li><ul>"
+    response = {}
+    response["dictionary"] = {}
+    response["dictionary"]["Lexitron Dictionary"] = lexi_dict_data
+    response["dictionary"]["User Dictionary"] = user_dict_data
+    sentences = query_example_sentences(selectedText, s_lang)
+    response["sentences"] = {}
+    response["sentences"]["WIT Copus"] = sentences
+    response["sentences"]["User Dictionary"] = user_sentences_data
+    return JsonResponse(response)
 
 # translate the senteces
 def trans_sentences(request):
@@ -297,11 +305,26 @@ def vocabulary_list(request):
     
     return JsonResponse(response)
 
-def query_vocabulary(request):
+def query_user_dictionary(request):
     _word = request.GET.get('seltext')
     _user = request.GET.get('user')
+    _is_allowed = request.GET.get('is_allowed', 0)
 
-    # please add query code in here
+    user_dict_records = DictWords.objects.filter(word=_word, user=_user, is_allowed = _is_allowed)
+    print(user_dict_records)
+    user_dict_data = {}
+    for i, data in enumerate(user_dict_records):
+        user_dict_data[i] = {}
+        if i == 0:
+            user_dict_data[i]['word'] = getattr(data, 'word')
+        user_dict_data[i]['part'] = getattr(data, 'part')
+        user_dict_data[i]['trans']= getattr(data, 'trans')
+        user_sentences_records = DictSentences.objects.filter(dictwords = data)
+        user_dict_data[i]['sentences'] = {}
+        for j, sentence in enumerate(user_sentences_records):
+            user_dict_data[i]['sentences'][j] = {}
+            user_dict_data[i]['sentences'][j]['s_sentence'] = getattr(sentence, 's_sentence')
+            user_dict_data[i]['sentences'][j]['t_sentence'] = getattr(sentence, 't_sentence')
 
     return JsonResponse({'content': "Successfully Query!"})
 

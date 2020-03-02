@@ -11,7 +11,7 @@ var query_dict = '../translator/query_dict';
 var detect_similar_words = "../translator/detect_similar_words";
 var add_words_url = "../translator/add_words"
 var vocabulary_list = "../translator/vocabulary_list";
-var query_vocabulary = "../translator/query_vocabulary";
+var query_vocabulary = "../translator/query_user_dictionary";
 
 var s_text = "";
 var wait, wait1;
