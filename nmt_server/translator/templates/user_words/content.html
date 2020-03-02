@@ -18,24 +18,15 @@
     <a href="#" id="view_user_dict">User Dictionary</a>
     {% endif %}
 </div>
-<div class="dict_area">
-    <dic class="dictionary_dict_area">
-        <div id="translator_dict"></div>
-        <div class="sentence_area">
-            <div id="translator_sentences"></div>
-            <div id="more_sentences">More sentences</div>
-        </div>
-        <div class="sentence_more">
-            <div id="translator_sentences1"></div>
-            <div id="few_sentences">Few sentences</div>
-        </div>
-    </dic>
+{% csrf_token %}
+<div style="text-align: -webkit-center;"> 
+    <div class="add_words" style="text-align:center;">
+        Translate from {{ add_words_form.s_lang}} to {{ add_words_form.t_lang}}
+    </div>
 </div>
-<div id="content_container" style="text-align: -webkit-center;">
-    <div class="add_words" style="text-align:left;">
+<div id="content_add_words" style="text-align: -webkit-center;">
+    <div class="add_words">
         <!-- <form action="" method="post"> -->
-            {% csrf_token %}
-            <div> Translate from {{ add_words_form.s_lang}} to {{ add_words_form.t_lang}}</div>
             <div> Vocabulary: {{ add_words_form.Vocabulary}} type <button id="btn_vtype" class=''>please select</button>(can select more than 1 item)</div>
             <div id='clear'>
                 <div class='word_type'>{{ add_words_form.chk_box1 }}</div>
@@ -50,12 +41,21 @@
             </div>
         <!-- </form> -->
             <button type='button' class='btn_save sky_button' disabled='true'>Submit</button>
-        <div style="text-align:right;">    You can see more suggestions. About how to enter words Including various examples
+            <div style="text-align:right;">    You can see more suggestions. About how to enter words Including various examples
         </div>
     </div>
-    <div class="user_vocabulary" style="text-align:left;"></div>
 </div>
-
+<div id="content_user_vocabulary" style="text-align: -webkit-center;">
+    <div class="list_vocabulary"></div>
+    <div class="add_words">
+        <!-- <form action="" method="post"> -->
+            <div> Vocabulary: <span id="view_word"></span></div>
+            <div id='db_vocabulary'></div>
+        <!-- </form> -->
+            <button type='button' class='btn_approve sky_button'>Approve</button>
+            <div style="text-align:right;">    You can see more suggestions. About how to enter words Including various examples
+    </div>
+</div>
 <!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog">

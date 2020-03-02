@@ -136,10 +136,14 @@ kref {
     background-color: transparent;
     color: grey;
 }
-.add_words{
-    max-width: 800px;
+.add_words, .language_bar, .list_vocabulary{
     width:100%;
     background-color: white;
+    text-align:left;
+}
+.add_words {
+    max-width: 800px;
+    padding-top:1%;
 }
 .add_words div{
     padding: 2% 2% 0 2%;
@@ -199,12 +203,18 @@ textarea{
     font-size: smaller;
     font-style: italic;
 }
+.list_vocabulary{
+    max-width: 300px;
+}
+#content_user_vocabulary{ 
+    display: none;
+}
 .glyphicon{
     margin-left: 10px;
     border-radius: 24px;
     background: none;
 }
-.btn_save {
+.btn_save, .btn_approve {
     margin: 0;
     margin-left: 3em;
     padding: 0.25em 0.75em;

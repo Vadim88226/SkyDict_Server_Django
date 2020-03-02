@@ -1,94 +1,33 @@
 var wait, wait1;
 var _ajax_communication;
 
-function similar_words() {
-	var selectedText = $('#id_find_word').val().trim();
-    if (s_text == selectedText) return; 
-    s_text = selectedText;
-    if(selectedText == "" || selectedText.split(" ").length > 1 || selectedText.split(",").length > 1) {
-        document.getElementById('wordDict_help_popup').style.display = "none";
-        return;
-    }
-    if (_ajax_communication) return; 
-    _ajax_communication = true;
-    $.ajax({
-        // type: "POST",
-        url: detect_similar_words,
-        data: {
-        'seltext': selectedText,
-        'sl' : source_language.toLowerCase().substr(0,2)
-        },
-        dataType: 'json',
-        success: function (data) {  //console.log(data);
-            if(data.content) {
-                document.getElementById('wordDict_help_popup').innerHTML = data.content; 
-                document.getElementById('wordDict_help_popup').style.display = "block";
-                _ajax_communication = false;
-            } else {
-                document.getElementById('wordDict_help_popup').style.display = "none"; //console.log("empty");
-                _ajax_communication = false;
-            }
-        },
-        error: function() {
-            document.getElementById('wordDict_help_popup').style.display = "none"; //console.log("error");
-            _ajax_communication = false;
-        },
-        timeout: 1000,
-    }).always(function(e){
-        // console.log(_ajax_communication);
-        _ajax_communication = false;
-    });
-}
-
-function ShowSelection(selectedText)
+function ShowVocabulary(selectedText)
 {
-    selectedText = selectedText.trim();
-    var sel = selectedText.split(' ');
-    if (sel.length > 1 || selectedText.length == 0) {$(".dict_area").css('display', 'none');return;}
-    sel = sel[0].split(',');
-    if (sel.length > 1) {$(".dict_area").css('display', 'none');return;}
-    selectedText = sel[0];
-
+    var selectedText = $('#id_find_word').val().trim();
     $.ajax({
-        // type: "POST",
-        url: query_dict,
+        url: vocabulary_list,
         data: {
-          'seltext': selectedText,
-          'sl' : source_language.toLowerCase().substr(0,2),
-          'tl' : target_language.toLowerCase().substr(0,2)
+            'seltext': selectedText,
+            'sl' : source_language.toLowerCase().substr(0,2),
+            'tl' : target_language.toLowerCase().substr(0,2)
         },
         dataType: 'json',
         success: function (data) {
-            if (data.content != "") {
-                $(".dict_area").css('display', 'flex');
-                var dText = data.content;
-                dText = dText.replace(/\n/g, "<br>");
-                dText = dText.replace(/  /g, "&nbsp; ");
-                document.getElementById('translator_dict').innerHTML = dText;
-                $(".dictionary_dict_area").css('display' ,  'block');
-                dText = data.sentences;
-                document.getElementById('translator_sentences').innerHTML = "";
-                $(".sentence_more").css('display', 'none');
-                $("#more_sentences").css('display', 'none');
-                if(dText) {
-                    document.getElementById('translator_sentences').innerHTML = dText;
-                    $(".sentence_area").css('display', 'block');
-                    var dText1 = data.sentences_more;
-                    if(dText1) {
-                        document.getElementById('translator_sentences1').innerHTML = dText1;
-                        $("#more_sentences").css('display', 'block');
-                    }
+            if (data != "") {
+                console.log(data);
+                if(data.length() == 0) {
+                    return;
+                } else {
+                    // for()
                 }
+                $("#content_add_words").css('display', 'none');
+                $("#content_user_vocabulary").css('display', 'flex');
             } else  {
-                $(".dict_area").css('display', 'none');
-                document.getElementById('translator_dict').innerHTML = "";
-                document.getElementById('translator_sentences').innerHTML = "";
-                $("#more_sentences").css('display', 'none');
-                $(".sentence_more").css('display', 'none');
+                
             }
         },
         error: function() {
-            $(".dict_area").css('display', 'none');
+            // $(".dict_area").css('display', 'none');
         },
         timeout: 2000
     });
@@ -96,16 +35,12 @@ function ShowSelection(selectedText)
 $(function(){
     $('#id_find_word').on('keyup', function(e) {
         var keycode = (e.keyCode ? e.keyCode : e.which);
-        suggest_navigation_keys_check(e);
-        if(keycode != 13 && keycode != 32) { //console.log(keycode);
-            clearTimeout(wait1);
-            wait1 = setTimeout(similar_words, 200);
-        } else {
+        if(keycode == 13) {
             $(".btn_search").click();
         }
     });
     $('#id_find_word').on('change', function(e) {
-        ShowSelection($('#id_find_word').val());
+        ShowVocabulary($('#id_find_word').val());
     });
     $(document).on('click',"#wordDict_help_popup ul", function(e){
         var _content = e.currentTarget.children[0];
@@ -117,9 +52,7 @@ $(function(){
     });
     $(".btn_search").on('click', function(){
         s_text = $('#id_find_word').val()
-        ShowSelection(s_text);
-        document.getElementById('wordDict_help_popup').style.display = "none"
-        $("#view_dict_area").click();
+        ShowVocabulary(s_text);
     })
     $(document).on('dblclick', "kref", function(e){
         var _content = e.currentTarget;
@@ -138,40 +71,12 @@ $(function(){
         $(".sentence_more").css('display', 'none');
         $("#more_sentences").css('display', 'block');
     })
-    $("#view_dict_area").on('click', function(){
-        $(".dict_area").css('display', 'block');
-        $(".add_words").css('display', 'none');
-    })
     $("#view_add_word").on('click', function(){
-        $(".dict_area").css('display', 'none');
-        $(".add_words").css('display', 'block');
+        $("#content_user_vocabulary").css('display', 'none');
+        $("#content_add_words").css('display', 'block');
     })
     $("#view_user_dict").on('click', function(){
-        $(".add_words").css('display', 'none');
-        $(".user_vocabulary").css('display', 'block');
-        var selectedText = $('#id_find_word').val().trim();
-        $.ajax({
-            // type: "POST",
-            url: vocabulary_list,
-            data: {
-              'seltext': selectedText,
-              'sl' : source_language.toLowerCase().substr(0,2),
-              'tl' : target_language.toLowerCase().substr(0,2)
-            },
-            dataType: 'json',
-            success: function (data) {
-                if (data != "") {
-                    console.log(data);
-                    
-                } else  {
-                    
-                }
-            },
-            error: function() {
-                // $(".dict_area").css('display', 'none');
-            },
-            timeout: 2000
-        });
+        ShowVocabulary();
     })
     $(".add_words li").on('click', function(e){
         if(e.target.type != 'checkbox') return;
