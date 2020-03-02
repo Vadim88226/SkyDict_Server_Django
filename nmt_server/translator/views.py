@@ -298,7 +298,7 @@ def vocabulary_list(request):
     else:
         _filter = DictWords.objects.filter(is_allowed=0, s_lang=_s_lang, t_lang=_t_lang)
     print(_filter)
-    datas = list(_filter.values("word", "user").annotate(Count('word'), Count('user')))
+    datas = list(_filter.order_by('word').values("word", "user").annotate(Count('word'), Count('user')))
     response = {}
     for i, data in enumerate(datas):
         response[i] = data
@@ -312,12 +312,11 @@ def query_user_dictionary(request):
     _is_allowed = request.GET.get('is_allowed', 0)
 
     user_dict_records = DictWords.objects.filter(word=_word, user=_user, is_allowed = _is_allowed)
-    print(user_dict_records)
     user_dict_data = {}
     for i, data in enumerate(user_dict_records):
         user_dict_data[i] = {}
         if i == 0:
-            user_dict_data[i]['word'] = getattr(data, 'word')
+            user_dict_data['word'] = getattr(data, 'word')
         user_dict_data[i]['part'] = getattr(data, 'part')
         user_dict_data[i]['trans']= getattr(data, 'trans')
         user_sentences_records = DictSentences.objects.filter(dictwords = data)
@@ -327,5 +326,5 @@ def query_user_dictionary(request):
             user_dict_data[i]['sentences'][j]['s_sentence'] = getattr(sentence, 's_sentence')
             user_dict_data[i]['sentences'][j]['t_sentence'] = getattr(sentence, 't_sentence')
 
-    return JsonResponse({'content': "Successfully Query!"})
+    return JsonResponse(user_dict_data)
 
