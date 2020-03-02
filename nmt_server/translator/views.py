@@ -272,11 +272,31 @@ def add_words(request):
     for _cont in _content:
         _part = _cont[0]
         _trans = _cont[1]
-        _e = DictWords(word=_vocabulary, part= _part, s_lang=_s_lang, t_lang=_t_lang, trans= _trans, user= _user)
-        _e.save()
-        _w_id = _e.id
+        _d = DictWords(word=_vocabulary, part= _part, s_lang=_s_lang, t_lang=_t_lang, trans= _trans, user= _user)
+        _d.save()
         for _sentence in _cont[2:]:
-            _e = DictSentences(word_id=_w_id, part= _part, s_sentence= _sentence[0], t_sentence = _sentence[1])
-            _e.save()
+            _s = DictSentences(part= _part, s_sentence= _sentence[0], t_sentence = _sentence[1], dictwords=_d)
+            _s.save()
 
-    return JsonResponse({'content': "Successfuly Registry!"})
+    return JsonResponse({'content': "Successfully Rigistry!"})
+
+def vocabulary_list(request):
+    _s_lang = request.GET.get('sl')
+    _t_lang = request.GET.get('tl')
+    _word = request.GET.get('seltext', None)
+    _is_allowed = request.GET.get('is_allowed', None)
+    print(_word)
+    print(_is_allowed)
+    if len(_word) and _is_allowed is not None:
+        _filter = DictWords.objects.all().filter(word=_word, is_allowed=_is_allowed, s_lang=_s_lang, t_lang=_t_lang)
+    elif len(_word):
+        _filter = DictWords.objects.all().filter(word=_word, s_lang=_s_lang, t_lang=_t_lang)
+    elif _is_allowed is not None:
+        _filter = DictWords.objects.all().filter(is_allowed=_is_allowed, s_lang=_s_lang, t_lang=_t_lang)
+    else:
+        _filter = DictWords.objects.all().filter(is_allowed=0, s_lang=_s_lang, t_lang=_t_lang)
+    data = list(_filter.values())
+    print( data )
+    
+    return JsonResponse(data)
+    # return JsonResponse({'content': _filter.values()},{'content': _filter.values()})

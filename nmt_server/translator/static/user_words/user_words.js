@@ -149,6 +149,29 @@ $(function(){
     $("#view_user_dict").on('click', function(){
         $(".add_words").css('display', 'none');
         $(".user_vocabulary").css('display', 'block');
+        var selectedText = $('#id_find_word').val().trim();
+        $.ajax({
+            // type: "POST",
+            url: vocabulary_list,
+            data: {
+              'seltext': selectedText,
+              'sl' : source_language.toLowerCase().substr(0,2),
+              'tl' : target_language.toLowerCase().substr(0,2)
+            },
+            dataType: 'json',
+            success: function (data) {
+                if (data != "") {
+                    console.log(data);
+                    
+                } else  {
+                    
+                }
+            },
+            error: function() {
+                // $(".dict_area").css('display', 'none');
+            },
+            timeout: 2000
+        });
     })
     $(".add_words li").on('click', function(e){
         if(e.target.type != 'checkbox') return;

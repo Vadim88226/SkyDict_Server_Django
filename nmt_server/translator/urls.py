@@ -14,4 +14,5 @@ urlpatterns = [
     path('detect_similar_words/', views.detect_similar_words, name='index'),
     path('upload_file', views.upload_file, name='index'),
     path('add_words', views.add_words, name='index'),
+    path('vocabulary_list', views.vocabulary_list, name='index'),
 ]
