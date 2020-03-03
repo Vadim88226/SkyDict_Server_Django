@@ -38,7 +38,7 @@ def DictionaryView(request):
 # display User_Words Page
 def User_WordsView(request):
     search_input_form = DictForm()
-    add_words_form = AddWordsForm()
+    add_words_form = AddWordsForm(initial={'t_lang': 'Thai'})
     return render(request, 'user_words/content.html', {'search_input_form': search_input_form, 'add_words_form': add_words_form})
 
 # query word for Lexitron dictionary

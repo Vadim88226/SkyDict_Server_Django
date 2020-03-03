@@ -228,10 +228,11 @@ textarea{
     border-radius: 24px;
     background: none;
 }
-.btn_save, .btn_approve {
+.btn_save, .btn_approve, .btn_delete {
     margin: 0;
     margin-left: 3em;
     padding: 0.25em 0.75em;
+    min-width: 100px;
 }
 .modal {
     top:auto;

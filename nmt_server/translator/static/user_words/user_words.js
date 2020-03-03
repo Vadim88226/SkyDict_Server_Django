@@ -189,6 +189,7 @@ $(function(){
             target.innerHTML = "";
             target.appendChild(_ul);
             target.appendChild(_divtool);
+            target.classList.remove("EditStatus");
             if($('#request_frm').val().substr(0,4) == "frm1"){
                 // update sentence
                 $.ajax({
@@ -201,7 +202,7 @@ $(function(){
                     },
                     dataType: 'json',
                     success: function (data) {
-                        console.log(data);
+                        // console.log(data);
                     },
                     error: function() {
                         alert("Sever Error!");
@@ -220,8 +221,8 @@ $(function(){
     $(document).on('click', ".frame .btn_Del", function(e) {
         if( !confirm("Do you really delete this sentence?") ) return;
         _exam = e.target.parentElement.parentElement;
-        _frm = e.target.parentElement.parentElement.parentElement;
-        if(_frm.textContent.substr(0,4) == "frm1") {
+        _frm = e.target.parentElement.parentElement.parentElement; //console.log(_frm.id);
+        if(_frm.id.substr(0,4) == "frm1") {
             // delete sentence
             $.ajax({
                 url: delete_sentence,
@@ -231,7 +232,8 @@ $(function(){
                 },
                 dataType: 'json',
                 success: function (data) {
-                    console.log(data);
+                    // console.log(data);
+                    _frm.removeChild(_exam);
                 },
                 error: function() {
                     alert("Sever Error!");
@@ -446,6 +448,30 @@ $(function(){
             dataType: 'json',
             success: function (data) {
                 console.log(data);
+                ShowVocabulary();
+            },
+            error: function() {
+                alert("Sever Error!");
+            },
+            timeout: 2000
+        });
+    });
+    $(".btn_delete").on('click', function(){ 
+        var _obj = document.getElementById("view_word");
+        if(_obj.textContent == "") return;
+        $.ajax({
+            url: delete_vocabulary,
+            headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
+            data: {
+                'word': _obj.textContent,
+                'user': _obj.getAttribute("user")
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                ShowVocabulary();
+                document.getElementById("view_word").innerHTML="";
+                document.getElementById("db_vocabulary").innerHTML="";
             },
             error: function() {
                 alert("Sever Error!");
