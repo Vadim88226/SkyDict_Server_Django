@@ -241,9 +241,14 @@ textarea{
     padding: 0.25em 0.75em;
     min-width: 100px;
 }
-.modal {
-    top:auto;
+.modal-dialog-centered {
+    /* top:auto; */
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    min-height: calc(100% - (1.75rem * 2));
 }
+
 select{
     width: 100px;
     margin: 0 20px;
