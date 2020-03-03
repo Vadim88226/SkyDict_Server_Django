@@ -216,7 +216,7 @@ textarea{
     max-height: calc(100vh - 150px);
 }
 #list_vocabulary{
-    margin-top: 15px;
+    /* margin-top: 15px; */
     max-height: 93%;
     overflow: auto;
 }
@@ -226,7 +226,9 @@ textarea{
     font-weight: 600;
 }
 #content_user_vocabulary{ 
-    display: none;
+    visibility: hidden;
+    display: flex;
+    height: 0;
 }
 .glyphicon{
     margin-left: 10px;
@@ -245,6 +247,35 @@ textarea{
 select{
     width: 100px;
     margin: 0 20px;
+}
+.form_vocabulary{
+    display:flex;
+}
+@media (max-width: 767px) {
+    #content_user_vocabulary {
+        display: block;
+    }
+    .list_side {
+        max-height: 200px;
+        max-width: 100%;
+        font-size: small;
+    }
+    #list_vocabulary{
+        max-height: 100px;
+    }
+    #content_user_vocabulary .add_words {
+        max-height: 100%;
+    }
+    .add_words ul {
+        padding: 0;
+        font-size: small;
+    }
+    .add_words div {
+        font-size: small;
+    }
+    .form_vocabulary{
+        display:block;
+    }
 }
 @media (max-width: 400px) {
     .DictSearch>Button{

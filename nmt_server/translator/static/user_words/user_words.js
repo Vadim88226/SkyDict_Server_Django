@@ -25,7 +25,8 @@ function ShowVocabulary()
                     }
                 }
                 $("#content_add_words").css('display', 'none');
-                $("#content_user_vocabulary").css('display', 'flex');
+                $("#content_user_vocabulary").css('visibility', 'visible'); 
+                $("#content_user_vocabulary").css('height', '100%'); 
             } else  {
                 
             }
@@ -78,7 +79,8 @@ $(function(){
         $("#more_sentences").css('display', 'block');
     })
     $("#view_add_word").on('click', function(){
-        $("#content_user_vocabulary").css('display', 'none');
+        $("#content_user_vocabulary").css('visibility', 'hidden');
+        $("#content_user_vocabulary").css('height', 0); 
         $("#content_add_words").css('display', 'block');
     })
     $("#view_user_dict").on('click', function(){
