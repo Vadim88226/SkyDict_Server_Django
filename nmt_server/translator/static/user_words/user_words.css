@@ -144,9 +144,12 @@ kref {
 .add_words {
     max-width: 800px;
     padding-top:1%;
+    /* height: fit-content; */
 }
 #content_user_vocabulary .add_words{
     max-width: 100%;
+    max-height: calc(100vh - 150px);
+    overflow: auto;
 }
 .add_words div{
     padding: 2% 2% 0 2%;
@@ -210,10 +213,11 @@ textarea{
     max-width: 300px;
     padding: 1%;
     background: oldlace;
+    max-height: calc(100vh - 150px);
 }
 #list_vocabulary{
-    padding-top: 15px;
-    max-height: 100%;
+    /* margin-top: 15px; */
+    max-height: 93%;
     overflow: auto;
 }
 #view_word {
@@ -222,7 +226,9 @@ textarea{
     font-weight: 600;
 }
 #content_user_vocabulary{ 
-    display: none;
+    visibility: hidden;
+    display: flex;
+    height: 0;
 }
 .glyphicon{
     margin-left: 10px;
@@ -235,12 +241,46 @@ textarea{
     padding: 0.25em 0.75em;
     min-width: 100px;
 }
-.modal {
-    top:auto;
+.modal-dialog-centered {
+    /* top:auto; */
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    min-height: calc(100% - (1.75rem * 2));
 }
+
 select{
     width: 100px;
     margin: 0 20px;
+}
+.form_vocabulary{
+    display:flex;
+}
+@media (max-width: 767px) {
+    #content_user_vocabulary {
+        display: block;
+    }
+    .list_side {
+        max-height: 200px;
+        max-width: 100%;
+        font-size: small;
+    }
+    #list_vocabulary{
+        max-height: 100px;
+    }
+    #content_user_vocabulary .add_words {
+        max-height: 100%;
+    }
+    .add_words ul {
+        padding: 0;
+        font-size: small;
+    }
+    .add_words div {
+        font-size: small;
+    }
+    .form_vocabulary{
+        display:block;
+    }
 }
 @media (max-width: 400px) {
     .DictSearch>Button{

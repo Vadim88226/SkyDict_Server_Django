@@ -25,13 +25,20 @@ function ShowVocabulary()
                     }
                 }
                 $("#content_add_words").css('display', 'none');
-                $("#content_user_vocabulary").css('display', 'flex');
+                $("#content_user_vocabulary").css('visibility', 'visible'); 
+                $("#content_user_vocabulary").css('height', '100%'); 
             } else  {
                 
             }
         },
         error: function() {
-            alert("Sever Error!");
+            $.alert({
+                title: 'Alert!', content: 'Server Error!',
+                icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                buttons: {
+                    okay: {  }
+                }
+            });
         },
         timeout: 2000
     });
@@ -78,7 +85,8 @@ $(function(){
         $("#more_sentences").css('display', 'block');
     })
     $("#view_add_word").on('click', function(){
-        $("#content_user_vocabulary").css('display', 'none');
+        $("#content_user_vocabulary").css('visibility', 'hidden');
+        $("#content_user_vocabulary").css('height', 0); 
         $("#content_add_words").css('display', 'block');
     })
     $("#view_user_dict").on('click', function(){
@@ -205,7 +213,13 @@ $(function(){
                         // console.log(data);
                     },
                     error: function() {
-                        alert("Sever Error!");
+                        $.alert({
+                            title: 'Alert!', content: 'Server Error!',
+                            icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                            buttons: {
+                                okay: {  }
+                            }
+                        });
                     },
                     timeout: 2000
                 });
@@ -219,30 +233,56 @@ $(function(){
         $(".close").click();
     });
     $(document).on('click', ".frame .btn_Del", function(e) {
-        if( !confirm("Do you really delete this sentence?") ) return;
-        _exam = e.target.parentElement.parentElement;
-        _frm = e.target.parentElement.parentElement.parentElement; //console.log(_frm.id);
-        if(_frm.id.substr(0,4) == "frm1") {
-            // delete sentence
-            $.ajax({
-                url: delete_sentence,
-                headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
-                data: {
-                    'sent_id': _exam.getAttribute("sent_id")
+        $.confirm({
+            title: 'Are you sure?',
+            content: 'You are deleting sentences.<br> If you are sure then click confirm button.',
+            icon: 'fa fa-question-circle',
+            animation: 'scale',
+            closeAnimation: 'scale',
+            opacity: 0.5,
+            closeIcon:true,
+            buttons: {
+                'confirm': {
+                    // text: 'Yes',
+                    btnClass: 'btn-blue',
+                    action: function(){
+                        _exam = e.target.parentElement.parentElement;
+                        _frm = e.target.parentElement.parentElement.parentElement; //console.log(_frm.id);
+                        if(_frm.id.substr(0,4) == "frm1") {
+                            // delete sentence
+                            $.ajax({
+                                url: delete_sentence,
+                                headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
+                                data: {
+                                    'sent_id': _exam.getAttribute("sent_id")
+                                },
+                                dataType: 'json',
+                                success: function (data) {
+                                    // console.log(data);
+                                    _frm.removeChild(_exam);
+                                },
+                                error: function() {
+                                    $.alert({
+                                        title: 'Alert!', content: 'Server Error!',
+                                        icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                                        buttons: {
+                                            okay: {  }
+                                        }
+                                    });
+                                },
+                                timeout: 2000
+                            });
+                        } else {
+                            _frm.removeChild(_exam);
+                        }
+                    }
                 },
-                dataType: 'json',
-                success: function (data) {
-                    // console.log(data);
-                    _frm.removeChild(_exam);
+                cancel: function(){
+                    
                 },
-                error: function() {
-                    alert("Sever Error!");
-                },
-                timeout: 2000
-            });
-        } else {
-            _frm.removeChild(_exam);
-        }
+            }
+        });
+        
     });
     $("#btn_vtype").on('click', function(){ 
         if ($('#clear').css('display') =='none') {
@@ -262,7 +302,13 @@ $(function(){
     $(".btn_save").on('click', function(){ 
         if(!$("#U_name").val()) {window.location.href = "/translator"; return;}
         if($("#id_s_lang").val() == $("#id_t_lang").val()) {
-            alert("Source Language equal target language. \n please change!");
+            $.alert({
+                title: 'Alert!', content: "Source Language equal target language. <br> Please change!",
+                icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                buttons: {
+                    okay: {  }
+                }
+            });
             $("#id_t_lang").focus(); return;
         }
         if($("#id_Vocabulary").val().trim() == "") {
@@ -295,7 +341,14 @@ $(function(){
             data_len++;
         }   //console.log(_data); return;
         if(data_len == 0) {
-            alert("Data is empty! please enter data."); return;
+            $.alert({
+                title: 'Alert!', content: "Data is empty! please enter data.",
+                icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                buttons: {
+                    okay: {  }
+                }
+            });
+            return;
         }
         $.ajax({
             // type: "POST",
@@ -310,10 +363,23 @@ $(function(){
             },
             dataType: 'json',
             success: function (data) {  
-                alert(data.content); window.location = window.location;
+                $.alert({
+                    title: 'Alert!', content: data.content,
+                    icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                    buttons: {
+                        okay: {  }
+                    }
+                });
+                window.location = window.location;
             },
             error: function() {
-                alert("Server Error!");
+                $.alert({
+                    title: 'Alert!', content: 'Server Error!',
+                    icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                    buttons: {
+                        okay: {  }
+                    }
+                });
             },
         }).always(function(e){
             
@@ -410,7 +476,13 @@ $(function(){
                 
             },
             error: function() {
-                alert("Server Error!");
+                $.alert({
+                    title: 'Alert!', content: 'Server Error!',
+                    icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                    buttons: {
+                        okay: {  }
+                    }
+                });
             },
         }).always(function(e){
             
@@ -430,7 +502,13 @@ $(function(){
                 console.log(data);
             },
             error: function() {
-                alert("Sever Error!");
+                $.alert({
+                    title: 'Alert!', content: 'Server Error!',
+                    icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                    buttons: {
+                        okay: {  }
+                    }
+                });
             },
             timeout: 2000
         });
@@ -451,7 +529,13 @@ $(function(){
                 ShowVocabulary();
             },
             error: function() {
-                alert("Sever Error!");
+                $.alert({
+                    title: 'Alert!', content: 'Server Error!',
+                    icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                    buttons: {
+                        okay: {  }
+                    }
+                });
             },
             timeout: 2000
         });
@@ -474,7 +558,13 @@ $(function(){
                 document.getElementById("db_vocabulary").innerHTML="";
             },
             error: function() {
-                alert("Sever Error!");
+                $.alert({
+                    title: 'Alert!', content: 'Server Error!',
+                    icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                    buttons: {
+                        okay: {  }
+                    }
+                });
             },
             timeout: 2000
         });

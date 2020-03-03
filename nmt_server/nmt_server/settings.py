@@ -25,8 +25,7 @@ SECRET_KEY = 'q98x8c^^zy0)3s6q)c@66jg^_j=rw2!)hzts!k032xh70gyw+4'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['192.168.209.98', 'www.skydict.com','*']
 
 # Application definition
 

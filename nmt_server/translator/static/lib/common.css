@@ -359,10 +359,15 @@ dictionary, copus {
     -ms-transition: 3s;
     -o-transition: 3s;
     transition: 3s;
+    overflow: hidden;
 }
 @media (max-width: 768px) {
     .container{
         width: 99% !important;
+    }
+    #dict_menu_bar a {
+        padding: 0 10px !important;
+        font-size: small;
     }
 }
 @media (max-width: 500px) {
