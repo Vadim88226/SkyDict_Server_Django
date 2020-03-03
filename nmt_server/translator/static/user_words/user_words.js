@@ -332,7 +332,8 @@ $(function(){
             },
             data: {
                 'user' : e.target.attributes["user"].value,
-                'seltext': e.target.textContent
+                'seltext': e.target.textContent,
+                'is_approved': document.querySelector('input[name="allowed"]:checked').value
             },
             dataType: 'json',
             success: function (data) {

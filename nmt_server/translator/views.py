@@ -307,7 +307,9 @@ def query_user_dictionary(request):
     _user = request.GET.get('user')
     _is_approved = request.GET.get('is_approved', 0)
 
+
     user_dict_records = DictWords.objects.filter(word=_word, user=_user, is_approved = _is_approved)
+    print(user_dict_records)
     user_dict_data = {}
     for i, data in enumerate(user_dict_records):
         user_dict_data[i] = {}
@@ -330,28 +332,30 @@ def update_sentence(request):
     _sent_id = request.GET.get('sent_id')
     _s_sentence = request.GET.get('s_sentence')
     _t_sentence = request.GET.get('t_sentence')
+    DictSentences.objects.filter(id=int(_sent_id)).update(s_sentence = _s_sentence, t_sentence = _t_sentence)
 
     return JsonResponse({'content': "Successfully Rigistry!"})
 
 def delete_sentence(request):
     _sent_id = request.GET.get('sent_id')
+    DictSentences.objects.filter(id=int(_sent_id)).delete()
 
     return JsonResponse({'content': "Successfully Rigistry!"})
 
 def update_vocabulary(request):
     _word_id = request.GET.get('word_id')
     _trans = request.GET.get('trans')
-
+    DictWords.objects.filter(id=int(_word_id)).update(trans=_trans)
     return JsonResponse({'content': "Successfully Rigistry!"})
 
 def approve_vocabulary(request):
     _word = request.GET.get('word')
     _user = request.GET.get('user')
-
+    DictWords.objects.filter(word=_word, user=_user).update(is_approved=1)
     return JsonResponse({'content': "Successfully Rigistry!"})
 
 def delete_vocabulary(request):
     _word = request.GET.get('word')
     _user = request.GET.get('user')
-
+    DictWords.objects.filter(word=_word, user=_user).delete()
     return JsonResponse({'content': "Successfully Rigistry!"})

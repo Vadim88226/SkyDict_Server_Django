@@ -1,5 +1,5 @@
 var sign_up = 'sign_up/';
-var log_in = 'log_in';
+var log_in = '../translator/log_in';
 var log_out = '../translator/log_out';
 var reset_password = '../translator/reset_password';
 var upload_file = 'upload_file';
