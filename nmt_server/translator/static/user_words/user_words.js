@@ -8,7 +8,7 @@ function ShowVocabulary()
         url: vocabulary_list,
         data: {
             'seltext': selectedText,
-            'is_allowed': document.querySelector('input[name="allowed"]:checked').value
+            'is_approved': document.querySelector('input[name="allowed"]:checked').value
         },
         dataType: 'json',
         success: function (data) {
@@ -31,7 +31,7 @@ function ShowVocabulary()
             }
         },
         error: function() {
-            // $(".dict_area").css('display', 'none');
+            alert("Sever Error!");
         },
         timeout: 2000
     });
@@ -139,11 +139,11 @@ $(function(){
             // _div.appendChild(div_exam);
             _parent.appendChild(_div);
         } else {
-            console.log(document.getElementById("frm_" + name));
+            // console.log(document.getElementById("frm_" + name));
             _parent.removeChild(document.getElementById("frm_" + name));
         }
     });
-    $(document).on('click', "#word_vocabulary .btn_add", function(e) {
+    $(document).on('click', ".frame .btn_add", function(e) {
         $("#request_frm").val(e.target.offsetParent.id);
         $("#modal-title").html("Please enter example sentence for " + e.target.offsetParent.children[0].textContent);
         $('#first_exam').val("");
@@ -160,7 +160,6 @@ $(function(){
         setTimeout(function(){ document.getElementById("first_exam").focus();} , 500);
     });
     $('.btn-add').on('click', function(){
-        // var target = $('#'+$('#request_frm').val()); 
         var target = document.getElementById($('#request_frm').val());
         var f_text = $('#first_exam').val();
         var s_text = $('#second_exam').val();
@@ -190,6 +189,26 @@ $(function(){
             target.innerHTML = "";
             target.appendChild(_ul);
             target.appendChild(_divtool);
+            if($('#request_frm').val().substr(0,4) == "frm1"){
+                // update sentence
+                $.ajax({
+                    url: update_sentence,
+                    headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
+                    data: {
+                        'sent_id': target.getAttribute("sent_id"),
+                        's_sentence': f_text,
+                        't_sentence': s_text
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                    },
+                    error: function() {
+                        alert("Sever Error!");
+                    },
+                    timeout: 2000
+                });
+            }
         } else {
             _div.appendChild(_ul);
             _div.appendChild(_divtool);
@@ -198,11 +217,30 @@ $(function(){
         }
         $(".close").click();
     });
-    $(document).on('click', "#word_vocabulary .btn_Del", function(e) {
+    $(document).on('click', ".frame .btn_Del", function(e) {
         if( !confirm("Do you really delete this sentence?") ) return;
         _exam = e.target.parentElement.parentElement;
         _frm = e.target.parentElement.parentElement.parentElement;
-        _frm.removeChild(_exam);
+        if(_frm.textContent.substr(0,4) == "frm1") {
+            // delete sentence
+            $.ajax({
+                url: delete_sentence,
+                headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
+                data: {
+                    'sent_id': _exam.getAttribute("sent_id")
+                },
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                },
+                error: function() {
+                    alert("Sever Error!");
+                },
+                timeout: 2000
+            });
+        } else {
+            _frm.removeChild(_exam);
+        }
     });
     $("#btn_vtype").on('click', function(){ 
         if ($('#clear').css('display') =='none') {
@@ -260,9 +298,7 @@ $(function(){
         $.ajax({
             // type: "POST",
             url: add_words_url,
-            headers:{
-                "X-CSRFToken": csrftoken
-            },
+            headers:{ "X-CSRFToken": csrftoken  },
             data: {
                 'user' : $("#U_name").val(),
                 'sl' : $("#id_s_lang").val().toLowerCase().substr(0,2),
@@ -296,19 +332,124 @@ $(function(){
             },
             data: {
                 'user' : e.target.attributes["user"].value,
-                'seltext': e.target.textContent,
-                'sl' : $("#id_s_lang").val().toLowerCase().substr(0,2),
-                'tl' : $("#id_t_lang").val().toLowerCase().substr(0,2)
+                'seltext': e.target.textContent
             },
             dataType: 'json',
-            success: function (data) {  
-                console.log(data)
+            success: function (data) {
+                if(data.length == 0) return;
+                document.getElementById("view_word").textContent = e.target.textContent;
+                document.getElementById("view_word").setAttribute('user', data[0]["user"]);
+                // console.log(data);
+                var target = document.getElementById('db_vocabulary');
+                target.innerHTML = "";
+                for (_d in data) { 
+                    var name = data[_d]["part"];
+                    var _div = document.createElement('div');
+                    _div.id = "frm1_" + name;
+                    _div.setAttribute('word_id', data[_d]["word_id"]);
+                    _div.setAttribute('class', 'frame');
+                    var _label = document.createElement('label');
+                    _label.textContent = name;
+                    _label.setAttribute('class', 'frm_label');
+                    _div.appendChild(_label);
+                    var labelExample;
+                    
+                    labelExample = document.createElement("label");
+                    labelExample.textContent = "Translation:";
+                    labelExample.setAttribute('class', 'txtlabel');
+                    _div.appendChild(labelExample);
+        
+                    var input = document.createElement("textarea");
+                    input.id = 'txt_' + name;
+                    input.value = data[_d]['trans'];
+                    _div.appendChild(input);
+                    if(data[_d]['sentences']) {
+                        labelExample = document.createElement("label");
+                        labelExample.textContent = "Example Sentences:";
+                        labelExample.setAttribute('class', 'txtlabel');
+                        _div.appendChild(labelExample);
+            
+                        var btn_add = document.createElement("button");
+                        btn_add.setAttribute('class', 'btn_add glyphicon glyphicon-plus');
+                        btn_add.setAttribute('data-toggle',"modal");
+                        btn_add.setAttribute('data-target', "#myModal");
+                        // _div.appendChild(btn_add);
+                        for(_s in data[_d]['sentences']){
+                            var _div1 = document.createElement('div');
+                            var _ul = document.createElement('ul');
+                            var _fli = document.createElement('li');
+                            var _sli = document.createElement('li');
+                            _fli.textContent = data[_d]['sentences'][_s]['s_sentence'];
+                            _sli.textContent = data[_d]['sentences'][_s]['t_sentence'];
+                            _ul.appendChild(_fli);
+                            _ul.appendChild(_sli);
+                            _ul.setAttribute('style', 'width:90%;');
+                            var _divtool = document.createElement('div');
+                            var _btnEdit = document.createElement('button');
+                            var _btnDel = document.createElement('button');
+                            _btnEdit.setAttribute('class', 'btn_Edit glyphicon glyphicon-pencil');
+                            _btnEdit.setAttribute('data-toggle',"modal");
+                            _btnEdit.setAttribute('data-target', "#myModal");
+                            _btnDel.setAttribute('class', 'btn_Del glyphicon glyphicon-remove');
+                            _divtool.appendChild(_btnEdit);
+                            _divtool.appendChild(_btnDel);
+                            _divtool.setAttribute('style', 'width:10%; padding:2px;');
+
+                            _div1.appendChild(_ul);
+                            _div1.appendChild(_divtool);
+                            _div1.setAttribute('style', 'display:flex;padding: 0;margin-bottom:5px;background: aliceblue;');
+                            _div1.setAttribute('sent_id', data[_d]['sentences'][_s]["sent_id"]);
+                            _div.appendChild(_div1);
+                        }
+                    }
+                    target.appendChild(_div);
+                }
+                
             },
             error: function() {
                 alert("Server Error!");
             },
         }).always(function(e){
             
+        });
+    });
+    $(document).on('change', "#db_vocabulary textarea", function(e) {
+        // update vocabulary
+        $.ajax({
+            url: update_vocabulary,
+            headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
+            data: {
+                'word_id': e.target.parentElement.getAttribute("word_id"),
+                'trans': this.value
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+            },
+            error: function() {
+                alert("Sever Error!");
+            },
+            timeout: 2000
+        });
+    });
+    $(".btn_approve").on('click', function(){ 
+        var _obj = document.getElementById("view_word");
+        if(_obj.textContent == "") return;
+        $.ajax({
+            url: approve_vocabulary,
+            headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
+            data: {
+                'word': _obj.textContent,
+                'user': _obj.getAttribute("user")
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+            },
+            error: function() {
+                alert("Sever Error!");
+            },
+            timeout: 2000
         });
     });
 })

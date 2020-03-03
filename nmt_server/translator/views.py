@@ -92,7 +92,7 @@ def query_dict(request):
 
     s_lang = detect_source_language(selectedText)
     lexi_dict_data = search_dict(selectedText, s_lang)
-    user_dict_records = DictWords.objects.filter(word=selectedText, s_lang=s_lang, is_allowed = 1)
+    user_dict_records = DictWords.objects.filter(word=selectedText, s_lang=s_lang, is_approved = 1)
     user_dict_data = ""
     user_sentences_data = ""
     for i, data in enumerate(user_dict_records):
@@ -285,16 +285,14 @@ def add_words(request):
     return JsonResponse({'content': "Successfully Rigistry!"})
 
 def vocabulary_list(request):
-    _word = request.GET.get('seltext', None)
-    _is_allowed = request.GET.get('is_allowed', None)
-    if len(_word) and _is_allowed:
-        _filter = DictWords.objects.filter(word=_word, is_allowed=_is_allowed)
+    _word = request.GET.get('seltext', "")
+    _is_approved = request.GET.get('is_approved', 0)
+    if len(_word) and _is_approved:
+        _filter = DictWords.objects.filter(word=_word, is_approved=_is_approved)
     elif len(_word):
         _filter = DictWords.objects.filter(word=_word)
-    elif _is_allowed:
-        _filter = DictWords.objects.filter(is_allowed=_is_allowed)
     else:
-        _filter = DictWords.objects.filter(is_allowed=0)
+        _filter = DictWords.objects.filter(is_approved=_is_approved)
     print(_filter)
     datas = list(_filter.order_by('word').values("word", "user").annotate(Count('word'), Count('user')))
     response = {}
@@ -307,22 +305,53 @@ def vocabulary_list(request):
 def query_user_dictionary(request):
     _word = request.GET.get('seltext')
     _user = request.GET.get('user')
-    _is_allowed = request.GET.get('is_allowed', 0)
+    _is_approved = request.GET.get('is_approved', 0)
 
-    user_dict_records = DictWords.objects.filter(word=_word, user=_user, is_allowed = _is_allowed)
+    user_dict_records = DictWords.objects.filter(word=_word, user=_user, is_approved = _is_approved)
     user_dict_data = {}
     for i, data in enumerate(user_dict_records):
         user_dict_data[i] = {}
-        if i == 0:
-            user_dict_data['word'] = getattr(data, 'word')
+        user_dict_data[i]['word_id'] = getattr(data, 'id')
         user_dict_data[i]['part'] = getattr(data, 'part')
         user_dict_data[i]['trans']= getattr(data, 'trans')
+        user_dict_data[i]['user']= getattr(data, 'user')
         user_sentences_records = DictSentences.objects.filter(dictwords = data)
         user_dict_data[i]['sentences'] = {}
         for j, sentence in enumerate(user_sentences_records):
             user_dict_data[i]['sentences'][j] = {}
+            user_dict_data[i]['sentences'][j]['sent_id'] = getattr(sentence, 'id')
             user_dict_data[i]['sentences'][j]['s_sentence'] = getattr(sentence, 's_sentence')
             user_dict_data[i]['sentences'][j]['t_sentence'] = getattr(sentence, 't_sentence')
 
     return JsonResponse(user_dict_data)
 
+
+def update_sentence(request):
+    _sent_id = request.GET.get('sent_id')
+    _s_sentence = request.GET.get('s_sentence')
+    _t_sentence = request.GET.get('t_sentence')
+
+    return JsonResponse({'content': "Successfully Rigistry!"})
+
+def delete_sentence(request):
+    _sent_id = request.GET.get('sent_id')
+
+    return JsonResponse({'content': "Successfully Rigistry!"})
+
+def update_vocabulary(request):
+    _word_id = request.GET.get('word_id')
+    _trans = request.GET.get('trans')
+
+    return JsonResponse({'content': "Successfully Rigistry!"})
+
+def approve_vocabulary(request):
+    _word = request.GET.get('word')
+    _user = request.GET.get('user')
+
+    return JsonResponse({'content': "Successfully Rigistry!"})
+
+def delete_vocabulary(request):
+    _word = request.GET.get('word')
+    _user = request.GET.get('user')
+
+    return JsonResponse({'content': "Successfully Rigistry!"})

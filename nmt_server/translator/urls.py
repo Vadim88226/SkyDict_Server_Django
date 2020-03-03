@@ -16,4 +16,9 @@ urlpatterns = [
     path('add_words', views.add_words, name='index'),
     path('vocabulary_list', views.vocabulary_list, name='index'),
     path('query_user_dictionary', views.query_user_dictionary, name='index'),
+    path('update_sentence', views.update_sentence, name='index'),
+    path('delete_sentence', views.delete_sentence, name='index'),
+    path('update_vocabulary', views.update_vocabulary, name='index'),
+    path('approve_vocabulary', views.approve_vocabulary, name='index'),
+    path('delete_vocabulary', views.delete_vocabulary, name='index'),
 ]

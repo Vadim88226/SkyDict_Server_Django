@@ -65,7 +65,7 @@
     color: white;
     background-image: -webkit-image-set(url(../icons/1x_mobile.png) 1x,url(../icons/2x_mobile.png) 2x);
 }
-#translator_dict,#translator_sentences,#translator_sentences1 {
+#translator_dict,#translator_sentences {
     padding: 0px 32px 1px 24px;
     /* margin:3px; */
     width:100%;
@@ -145,6 +145,9 @@ kref {
     max-width: 800px;
     padding-top:1%;
 }
+#content_user_vocabulary .add_words{
+    max-width: 100%;
+}
 .add_words div{
     padding: 2% 2% 0 2%;
 }
@@ -160,7 +163,7 @@ kref {
 }
 .add_words .frame{
     position: relative;
-    margin-top: 24px;    
+    margin: 24px 0;    
     padding: 10px 15px;
     border: 2px solid #666;
     border-radius: 5px;
@@ -211,6 +214,11 @@ textarea{
     padding-top: 15px;
     max-height: 100%;
     overflow: auto;
+}
+#view_word {
+    font-size: x-large;
+    font-style: oblique;
+    font-weight: 600;
 }
 #content_user_vocabulary{ 
     display: none;

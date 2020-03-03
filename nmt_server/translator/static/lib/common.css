@@ -344,6 +344,22 @@ k{
     color: #265180;
     font-size: 20px;
 }
+dictionary, copus {
+    display: block;
+    font-style: italic;
+    font-weight: 600;
+    background: #F0EFEF url(../icons/orange-square-bullet.gif) no-repeat 7px 10px;
+    font-size: 14px;
+    padding: 3px 0 3px 20px;
+    border-bottom: 1px solid #AFAEAE;
+}
+.animate{
+    -webkit-transition: 3s;
+    -moz-transition: 3s;
+    -ms-transition: 3s;
+    -o-transition: 3s;
+    transition: 3s;
+}
 @media (max-width: 768px) {
     .container{
         width: 99% !important;

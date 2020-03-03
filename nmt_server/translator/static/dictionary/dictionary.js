@@ -59,32 +59,37 @@ function ShowSelection(selectedText)
         },
         dataType: 'json',
         success: function (data) {
-            if (data.content != "") {
+            if (data != "") {
                 $(".dict_area").css('display', 'flex');
-                var dText = data.content;
-                dText = dText.replace(/\n/g, "<br>");
-                dText = dText.replace(/  /g, "&nbsp; ");
-                document.getElementById('translator_dict').innerHTML = dText;
-                $(".dictionary_dict_area").css('display' ,  'block');
-                dText = data.sentences;
-                document.getElementById('translator_sentences').innerHTML = "";
-                $(".sentence_more").css('display', 'none');
-                $("#more_sentences").css('display', 'none');
+                var dText = "";
+                for(_dict in data.dictionary) {
+                    if(data.dictionary[_dict]) {
+                        dText += "<div><dictionary>" + _dict + "</dictionary>";
+                        dText += data.dictionary[_dict] + "</div>";
+                    }
+                }
+                    dText = dText.replace(/\n/g, "<br>");
+                    dText = dText.replace(/  /g, "&nbsp; ");
+                    document.getElementById('translator_dict').innerHTML = dText;
+                    $(".dictionary_dict_area").css('display' ,  'block');
+
+                dText = "";
+                for(_s in data.sentences) {
+                    if(data.sentences[_s]) {
+                        dText += "<div><copus>" + _s + "</copus>";
+                        dText += data.sentences[_s] + "</div>";
+                    }
+                }
                 if(dText) {
                     document.getElementById('translator_sentences').innerHTML = dText;
                     $(".sentence_area").css('display', 'block');
-                    var dText1 = data.sentences_more;
-                    if(dText1) {
-                        document.getElementById('translator_sentences1').innerHTML = dText1;
-                        $("#more_sentences").css('display', 'block');
-                    }
+                } else {
+                    document.getElementById('translator_sentences').innerHTML = "";
                 }
             } else  {
                 $(".dict_area").css('display', 'none');
                 document.getElementById('translator_dict').innerHTML = "";
                 document.getElementById('translator_sentences').innerHTML = "";
-                $("#more_sentences").css('display', 'none');
-                $(".sentence_more").css('display', 'none');
             }
         },
         error: function() {
@@ -137,5 +142,14 @@ $(function(){
     $("#few_sentences").on('click', function(){
         $(".sentence_more").css('display', 'none');
         $("#more_sentences").css('display', 'block');
+    })
+    $(document).on('click', "copus, dictionary", function(e){
+        var _cont = e.target.parentElement; _cont.className = "animate";
+        if( _cont.style.height == "") {
+            _cont.style.height = "100px";
+        } else {
+            _cont.style.height = "";
+        }
+
     })
 })

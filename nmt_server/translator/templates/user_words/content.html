@@ -22,7 +22,7 @@
 <div id="content_add_words" style="text-align: -webkit-center;">
     <div class="add_words">
         <!-- <form action="" method="post"> -->
-            Translate from {{ add_words_form.s_lang}} to {{ add_words_form.t_lang}}
+            <div style="text-align: center;"> Translate from {{ add_words_form.s_lang}} to {{ add_words_form.t_lang}} </div>
             <div> Vocabulary: {{ add_words_form.Vocabulary}} type <button id="btn_vtype" class=''>please select</button>(can select more than 1 item)</div>
             <div id='clear'>
                 <div class='word_type'>{{ add_words_form.chk_box1 }}</div>
@@ -41,30 +41,31 @@
         </div>
     </div>
 </div>
-<div id="content_user_vocabulary" style="text-align: -webkit-center;">
-    <div class="list_side">
-        <div style="display: flex;">
-        <div>
-            <input type="radio" id="Unapproved" name="allowed" value=0 checked>
-            <label for="Unapproved">Unapproved</label>
+
+    <div id="content_user_vocabulary" style="text-align: -webkit-center;">
+        <div class="list_side">
+            <div style="display: flex;">
+            <div>
+                <input type="radio" id="Unapproved" name="allowed" value=0 checked>
+                <label for="Unapproved">Unapproved</label>
+            </div>
+            <div style="margin-left: 15px;">
+                <input type="radio" id="Approved" name="allowed" value=1>
+                <label for="Approved">Approved</label>
+            </div>
+            </div>
+            <div id="list_vocabulary"></div>
         </div>
-        <div style="margin-left: 15px;">
-            <input type="radio" id="Approved" name="allowed" value=1>
-            <label for="Approved">Approved</label>
+        <div class="add_words">
+            <!-- <form action="" method="post"> -->
+                <div> Vocabulary: <span id="view_word"></span></div>
+                <div id='db_vocabulary'></div>
+            <!-- </form> -->
+                <button type='button' class='btn_approve sky_button'>Approve</button>
+                <div style="text-align:right;">    You can see more suggestions. About how to enter words Including various examples </div>
         </div>
-        </div>
-        <div id="list_vocabulary"></div>
     </div>
-    <div id="list_vocabulary"></div>
-    <div class="add_words">
-        <!-- <form action="" method="post"> -->
-            <div> Vocabulary: <span id="view_word"></span></div>
-            <div id='db_vocabulary'></div>
-        <!-- </form> -->
-            <button type='button' class='btn_approve sky_button'>Approve</button>
-            <div style="text-align:right;">    You can see more suggestions. About how to enter words Including various examples
-    </div>
-</div>
+
 <!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog">

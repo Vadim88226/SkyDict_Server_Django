@@ -17,7 +17,7 @@ class DictWords(models.Model):
     t_lang = models.CharField(max_length=5,default='th')
     trans = models.TextField(blank=True)
     user = models.CharField(max_length=70, default='unknown')
-    is_allowed = models.IntegerField(default=0)
+    is_approved = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -27,7 +27,7 @@ class DictSentences(models.Model):
     part = models.CharField(max_length=50,default='name')
     s_sentence = models.TextField(blank=True)
     t_sentence = models.TextField(blank=True)
-    # is_allowed = models.IntegerField(default=0)
+    # is_approved = models.IntegerField(default=0)
     # created_at = models.DateTimeField(auto_now_add=True)
     # updated_at = models.DateTimeField(auto_now=True)
     # def __str__(self):

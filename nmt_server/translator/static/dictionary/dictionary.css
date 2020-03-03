@@ -65,9 +65,10 @@
     color: white;
     background-image: -webkit-image-set(url(../icons/1x_mobile.png) 1x,url(../icons/2x_mobile.png) 2x);
 }
-#translator_dict,#translator_sentences,#translator_sentences1 {
-    padding: 0px 32px 1px 24px;
+#translator_dict,#translator_sentences {
+    padding: 10px 32px 10px 24px;
     /* margin:3px; */
+    overflow: hidden;
     width:100%;
     background: white;
 }
@@ -89,7 +90,7 @@
     /* display: none; */
     background-repeat: no-repeat;
     padding-left: 5%;
-    color: aliceblue;
+    color: snow;
     width: 100%;
     background-image: -webkit-image-set(url(../icons/1x_mobile.png) 1x,url(../icons/2x_mobile.png) 2x);
     background-color: #d2d2d2;
@@ -120,7 +121,6 @@ kref {
 }
 .dictionary_dict_area{
     width: 100%;
-    margin-top: 10px;
 }
 #dict_menu_bar {
     background: -webkit-linear-gradient(#FFF, #E0E0E0) no-repeat center bottom;
