@@ -253,6 +253,7 @@ def detect_similar_words(request):
                 return JsonResponse({'content':responses})
     return JsonResponse({'content': responses})
 
+# file uploading and downloading for translate
 def upload_file(request):
     if request.method == 'POST' and request.FILES['docTrans']:
         s_lang = request.POST.get('sl', None)
@@ -263,7 +264,6 @@ def upload_file(request):
         uploaded_file_url = fs.path(filename)
         trans_file_url, tfilename = translate_file(uploaded_file_url, s_lang, t_lang)
         return JsonResponse({'content': tfilename})
-
     return JsonResponse({'content': ""})
 
 def add_words(request):
@@ -284,6 +284,7 @@ def add_words(request):
 
     return JsonResponse({'content': "Successfully Rigistry!"})
 
+# vocabulary list query
 def vocabulary_list(request):
     _word = request.GET.get('seltext', "")
     _is_approved = request.GET.get('is_approved', 0)
@@ -293,7 +294,7 @@ def vocabulary_list(request):
         _filter = DictWords.objects.filter(word=_word)
     else:
         _filter = DictWords.objects.filter(is_approved=_is_approved)
-    print(_filter)
+    # print(_filter)
     datas = list(_filter.order_by('word').values("word", "user").annotate(Count('word'), Count('user')))
     response = {}
     for i, data in enumerate(datas):

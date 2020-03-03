@@ -209,6 +209,7 @@ textarea{
 .list_side{
     max-width: 300px;
     padding: 1%;
+    background: oldlace;
 }
 #list_vocabulary{
     padding-top: 15px;
