@@ -144,9 +144,12 @@ kref {
 .add_words {
     max-width: 800px;
     padding-top:1%;
+    /* height: fit-content; */
 }
 #content_user_vocabulary .add_words{
     max-width: 100%;
+    max-height: calc(100vh - 150px);
+    overflow: auto;
 }
 .add_words div{
     padding: 2% 2% 0 2%;
@@ -210,10 +213,11 @@ textarea{
     max-width: 300px;
     padding: 1%;
     background: oldlace;
+    max-height: calc(100vh - 150px);
 }
 #list_vocabulary{
-    padding-top: 15px;
-    max-height: 100%;
+    margin-top: 15px;
+    max-height: 93%;
     overflow: auto;
 }
 #view_word {
