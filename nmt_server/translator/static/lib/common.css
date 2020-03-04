@@ -335,10 +335,11 @@ a:link, a:link:hover {
     color: #090909;
 }
 .dict_area{
-    background: transparent;
-    display: none;
+    /* display: none; */
     width:100%;
-    margin-bottom: 30px;
+    /* margin-bottom: 30px; */
+    background: white;
+    min-height: calc(100vh - 155px);
 }
 #dict_menu_bar {
     background: -webkit-linear-gradient(#FFF, #E0E0E0) no-repeat center bottom;
@@ -363,7 +364,7 @@ dictionary, copus {
     display: block;
     font-style: italic;
     font-weight: 600;
-    background: #F0EFEF30 url(../icons/1x_mobile.png) no-repeat;
+    background: #eee url(../icons/1x_mobile.png) no-repeat;
     background-position: 3px -334px;
     font-size: 14px;
     padding: 3px 0 3px 30px;

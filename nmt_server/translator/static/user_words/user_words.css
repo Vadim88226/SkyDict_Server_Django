@@ -131,6 +131,7 @@ kref {
     max-width: 800px;
     padding-top:1%;
     /* height: fit-content; */
+    min-height: calc(100vh - 155px);
 }
 #content_user_vocabulary .add_words{
     max-width: 100%;
@@ -200,6 +201,9 @@ textarea{
     padding: 1%;
     height: calc(100vh - 155px);
 } 
+.list_side label {
+    font-weight: 100;
+}
 #list_vocabulary{
     padding: 0;
     padding-top: 10px;
@@ -209,8 +213,11 @@ textarea{
     margin: -1px 0;
 }
 #list_vocabulary ul{
+    padding-top: 6px;
     border: 1px solid lightgray;
     border-style: none none solid;
+    margin: 0;
+    li
 }
 #list_vocabulary ul:hover{
     background-color: #eee;
@@ -237,6 +244,7 @@ textarea{
     visibility: hidden;
     display: flex;
     height: 0;
+    position: fixed;
 }
 .glyphicon{
     margin-left: 10px;
