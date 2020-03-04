@@ -309,6 +309,7 @@ $(function(){
             $.alert({
                 title: 'Alert!', content: "Source Language equal target language. <br> Please change!",
                 icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                autoClose: 'okay|3000',
                 buttons: {
                     okay: {  }
                 }
@@ -348,6 +349,7 @@ $(function(){
             $.alert({
                 title: 'Alert!', content: "Data is empty! <br> please enter data.",
                 icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                autoClose: 'okay|3000',
                 buttons: {
                     okay: {  }
                 }
@@ -367,14 +369,21 @@ $(function(){
             },
             dataType: 'json',
             success: function (data) {  
-                $.alert({
-                    title: 'Alert!', content: data.content,
-                    icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                $.confirm({
+                    icon: 'fa fa-smile-o',
+                    theme: 'modern', content: data.content,
+                    animation: 'scale',
+                    type: 'blue',
+                    autoClose: 'okay|3000',
+                    escapeKey: 'okay',
                     buttons: {
-                        okay: {  }
+                        okay: { 
+                            action: function(){
+                                window.location = "/user_words/index";
+                            }
+                        }
                     }
                 });
-                window.location = "/user_words/index";
             },
             error: function() {
                 $.alert({
@@ -567,44 +576,55 @@ $(function(){
     $(".btn_delete").on('click', function(){ 
         var _obj = document.getElementById("view_word");
         if(_obj.textContent == "") return;
-        $.ajax({
-            url: delete_vocabulary,
-            headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
-            data: {
-                'word': _obj.textContent,
-                'user': _obj.getAttribute("user")
-            },
-            dataType: 'json',
-            success: function (data) {
-                $.confirm({
-                    icon: 'fa fa-smile-o',
-                    theme: 'modern', content: data.content,
-                    animation: 'scale',
-                    type: 'blue',
-                    autoClose: 'okay|3000',
-                    escapeKey: 'okay',
-                    buttons: {
-                        okay: { 
-                            action: function(){
-                                ShowVocabulary();
-                                document.getElementById("view_word").innerHTML="";
-                                document.getElementById("db_vocabulary").innerHTML="";
-                                $(".add_words").css('display', 'none');
-                            }
-                        }
+        $.confirm({
+            title: 'Are you sure?', content: 'Please check again',
+            icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+            buttons: {
+                okay: { 
+                    action: function(){
+                        $.ajax({
+                            url: delete_vocabulary,
+                            headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
+                            data: {
+                                'word': _obj.textContent,
+                                'user': _obj.getAttribute("user")
+                            },
+                            dataType: 'json',
+                            success: function (data) {
+                                $.confirm({
+                                    icon: 'fa fa-smile-o',
+                                    theme: 'modern', content: data.content,
+                                    animation: 'scale',
+                                    type: 'blue',
+                                    autoClose: 'okay|3000',
+                                    escapeKey: 'okay',
+                                    buttons: {
+                                        okay: { 
+                                            action: function(){
+                                                ShowVocabulary();
+                                                document.getElementById("view_word").innerHTML="";
+                                                document.getElementById("db_vocabulary").innerHTML="";
+                                                $(".add_words").css('display', 'none');
+                                            }
+                                        }
+                                    }
+                                });
+                            },
+                            error: function() {
+                                $.alert({
+                                    title: 'Alert!', content: 'Server Error!',
+                                    icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                                    buttons: {
+                                        okay: {  }
+                                    }
+                                });
+                            },
+                            timeout: 2000
+                        });
                     }
-                });
-            },
-            error: function() {
-                $.alert({
-                    title: 'Alert!', content: 'Server Error!',
-                    icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
-                    buttons: {
-                        okay: {  }
-                    }
-                });
-            },
-            timeout: 2000
+                },
+                cancel :{}
+            }
         });
     });
     if (suburl == 'dict')  ShowVocabulary();
