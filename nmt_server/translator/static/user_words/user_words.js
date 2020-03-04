@@ -1,6 +1,3 @@
-var wait, wait1;
-var _ajax_communication;
-
 function ShowVocabulary()
 {
     var selectedText = $('#id_find_word').val().trim();
@@ -13,7 +10,7 @@ function ShowVocabulary()
         dataType: 'json',
         success: function (data) {
             if (data != "") {
-                if(data.length == 0) { console.log("ppppppppppppp");
+                if(data.length == 0) {
                     return;
                 } else {
                     document.getElementById("list_vocabulary").innerHTML="";
@@ -349,7 +346,7 @@ $(function(){
         }   //console.log(_data); return;
         if(data_len == 0) {
             $.alert({
-                title: 'Alert!', content: "Data is empty! please enter data.",
+                title: 'Alert!', content: "Data is empty! <br> please enter data.",
                 icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
                 buttons: {
                     okay: {  }
@@ -507,7 +504,15 @@ $(function(){
             },
             dataType: 'json',
             success: function (data) {
-                console.log(data);
+                $.confirm({
+                    icon: 'fa fa-smile-o',
+                    theme: 'modern', content: data.content,
+                    animation: 'scale', type: 'blue',
+                    autoClose: 'okay|2000', escapeKey: 'okay',
+                    buttons: {
+                        okay: {  }
+                    }
+                });
             },
             error: function() {
                 $.alert({
@@ -521,7 +526,7 @@ $(function(){
             timeout: 2000
         });
     });
-    $(".btn_approve").on('click', function(){ 
+    $(".btn_approve").on('click', function(){  
         var _obj = document.getElementById("view_word");
         if(_obj.textContent == "") return;
         $.ajax({
@@ -533,8 +538,19 @@ $(function(){
             },
             dataType: 'json',
             success: function (data) {
-                console.log(data);
-                ShowVocabulary();
+                $.confirm({
+                    icon: 'fa fa-smile-o',
+                    theme: 'modern', content: data.content,
+                    animation: 'scale', type: 'blue',
+                    autoClose: 'okay|3000', escapeKey: 'okay',
+                    buttons: {
+                        okay: { 
+                            action: function(){
+                                ShowVocabulary();
+                             }
+                        }
+                    }
+                });
             },
             error: function() {
                 $.alert({
@@ -560,10 +576,24 @@ $(function(){
             },
             dataType: 'json',
             success: function (data) {
-                console.log(data);
-                ShowVocabulary();
-                document.getElementById("view_word").innerHTML="";
-                document.getElementById("db_vocabulary").innerHTML="";
+                $.confirm({
+                    icon: 'fa fa-smile-o',
+                    theme: 'modern', content: data.content,
+                    animation: 'scale',
+                    type: 'blue',
+                    autoClose: 'okay|3000',
+                    escapeKey: 'okay',
+                    buttons: {
+                        okay: { 
+                            action: function(){
+                                ShowVocabulary();
+                                document.getElementById("view_word").innerHTML="";
+                                document.getElementById("db_vocabulary").innerHTML="";
+                                $(".add_words").css('display', 'none');
+                            }
+                        }
+                    }
+                });
             },
             error: function() {
                 $.alert({
