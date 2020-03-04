@@ -186,7 +186,7 @@ $(function(){
         _sli.textContent = s_text;
         _ul.appendChild(_fli);
         _ul.appendChild(_sli);
-        _ul.setAttribute('style', 'width:90%;');
+        _ul.setAttribute('style', 'width: calc(100% - 50px);');
         var _divtool = document.createElement('div');
         var _btnEdit = document.createElement('button');
         var _btnDel = document.createElement('button');
@@ -196,7 +196,7 @@ $(function(){
         _btnDel.setAttribute('class', 'btn_Del glyphicon glyphicon-remove');
         _divtool.appendChild(_btnEdit);
         _divtool.appendChild(_btnDel);
-        _divtool.setAttribute('style', 'width:10%; padding:2px;');
+        _divtool.setAttribute('style', 'width:50px; padding:2px;');
 
         if($(".EditStatus").length) {
             target = document.getElementsByClassName("EditStatus")[0];
@@ -468,7 +468,7 @@ $(function(){
                             _sli.textContent = data[_d]['sentences'][_s]['t_sentence'];
                             _ul.appendChild(_fli);
                             _ul.appendChild(_sli);
-                            _ul.setAttribute('style', 'width:90%;');
+                            _ul.setAttribute('style', 'width:calc(100% - 50px);');
                             var _divtool = document.createElement('div');
                             var _btnEdit = document.createElement('button');
                             var _btnDel = document.createElement('button');
@@ -478,7 +478,7 @@ $(function(){
                             _btnDel.setAttribute('class', 'btn_Del glyphicon glyphicon-remove');
                             _divtool.appendChild(_btnEdit);
                             _divtool.appendChild(_btnDel);
-                            _divtool.setAttribute('style', 'width:10%; padding:2px;');
+                            _divtool.setAttribute('style', 'width:50px; padding:2px;');
 
                             _div1.appendChild(_ul);
                             _div1.appendChild(_divtool);

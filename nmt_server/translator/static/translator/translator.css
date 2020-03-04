@@ -398,6 +398,7 @@ input[type=text], input[type=email], input[type=password]{
     transition: 0.3s;
     background-position: right 5px top 5px;
     width: -webkit-fill-available;
+    width: -moz-available;
 /*     
     border: none;
     border-bottom: 1px solid #dee2e5;
@@ -584,6 +585,7 @@ a:link, a:link:hover {
     background: white;
     width: 100%;
     height: -webkit-fill-available;
+    height: : -moz-available;
     padding: 15% 0;
     text-align: -webkit-center;
 }

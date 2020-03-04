@@ -150,6 +150,7 @@ kref {
 }
 .add_words ul{
     list-style-type: none;
+    margin: 0;
 }
 .add_words .frame{
     position: relative;
@@ -173,6 +174,7 @@ kref {
 }
 .add_words .word_type{
     width: -webkit-fill-available;
+    width: -moz-available;
     padding: 2% 0;
 }
 textarea{
