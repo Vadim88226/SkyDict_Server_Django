@@ -13,7 +13,7 @@ function ShowVocabulary()
         dataType: 'json',
         success: function (data) {
             if (data != "") {
-                if(data.length == 0) {
+                if(data.length == 0) { console.log("ppppppppppppp");
                     return;
                 } else {
                     document.getElementById("list_vocabulary").innerHTML="";
@@ -54,6 +54,13 @@ $(function(){
         ShowVocabulary();
     });
     $('input[type=radio][name=allowed]').change(function() {
+        if(document.querySelector('input[name="allowed"]:checked').value == 1) {
+            $('.div_approved').css('border-style', 'solid solid none solid');
+            $('.div_unapproved').css('border-style', 'none none solid none');
+        } else {
+            $('.div_approved').css('border-style', 'none none solid none');
+            $('.div_unapproved').css('border-style', 'solid solid none solid');
+        }
         ShowVocabulary();
     });
     $(document).on('click',"#wordDict_help_popup ul", function(e){
@@ -370,7 +377,7 @@ $(function(){
                         okay: {  }
                     }
                 });
-                window.location = window.location;
+                window.location = "/user_words/index";
             },
             error: function() {
                 $.alert({
@@ -387,7 +394,7 @@ $(function(){
     });
     function obj_focus( obj ){
         $(obj).focus();
-        $(obj).css('border', '2px dotted red');
+        $(obj).css('border', '2px solid red');
         $(obj).attr('placeholder', 'Please Enter');
     }
     $(document).on('click', "#list_vocabulary ul", function(e) {
@@ -406,6 +413,7 @@ $(function(){
             dataType: 'json',
             success: function (data) {
                 if(data.length == 0) return;
+                $('.add_words').css('display', 'block');
                 document.getElementById("view_word").textContent = e.target.textContent;
                 document.getElementById("view_word").setAttribute('user', data[0]["user"]);
                 // console.log(data);
@@ -569,4 +577,5 @@ $(function(){
             timeout: 2000
         });
     });
+    if (suburl == 'dict')  ShowVocabulary();
 })

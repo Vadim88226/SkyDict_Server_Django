@@ -122,20 +122,6 @@ kref {
     width: 100%;
     margin-top: 10px;
 }
-#dict_menu_bar {
-    background: -webkit-linear-gradient(#FFF, #E0E0E0) no-repeat center bottom;
-    margin-top:5px;
-}
-#dict_menu_bar a{
-    padding: 0 18px;
-    border-image: linear-gradient(to top, #AAA, rgba(0, 0, 0, 0)) 1 100%;
-    border-width: 1px;
-    border-style: solid;
-    border-bottom: none;
-    border-left: none;
-    background-color: transparent;
-    color: grey;
-}
 .add_words, .language_bar, .list_side{
     width:100%;
     background-color: white;
@@ -148,7 +134,7 @@ kref {
 }
 #content_user_vocabulary .add_words{
     max-width: 100%;
-    max-height: calc(100vh - 150px);
+    max-height: calc(100vh - 155px);
     overflow: auto;
 }
 .add_words div{
@@ -210,15 +196,37 @@ textarea{
     font-style: italic;
 }
 .list_side{
-    max-width: 300px;
+    max-width: 235px;
     padding: 1%;
-    background: oldlace;
-    max-height: calc(100vh - 150px);
-}
+    height: calc(100vh - 155px);
+} 
 #list_vocabulary{
-    /* margin-top: 15px; */
-    max-height: 93%;
+    padding: 0;
+    padding-top: 10px;
+    border: 1px solid #0F2B46;
+    height: 97%;
     overflow: auto;
+    margin: -1px 0;
+}
+#list_vocabulary ul{
+    border: 1px solid lightgray;
+    border-style: none none solid;
+}
+#list_vocabulary ul:hover{
+    background-color: #eee;
+}
+.div_unapproved, .div_approved {
+    width: 50%; 
+    text-align: center;
+    border: 1px solid;
+    border-radius: 5px 5px 0 0;
+    background: white;
+}
+.div_unapproved {
+    border-style: solid solid none solid;
+}
+.div_approved {
+    border-style: none none solid none;
 }
 #view_word {
     font-size: x-large;
@@ -255,6 +263,9 @@ select{
 }
 .form_vocabulary{
     display:flex;
+}
+#Unapproved, #Approved{
+    display: none;
 }
 @media (max-width: 767px) {
     #content_user_vocabulary {

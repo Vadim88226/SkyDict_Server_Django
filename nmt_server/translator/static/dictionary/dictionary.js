@@ -144,12 +144,13 @@ $(function(){
         $("#more_sentences").css('display', 'block');
     })
     $(document).on('click', "copus, dictionary", function(e){
-        var _cont = e.target.parentElement; _cont.className = "animate";
+        var _cont = e.target.parentElement; _cont.className = "animate"; console.log(_cont.style);
         if( _cont.style.height == "") {
-            _cont.style.height = "100px";
+            _cont.style.height = "27px";
+            e.target.style.backgroundPosition = "3px -214px";
         } else {
             _cont.style.height = "";
+            e.target.style.backgroundPosition = "";
         }
-
     })
 })
