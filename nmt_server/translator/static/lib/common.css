@@ -13,7 +13,7 @@ body{
     align-items: center;
 }
 .navbar-brand{
-    font-size: 24px;
+    font-size: 24px !important;
     font-weight: bold;
 }
 .navbar-nav{
@@ -340,6 +340,21 @@ a:link, a:link:hover {
     width:100%;
     margin-bottom: 30px;
 }
+#dict_menu_bar {
+    background: -webkit-linear-gradient(#FFF, #E0E0E0) no-repeat center bottom;
+    margin-top:5px;
+    font-size: larger;
+}
+#dict_menu_bar a{
+    padding: 0 18px;
+    border-image: linear-gradient(to top, #AAA, rgba(0, 0, 0, 0)) 1 100%;
+    border-width: 1px;
+    border-style: solid;
+    border-bottom: none;
+    border-left: none;
+    background-color: transparent;
+    color: grey;
+}
 k{
     color: #265180;
     font-size: 20px;
@@ -348,10 +363,12 @@ dictionary, copus {
     display: block;
     font-style: italic;
     font-weight: 600;
-    background: #F0EFEF url(../icons/orange-square-bullet.gif) no-repeat 7px 10px;
+    background: #F0EFEF30 url(../icons/1x_mobile.png) no-repeat;
+    background-position: 3px -334px;
     font-size: 14px;
-    padding: 3px 0 3px 20px;
+    padding: 3px 0 3px 30px;
     border-bottom: 1px solid #AFAEAE;
+    cursor: pointer;
 }
 .animate{
     -webkit-transition: 3s;

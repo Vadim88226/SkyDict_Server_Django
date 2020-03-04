@@ -1,6 +1,9 @@
 {% extends 'user_words/index.html' %}
 <!-- ============================== Dictionary ============================== -->
 {% block content %}
+<script type="text/javascript"> 
+var suburl = "{{suburl}}";
+</script>
 <div class='DictSearch'>
     <!-- <form action="" method="post"> -->
         {{ search_input_form }}
@@ -19,7 +22,11 @@
     {% endif %}
 </div>
 {% csrf_token %}
-<div id="content_add_words" style="text-align: -webkit-center;">
+{% if suburl != "index" %}
+<div id="content_add_words" {{ suburl }} style="text-align: -webkit-center;text-align: -moz-center;display: none;">
+{% else %}
+<div id="content_add_words" {{ suburl }} style="text-align: -webkit-center;text-align: -moz-center;">
+{% endif %}
     <div class="add_words">
         <!-- <form action="" method="post"> -->
             <div style="text-align: right;" class="form_vocabulary"> 
@@ -46,31 +53,40 @@
         </div>
     </div>
 </div>
-
-    <div id="content_user_vocabulary" style="text-align: -webkit-center;">
-        <div class="list_side">
-            <div style="display: flex;">
-            <div>
-                <input type="radio" id="Unapproved" name="allowed" value=0 checked>
-                <label for="Unapproved">Unapproved</label>
-            </div>
-            <div style="margin-left: 15px;">
-                <input type="radio" id="Approved" name="allowed" value=1>
-                <label for="Approved">Approved</label>
-            </div>
-            </div>
-            <div id="list_vocabulary"></div>
+{% if suburl == 'dict' %}
+<div id="content_user_vocabulary" style="text-align: -webkit-center;visibility: visible;">
+{% else %}
+<div id="content_user_vocabulary" style="text-align: -webkit-center;">
+{% endif %}
+    <div class="list_side">
+        <div style="display: flex;position: relative;">
+        <div class="div_unapproved">
+            <input type="radio" id="Unapproved" name="allowed" value=0 checked>
+            <label for="Unapproved">Unapproved</label>
         </div>
-        <div class="add_words">
-            <!-- <form action="" method="post"> -->
-                <div> Vocabulary: <span id="view_word"></span></div>
-                <div id='db_vocabulary'></div>
-            <!-- </form> -->
-                <button type='button' class='btn_approve sky_button'>Approve</button>
-                <button type='button' class='btn_delete sky_button'>Delete</button>
-                <div style="text-align:right;">    You can see more suggestions. About how to enter words Including various examples </div>
+        <div class="div_approved">
+            <input type="radio" id="Approved" name="allowed" value=1>
+            <label for="Approved">Approved</label>
+        </div>
+        </div>
+        <div id="list_vocabulary"></div>
+    </div>
+    <div style="background-color: white;width: -webkit-fill-available;">
+        <div class="add_words" style="display: none;">
+        <!-- <form action="" method="post"> -->
+            <div> Vocabulary: <span id="view_word"></span></div>
+            <div id='db_vocabulary'></div>
+        <!-- </form> -->
+            <div style="text-align:right;">
+                <div>
+                    <button type='button' class='btn_approve sky_button'>Approve</button>
+                    <button type='button' class='btn_delete sky_button'>Delete</button>
+                </div>
+                You can see more suggestions. About how to enter words Including various examples 
+            </div>
         </div>
     </div>
+</div>
 
 <!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">

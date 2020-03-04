@@ -36,10 +36,10 @@ def DictionaryView(request):
     return render(request, 'dictionary/content.html', {'search_input_form': search_input_form})
 
 # display User_Words Page
-def User_WordsView(request):
+def User_WordsView(request, suburl = ""):
     search_input_form = DictForm()
     add_words_form = AddWordsForm(initial={'t_lang': 'Thai'})
-    return render(request, 'user_words/content.html', {'search_input_form': search_input_form, 'add_words_form': add_words_form})
+    return render(request, 'user_words/content.html', {'search_input_form': search_input_form, 'add_words_form': add_words_form, 'suburl': suburl})
 
 # query word for Lexitron dictionary
 def search_dict(word, lang):
@@ -335,28 +335,28 @@ def update_sentence(request):
     _t_sentence = request.GET.get('t_sentence')
     DictSentences.objects.filter(id=int(_sent_id)).update(s_sentence = _s_sentence, t_sentence = _t_sentence)
 
-    return JsonResponse({'content': "Successfully Rigistry!"})
+    return JsonResponse({'content': "Successfully Update Sentence!"})
 
 def delete_sentence(request):
     _sent_id = request.GET.get('sent_id')
     DictSentences.objects.filter(id=int(_sent_id)).delete()
 
-    return JsonResponse({'content': "Successfully Rigistry!"})
+    return JsonResponse({'content': "Successfully Delete Sentence!"})
 
 def update_vocabulary(request):
     _word_id = request.GET.get('word_id')
     _trans = request.GET.get('trans')
     DictWords.objects.filter(id=int(_word_id)).update(trans=_trans)
-    return JsonResponse({'content': "Successfully Rigistry!"})
+    return JsonResponse({'content': "Successfully Update!"})
 
 def approve_vocabulary(request):
     _word = request.GET.get('word')
     _user = request.GET.get('user')
     DictWords.objects.filter(word=_word, user=_user).update(is_approved=1)
-    return JsonResponse({'content': "Successfully Rigistry!"})
+    return JsonResponse({'content': "Successfully Approve!"})
 
 def delete_vocabulary(request):
     _word = request.GET.get('word')
     _user = request.GET.get('user')
     DictWords.objects.filter(word=_word, user=_user).delete()
-    return JsonResponse({'content': "Successfully Rigistry!"})
+    return JsonResponse({'content': "Success Delete Vocabulary!"})

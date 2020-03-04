@@ -1,8 +1,5 @@
-var wait, wait1;
-var _ajax_communication;
-
 function similar_words() {
-	var selectedText = $('#id_find_word').val().trim();
+	var selectedText = $('#id_find_word').val();
     if (s_text == selectedText) return; 
     s_text = selectedText;
     if(selectedText == "" || selectedText.split(" ").length > 1 || selectedText.split(",").length > 1) {
@@ -20,6 +17,7 @@ function similar_words() {
         },
         dataType: 'json',
         success: function (data) {  //console.log(data);
+            if(selectedText != $('#id_find_word').val()) return;
             if(data.content) {
                 document.getElementById('wordDict_help_popup').innerHTML = data.content; 
                 document.getElementById('wordDict_help_popup').style.display = "block";
@@ -42,7 +40,7 @@ function similar_words() {
 
 function ShowSelection(selectedText)
 {
-    selectedText = selectedText.trim();
+    // selectedText = selectedText.trim();
     var sel = selectedText.split(' ');
     if (sel.length > 1 || selectedText.length == 0) {$(".dict_area").css('display', 'none');return;}
     sel = sel[0].split(',');
@@ -59,6 +57,7 @@ function ShowSelection(selectedText)
         },
         dataType: 'json',
         success: function (data) {
+            if($('#id_find_word').val() != selectedText) return;
             if (data != "") {
                 $(".dict_area").css('display', 'flex');
                 var dText = "";
@@ -121,8 +120,7 @@ $(function(){
         document.getElementById('wordDict_help_popup').style.display = "none";
     });
     $(".btn_search").on('click', function(){
-        s_text = $('#id_find_word').val()
-        ShowSelection(s_text);
+        ShowSelection($('#id_find_word').val());
         document.getElementById('wordDict_help_popup').style.display = "none"
         $("#view_dict_area").click();
     })
@@ -144,12 +142,13 @@ $(function(){
         $("#more_sentences").css('display', 'block');
     })
     $(document).on('click', "copus, dictionary", function(e){
-        var _cont = e.target.parentElement; _cont.className = "animate";
+        var _cont = e.target.parentElement; _cont.className = "animate"; console.log(_cont.style);
         if( _cont.style.height == "") {
-            _cont.style.height = "100px";
+            _cont.style.height = "27px";
+            e.target.style.backgroundPosition = "3px -214px";
         } else {
             _cont.style.height = "";
+            e.target.style.backgroundPosition = "";
         }
-
     })
 })

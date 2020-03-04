@@ -1,6 +1,3 @@
-var wait, wait1;
-var _ajax_communication;
-
 function ShowVocabulary()
 {
     var selectedText = $('#id_find_word').val().trim();
@@ -54,6 +51,13 @@ $(function(){
         ShowVocabulary();
     });
     $('input[type=radio][name=allowed]').change(function() {
+        if(document.querySelector('input[name="allowed"]:checked').value == 1) {
+            $('.div_approved').css('border-style', 'solid solid none solid');
+            $('.div_unapproved').css('border-style', 'none none solid none');
+        } else {
+            $('.div_approved').css('border-style', 'none none solid none');
+            $('.div_unapproved').css('border-style', 'solid solid none solid');
+        }
         ShowVocabulary();
     });
     $(document).on('click',"#wordDict_help_popup ul", function(e){
@@ -305,6 +309,7 @@ $(function(){
             $.alert({
                 title: 'Alert!', content: "Source Language equal target language. <br> Please change!",
                 icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                autoClose: 'okay|3000',
                 buttons: {
                     okay: {  }
                 }
@@ -342,8 +347,9 @@ $(function(){
         }   //console.log(_data); return;
         if(data_len == 0) {
             $.alert({
-                title: 'Alert!', content: "Data is empty! please enter data.",
+                title: 'Alert!', content: "Data is empty! <br> please enter data.",
                 icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                autoClose: 'okay|3000',
                 buttons: {
                     okay: {  }
                 }
@@ -363,14 +369,21 @@ $(function(){
             },
             dataType: 'json',
             success: function (data) {  
-                $.alert({
-                    title: 'Alert!', content: data.content,
-                    icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                $.confirm({
+                    icon: 'fa fa-smile-o',
+                    theme: 'modern', content: data.content,
+                    animation: 'scale',
+                    type: 'blue',
+                    autoClose: 'okay|3000',
+                    escapeKey: 'okay',
                     buttons: {
-                        okay: {  }
+                        okay: { 
+                            action: function(){
+                                window.location = "/user_words/index";
+                            }
+                        }
                     }
                 });
-                window.location = window.location;
             },
             error: function() {
                 $.alert({
@@ -387,7 +400,7 @@ $(function(){
     });
     function obj_focus( obj ){
         $(obj).focus();
-        $(obj).css('border', '2px dotted red');
+        $(obj).css('border', '2px solid red');
         $(obj).attr('placeholder', 'Please Enter');
     }
     $(document).on('click', "#list_vocabulary ul", function(e) {
@@ -406,6 +419,7 @@ $(function(){
             dataType: 'json',
             success: function (data) {
                 if(data.length == 0) return;
+                $('.add_words').css('display', 'block');
                 document.getElementById("view_word").textContent = e.target.textContent;
                 document.getElementById("view_word").setAttribute('user', data[0]["user"]);
                 // console.log(data);
@@ -499,7 +513,15 @@ $(function(){
             },
             dataType: 'json',
             success: function (data) {
-                console.log(data);
+                $.confirm({
+                    icon: 'fa fa-smile-o',
+                    theme: 'modern', content: data.content,
+                    animation: 'scale', type: 'blue',
+                    autoClose: 'okay|2000', escapeKey: 'okay',
+                    buttons: {
+                        okay: {  }
+                    }
+                });
             },
             error: function() {
                 $.alert({
@@ -513,7 +535,7 @@ $(function(){
             timeout: 2000
         });
     });
-    $(".btn_approve").on('click', function(){ 
+    $(".btn_approve").on('click', function(){  
         var _obj = document.getElementById("view_word");
         if(_obj.textContent == "") return;
         $.ajax({
@@ -525,8 +547,19 @@ $(function(){
             },
             dataType: 'json',
             success: function (data) {
-                console.log(data);
-                ShowVocabulary();
+                $.confirm({
+                    icon: 'fa fa-smile-o',
+                    theme: 'modern', content: data.content,
+                    animation: 'scale', type: 'blue',
+                    autoClose: 'okay|3000', escapeKey: 'okay',
+                    buttons: {
+                        okay: { 
+                            action: function(){
+                                ShowVocabulary();
+                             }
+                        }
+                    }
+                });
             },
             error: function() {
                 $.alert({
@@ -543,30 +576,56 @@ $(function(){
     $(".btn_delete").on('click', function(){ 
         var _obj = document.getElementById("view_word");
         if(_obj.textContent == "") return;
-        $.ajax({
-            url: delete_vocabulary,
-            headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
-            data: {
-                'word': _obj.textContent,
-                'user': _obj.getAttribute("user")
-            },
-            dataType: 'json',
-            success: function (data) {
-                console.log(data);
-                ShowVocabulary();
-                document.getElementById("view_word").innerHTML="";
-                document.getElementById("db_vocabulary").innerHTML="";
-            },
-            error: function() {
-                $.alert({
-                    title: 'Alert!', content: 'Server Error!',
-                    icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
-                    buttons: {
-                        okay: {  }
+        $.confirm({
+            title: 'Are you sure?', content: 'Please check again',
+            icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+            buttons: {
+                okay: { 
+                    action: function(){
+                        $.ajax({
+                            url: delete_vocabulary,
+                            headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
+                            data: {
+                                'word': _obj.textContent,
+                                'user': _obj.getAttribute("user")
+                            },
+                            dataType: 'json',
+                            success: function (data) {
+                                $.confirm({
+                                    icon: 'fa fa-smile-o',
+                                    theme: 'modern', content: data.content,
+                                    animation: 'scale',
+                                    type: 'blue',
+                                    autoClose: 'okay|3000',
+                                    escapeKey: 'okay',
+                                    buttons: {
+                                        okay: { 
+                                            action: function(){
+                                                ShowVocabulary();
+                                                document.getElementById("view_word").innerHTML="";
+                                                document.getElementById("db_vocabulary").innerHTML="";
+                                                $(".add_words").css('display', 'none');
+                                            }
+                                        }
+                                    }
+                                });
+                            },
+                            error: function() {
+                                $.alert({
+                                    title: 'Alert!', content: 'Server Error!',
+                                    icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                                    buttons: {
+                                        okay: {  }
+                                    }
+                                });
+                            },
+                            timeout: 2000
+                        });
                     }
-                });
-            },
-            timeout: 2000
+                },
+                cancel :{}
+            }
         });
     });
+    if (suburl == 'dict')  ShowVocabulary();
 })
