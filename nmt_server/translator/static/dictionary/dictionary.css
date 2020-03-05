@@ -63,7 +63,7 @@
     width: 24px!important;
     background-position: 0px -360px;
     color: white;
-    background-image: -webkit-image-set(url(../icons/1x_mobile.png) 1x,url(../icons/2x_mobile.png) 2x);
+    background-image: url(../icons/1x_mobile.png);
 }
 #translator_dict, .sentence_area {
     /* padding: 0px 32px 0px 24px; */
@@ -98,7 +98,7 @@
     padding-left: 5%;
     color: snow;
     width: 100%;
-    background-image: -webkit-image-set(url(../icons/1x_mobile.png) 1x,url(../icons/2x_mobile.png) 2x);
+    background-image: url(../icons/1x_mobile.png);
     background-color: #d2d2d2;
     border: 1px solid #d2d2d2;
     transition: background-color 0.15s ease-out, color 0.15s ease-out, color 0.15s ease-out, color 0.15s ease-out, border 0.15s ease-out, color 0.15s ease-out;
