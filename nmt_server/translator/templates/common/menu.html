@@ -4,9 +4,14 @@
       <a class="navbar-brand" href="/translator">SkyDict</a>
       <span class="header_menu_separator"></span>
       <div class="navbar-nav navbar-item">
-          <div class = "nav-left navbar-item">
-              <a href="/translator">Translator</a>
-              <a href="/dictionary">Dictionary</a>
+          <div class = "nav-left navbar-item"> 
+              {% if request.get_full_path == "/translator/" %}
+              <a href="/translator" style="color:black">Translator</a>
+              <a href="/dictionary">Dictionary</a> 
+              {% else %}
+              <a href="/translator" >Translator</a>
+              <a href="/dictionary" style="color:black">Dictionary</a> 
+              {% endif %}
           </div>
           <div class="nav-right navbar-item">
               {% if not request.user.is_authenticated %}

@@ -8,7 +8,7 @@ class SignupForm(UserCreationForm):
         fields = ('email', 'username', 'first_name', 'last_name', 'password1','password2')
 
 class DictForm(forms.Form):
-    find_word = forms.CharField(label='',required=False, widget=forms.TextInput(attrs={'placeholder': 'Enter word','autofocus':True}))
+    find_word = forms.CharField(label='',required=False, widget=forms.TextInput(attrs={'placeholder': 'Enter word','autofocus':True, 'autocomplete': 'off'} ))
 
 class AddWordsForm(forms.Form):
     LANG = ('English', 'Thai');

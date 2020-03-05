@@ -63,8 +63,8 @@ function ShowSelection(selectedText)
                 var dText = "";
                 for(_dict in data.dictionary) {
                     if(data.dictionary[_dict]) {
-                        dText += "<div><dictionary>" + _dict + "</dictionary>";
-                        dText += data.dictionary[_dict] + "</div>";
+                        dText += "<div><dictionary>" + _dict + "</dictionary><div class='content'>";
+                        dText += data.dictionary[_dict] + "</div></div>";
                     }
                 }
                     dText = dText.replace(/\n/g, "<br>");
@@ -75,8 +75,8 @@ function ShowSelection(selectedText)
                 dText = "";
                 for(_s in data.sentences) {
                     if(data.sentences[_s]) {
-                        dText += "<div><copus>" + _s + "</copus>";
-                        dText += data.sentences[_s] + "</div>";
+                        dText += "<div><copus>" + _s + "</copus><div class='content'>";
+                        dText += data.sentences[_s] + "</div></div>";
                     }
                 }
                 if(dText) {
@@ -101,7 +101,7 @@ $(function(){
     $('#id_find_word').on('keyup', function(e) {
         var keycode = (e.keyCode ? e.keyCode : e.which);
         suggest_navigation_keys_check(e);
-        if(keycode != 13 && keycode != 32) { //console.log(keycode);
+        if(keycode != 13 && keycode != 32) {
             clearTimeout(wait1);
             wait1 = setTimeout(similar_words, 200);
         } else {
@@ -142,13 +142,15 @@ $(function(){
         $("#more_sentences").css('display', 'block');
     })
     $(document).on('click', "copus, dictionary", function(e){
-        var _cont = e.target.parentElement; _cont.className = "animate"; console.log(_cont.style);
-        if( _cont.style.height == "") {
-            _cont.style.height = "27px";
+        $(".animate").removeClass("animate");
+        var _cont = e.target.parentElement; _cont.className = "animate";
+        if( _cont.style.height != "27px") {
+            if(!_cont.getAttribute("_h")) _cont.setAttribute("_h", _cont.offsetHeight);
+            $(".animate").animate({ height:"27px" }, 10 );
             e.target.style.backgroundPosition = "3px -214px";
         } else {
-            _cont.style.height = "";
             e.target.style.backgroundPosition = "";
+            $(".animate").animate({ height:_cont.getAttribute("_h")+"px" }, 10 );
         }
     })
 })
