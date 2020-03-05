@@ -378,7 +378,7 @@ dictionary, copus {
     -moz-transition: 3s;
     -ms-transition: 3s;
     -o-transition: 3s;
-    transition: 3s;
+    transition: 1s;
     overflow: hidden;
 }
 @media (max-width: 768px) {

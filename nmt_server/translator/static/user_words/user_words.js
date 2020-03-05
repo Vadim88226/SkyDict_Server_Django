@@ -31,7 +31,7 @@ function ShowVocabulary()
         },
         error: function() {
             $.alert({
-                title: 'Alert!', content: 'Server Error!',
+                title: 'Alert', content: 'SERVER ERROR',
                 icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
                 buttons: {
                     okay: {  }
@@ -55,9 +55,11 @@ $(function(){
         if(document.querySelector('input[name="allowed"]:checked').value == 1) {
             $('.div_approved').css('border-style', 'solid solid none solid');
             $('.div_unapproved').css('border-style', 'none none solid none');
+            $(".btn_approve").css('visibility', 'hidden');
         } else {
             $('.div_approved').css('border-style', 'none none solid none');
             $('.div_unapproved').css('border-style', 'solid solid none solid');
+            $(".btn_approve").css('visibility', 'visible');
         }
         ShowVocabulary();
     });
@@ -80,14 +82,6 @@ $(function(){
     $(".btn_sound").on('click', function(){
         $("#sound_src").attr("src", "../static/sound.mp3");
 	    $(".my_audio").trigger('load');$(".my_audio").trigger('play');
-    })
-    $("#more_sentences").on('click', function(){
-        $(".sentence_more").css('display', 'block');
-        $("#more_sentences").css('display', 'none');
-    })
-    $("#few_sentences").on('click', function(){
-        $(".sentence_more").css('display', 'none');
-        $("#more_sentences").css('display', 'block');
     })
     $("#view_add_word").on('click', function(){
         $("#content_user_vocabulary").css('visibility', 'hidden');
@@ -220,7 +214,7 @@ $(function(){
                     },
                     error: function() {
                         $.alert({
-                            title: 'Alert!', content: 'Server Error!',
+                            title: 'Alert', content: 'SERVER ERROR',
                             icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
                             buttons: {
                                 okay: {  }
@@ -240,8 +234,8 @@ $(function(){
     });
     $(document).on('click', ".frame .btn_Del", function(e) {
         $.confirm({
-            title: 'Are you sure?',
-            content: 'You are deleting sentences.<br> If you are sure then click confirm button.',
+            title: 'Delete Sentences',
+            content: 'Are you sure you want to delete these sentences?.',
             icon: 'fa fa-question-circle',
             animation: 'scale',
             closeAnimation: 'scale',
@@ -269,7 +263,7 @@ $(function(){
                                 },
                                 error: function() {
                                     $.alert({
-                                        title: 'Alert!', content: 'Server Error!',
+                                        title: 'Alert', content: 'SERVER ERROR',
                                         icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
                                         buttons: {
                                             okay: {  }
@@ -309,7 +303,7 @@ $(function(){
         if(!$("#U_name").val()) {window.location.href = "/translator"; return;}
         if($("#id_s_lang").val() == $("#id_t_lang").val()) {
             $.alert({
-                title: 'Alert!', content: "Source Language equal target language. <br> Please change!",
+                title: 'Alert', content: "Source and target language is equal. <br> Please change!",
                 icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
                 autoClose: 'okay|3000',
                 buttons: {
@@ -349,7 +343,7 @@ $(function(){
         }   //console.log(_data); return;
         if(data_len == 0) {
             $.alert({
-                title: 'Alert!', content: "Data is empty! <br> please enter data.",
+                title: 'Alert', content: "Data is empty. <br> Please enter data.",
                 icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
                 autoClose: 'okay|3000',
                 buttons: {
@@ -389,7 +383,7 @@ $(function(){
             },
             error: function() {
                 $.alert({
-                    title: 'Alert!', content: 'Server Error!',
+                    title: 'Alert', content: 'SERVER ERROR',
                     icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
                     buttons: {
                         okay: {  }
@@ -493,7 +487,7 @@ $(function(){
             },
             error: function() {
                 $.alert({
-                    title: 'Alert!', content: 'Server Error!',
+                    title: 'Alert', content: 'SERVER ERROR',
                     icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
                     buttons: {
                         okay: {  }
@@ -527,7 +521,7 @@ $(function(){
             },
             error: function() {
                 $.alert({
-                    title: 'Alert!', content: 'Server Error!',
+                    title: 'Alert', content: 'SERVER ERROR',
                     icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
                     buttons: {
                         okay: {  }
@@ -551,7 +545,7 @@ $(function(){
             success: function (data) {
                 $.confirm({
                     icon: 'fa fa-smile-o',
-                    theme: 'modern', content: data.content,
+                    theme: 'modern', content: data.content, title: "Success!", 
                     animation: 'scale', type: 'blue',
                     autoClose: 'okay|3000', escapeKey: 'okay',
                     buttons: {
@@ -565,7 +559,7 @@ $(function(){
             },
             error: function() {
                 $.alert({
-                    title: 'Alert!', content: 'Server Error!',
+                    title: 'Alert', content: 'SERVER ERROR',
                     icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
                     buttons: {
                         okay: {  }
@@ -579,7 +573,7 @@ $(function(){
         var _obj = document.getElementById("view_word");
         if(_obj.textContent == "") return;
         $.confirm({
-            title: 'Are you sure?', content: 'Please check again',
+            title: 'Delete vocabulary', content: 'Are you sure you want to delete this vocabulary?',
             icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
             buttons: {
                 okay: { 
@@ -595,7 +589,7 @@ $(function(){
                             success: function (data) {
                                 $.confirm({
                                     icon: 'fa fa-smile-o',
-                                    theme: 'modern', content: data.content,
+                                    theme: 'modern',title: 'Success!', content: data.content,
                                     animation: 'scale',
                                     type: 'blue',
                                     autoClose: 'okay|3000',
@@ -614,7 +608,7 @@ $(function(){
                             },
                             error: function() {
                                 $.alert({
-                                    title: 'Alert!', content: 'Server Error!',
+                                    title: 'Alert', content: 'SERVER ERROR',
                                     icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
                                     buttons: {
                                         okay: {  }

@@ -103,7 +103,7 @@ def query_dict(request):
         user_sentences_records = DictSentences.objects.filter(dictwords = data)
         for j, sentence in enumerate(user_sentences_records):
             user_sentences_data += "<ul><li>" + getattr(sentence, 's_sentence') + "</li>"
-            user_sentences_data += "<li>" + getattr(sentence, 't_sentence') + "</li><ul>"
+            user_sentences_data += "<li>" + getattr(sentence, 't_sentence') + "</li></ul>"
     response = {}
     response["dictionary"] = {}
     response["dictionary"]["Lexitron Dictionary"] = lexi_dict_data
@@ -335,28 +335,28 @@ def update_sentence(request):
     _t_sentence = request.GET.get('t_sentence')
     DictSentences.objects.filter(id=int(_sent_id)).update(s_sentence = _s_sentence, t_sentence = _t_sentence)
 
-    return JsonResponse({'content': "Successfully Update Sentence!"})
+    return JsonResponse({'content': "You successfully updated these sentence!"})
 
 def delete_sentence(request):
     _sent_id = request.GET.get('sent_id')
     DictSentences.objects.filter(id=int(_sent_id)).delete()
 
-    return JsonResponse({'content': "Successfully Delete Sentence!"})
+    return JsonResponse({'content': "You deleted these sentences."})
 
 def update_vocabulary(request):
     _word_id = request.GET.get('word_id')
     _trans = request.GET.get('trans')
     DictWords.objects.filter(id=int(_word_id)).update(trans=_trans)
-    return JsonResponse({'content': "Successfully Update!"})
+    return JsonResponse({'content': "You updated this vocabulary."})
 
 def approve_vocabulary(request):
     _word = request.GET.get('word')
     _user = request.GET.get('user')
     DictWords.objects.filter(word=_word, user=_user).update(is_approved=1)
-    return JsonResponse({'content': "Successfully Approve!"})
+    return JsonResponse({'content': "You successfully approved this vocabulary."})
 
 def delete_vocabulary(request):
     _word = request.GET.get('word')
     _user = request.GET.get('user')
     DictWords.objects.filter(word=_word, user=_user).delete()
-    return JsonResponse({'content': "Success Delete Vocabulary!"})
+    return JsonResponse({'content': "You deleted this vocabulary."})
