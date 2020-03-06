@@ -69,7 +69,7 @@ function similar_words() {
     _ajax_communication = true;
     $.ajax({
         // type: "POST",
-        url: detect_similar_words,
+        url: text_similar_words,
         data: {
         'seltext': selectedText,
         'sl' : source_language.toLowerCase().substr(0,2)

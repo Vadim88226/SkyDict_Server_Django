@@ -315,7 +315,6 @@ $(function(){
         if($("#id_Vocabulary").val().trim() == "") {
             obj_focus("#id_Vocabulary"); return;
         }
-        var csrftoken = $("[name=csrfmiddlewaretoken]").val();
         var chk_boxes = $('#clear input[type=checkbox]');
         var _data = [];
         var data_len = 0;
@@ -353,7 +352,35 @@ $(function(){
             return;
         }
         $.ajax({
-            // type: "POST",
+            url: vocabulary_list,
+            data: {
+                'seltext': $("#id_Vocabulary").val().trim(),
+                'is_approved': 2
+            },
+            dataType: 'json',
+            success: function (data) { console.log(data);
+                if(data[0]) { console.log(data[0]);
+                    $.confirm({
+                        title: 'Confirm vocabulary', content: 'This vocabulary is in database.<br> Do you really add?',
+                        icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                        buttons: {
+                            okay: { 
+                                action: function() {
+                                    add_words_database(_data)
+                                }
+                            },
+                            cancel:{}
+                        }
+                    })
+                } else {
+                    add_words_database(_data);
+                }
+            }
+        })
+    });
+    function add_words_database(_data){
+        var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
             url: add_words_url,
             headers:{ "X-CSRFToken": csrftoken  },
             data: {
@@ -393,7 +420,7 @@ $(function(){
         }).always(function(e){
             
         });
-    });
+    }
     function obj_focus( obj ){
         $(obj).focus();
         $(obj).css('border', '2px solid red');
