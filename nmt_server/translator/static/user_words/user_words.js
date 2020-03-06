@@ -358,18 +358,19 @@ $(function(){
                 'is_approved': 2
             },
             dataType: 'json',
-            success: function (data) { console.log(data);
-                if(data[0]) { console.log(data[0]);
+            success: function (data) {
+                if(data[0]) {
                     $.confirm({
-                        title: 'Confirm vocabulary', content: 'This vocabulary is in database.<br> Do you really add?',
+                        title: 'Add Words', content: 'This word exists in User Dictionary.<br> Are you sure you want to add this word?',
                         icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
                         buttons: {
                             okay: { 
+                                text:'Yes',
                                 action: function() {
                                     add_words_database(_data)
                                 }
                             },
-                            cancel:{}
+                            cancel:{ text: 'No'}
                         }
                     })
                 } else {
