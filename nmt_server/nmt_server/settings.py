@@ -138,4 +138,3 @@ EMAIL_HOST_PASSWORD='password'
 
 
 django_heroku.settings(locals())
-
