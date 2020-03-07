@@ -90,6 +90,7 @@ textarea{
 }
 textarea::placeholder {
     font-size: xx-large;
+    color:#ddd;
 }
 .clear_text_button {
     top: 4px;
