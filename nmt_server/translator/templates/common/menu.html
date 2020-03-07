@@ -5,7 +5,7 @@
       <span class="header_menu_separator"></span>
       <div class="navbar-nav navbar-item">
           <div class = "nav-left navbar-item"> 
-              {% if request.get_full_path == "/translator/" %}
+              {% if request.get_full_path == "/translator/" or request.get_full_path|length|get_digit:"-1" == 1 %}
               <a href="/translator" style="color:black">Translator</a>
               <a href="/dictionary">Dictionary</a> 
               {% else %}

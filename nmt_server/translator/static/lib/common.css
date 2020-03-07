@@ -11,9 +11,11 @@ body{
     align-self: center;
     justify-content: space-between;
     align-items: center;
+    line-height: normal;
+    height: 50px;
 }
 .navbar-brand{
-    font-size: 24px !important;
+    font-size: 34px !important;
     font-weight: bold;
 }
 .navbar-nav{
@@ -22,7 +24,8 @@ body{
     align-self: center;
     justify-content: space-between;
     align-items: center;
-    font-size: 20px;
+    font-size: 26px;
+
 }
 .nav-right {
     display: flex;
@@ -45,7 +48,7 @@ body{
 }
 .navbar-nav a{
     color: #777;
-    padding:10px 10px 10px 10px;
+    padding: 10px 10px 10px 10px;
     -webkit-appearance: button;
 }
 .header_menu_separator {

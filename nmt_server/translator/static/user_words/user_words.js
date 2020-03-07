@@ -74,15 +74,6 @@ $(function(){
     $(".btn_search").on('click', function(){
         ShowVocabulary();
     })
-    $(document).on('dblclick', "kref", function(e){
-        var _content = e.currentTarget;
-        $('#id_find_word').val(_content.textContent);
-        $(".btn_search").click();
-    })
-    $(".btn_sound").on('click', function(){
-        $("#sound_src").attr("src", "../static/sound.mp3");
-	    $(".my_audio").trigger('load');$(".my_audio").trigger('play');
-    })
     $("#view_add_word").on('click', function(){
         $("#content_user_vocabulary").css('visibility', 'hidden');
         $("#content_user_vocabulary").css('position', 'fixed'); 
@@ -243,8 +234,7 @@ $(function(){
             closeIcon:true,
             buttons: {
                 'confirm': {
-                    // text: 'Yes',
-                    btnClass: 'btn-blue',
+                    text: 'Yes',
                     action: function(){
                         _exam = e.target.parentElement.parentElement;
                         _frm = e.target.parentElement.parentElement.parentElement; //console.log(_frm.id);
@@ -277,8 +267,7 @@ $(function(){
                         }
                     }
                 },
-                cancel: function(){
-                    
+                cancel: { text:'No'
                 },
             }
         });
@@ -401,7 +390,7 @@ $(function(){
                     autoClose: 'okay|3000',
                     escapeKey: 'okay',
                     buttons: {
-                        okay: { 
+                        okay: {
                             action: function(){
                                 window.location = "/user_words/index";
                             }
@@ -604,7 +593,7 @@ $(function(){
             title: 'Delete vocabulary', content: 'Are you sure you want to delete this vocabulary?',
             icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
             buttons: {
-                okay: { 
+                okay: { text:'Yes',
                     action: function(){
                         $.ajax({
                             url: delete_vocabulary,
@@ -647,7 +636,7 @@ $(function(){
                         });
                     }
                 },
-                cancel :{}
+                cancel :{text:'No'}
             }
         });
     });

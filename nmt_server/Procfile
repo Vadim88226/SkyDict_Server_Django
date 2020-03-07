@@ -1,1 +1,0 @@
-web: gunicorn nmt_server.wsgi --log-file -
