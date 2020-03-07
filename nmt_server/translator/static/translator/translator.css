@@ -552,7 +552,7 @@ input[type=text]:focus, input[type=email]:focus, input[type=password]:focus {
     background: white;
     width: 100%;
     height: -webkit-fill-available;
-    height: : -moz-available;
+    height: -moz-available;
     padding: 15% 0;
     text-align: -webkit-center;
 }
