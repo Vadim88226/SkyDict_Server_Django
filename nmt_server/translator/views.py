@@ -253,6 +253,29 @@ def detect_similar_words(request):
                 return JsonResponse({'content':responses})
     return JsonResponse({'content': responses})
 
+# query matched words list
+def text_similar_words(request):
+    query = request.GET.get('seltext', None)
+    s_lang = request.GET.get('sl', None)
+    s_lang = detect_source_language(query)
+    dict = TranslatorConfig.en_th_dict
+    words_list = TranslatorConfig.en_words_list
+    if s_lang == 'th':
+        dict = TranslatorConfig.th_en_dict
+        words_list = TranslatorConfig.th_words_list
+    cnt = 0
+    responses = ""
+    for word in words_list:
+        response = search_dict(word, s_lang)
+        if word.startswith(query) and response != "":
+            cnt += 1
+            response = re.search('<dtrn>.+</dtrn>', response).group()
+            response = response.replace("<dtrn>", "").replace("</dtrn>", "")
+            responses += "<ul><li>" + word + "</li><li>" + response + "</li></ul>"
+            if cnt >= 5:
+                return JsonResponse({'content':responses})
+    return JsonResponse({'content': responses})
+
 # file uploading and downloading for translate
 def upload_file(request):
     if request.method == 'POST' and request.FILES['docTrans']:
@@ -288,10 +311,10 @@ def add_words(request):
 def vocabulary_list(request):
     _word = request.GET.get('seltext', "")
     _is_approved = request.GET.get('is_approved', 0)
-    if len(_word) and _is_approved:
-        _filter = DictWords.objects.filter(word=_word, is_approved=_is_approved)
-    elif len(_word):
+    if len(_word) and _is_approved == '2':
         _filter = DictWords.objects.filter(word=_word)
+    elif len(_word):
+        _filter = DictWords.objects.filter(word=_word, is_approved=_is_approved)
     else:
         _filter = DictWords.objects.filter(is_approved=_is_approved)
     # print(_filter)

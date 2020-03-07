@@ -10,6 +10,7 @@ var target_language = "Thai";
 var trans_sentences = "/translator/trans_sentences";
 var query_dict = '/translator/query_dict';
 var detect_similar_words = "/translator/detect_similar_words";
+var text_similar_words = "/translator/text_similar_words";
 
 var add_words_url = "/translator/add_words"
 var vocabulary_list = "/translator/vocabulary_list";
