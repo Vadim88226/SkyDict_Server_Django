@@ -150,7 +150,7 @@ $(function(){
         $('#docTrans').click();
     });
     $('#docTrans').on('change', function(e){
-        e.preventDefault();
+        e.preventDefault();if (this.files.length == 0) return;
         $('.docTrans__help_popup').css('opacity', 1);
         $('.docTrans__help_popup').css('z-index', 1);
         $('#docTrans_loading').css('display', 'block');
@@ -164,7 +164,7 @@ $(function(){
         form_data.append('docTrans', this.files[0]);
         form_data.append('sl', source_language.toLowerCase().substr(0,2)),
         form_data.append('tl', target_language.toLowerCase().substr(0,2)),
-
+        
         $.ajax({
             type: "POST",
             url: upload_file,
