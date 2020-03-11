@@ -153,15 +153,17 @@ def translate_sdlxliff_file(s_url, t_url, s_lang, t_lang):
     source_lines = []
     for source in root.findall('.//{urn:oasis:names:tc:xliff:document:1.2}seg-source'):
         for e in source:
-            if "g" in e.tag:
-                source_lines.append(e.text)
+            for g in e:
+                if "mrk" in g.tag:
+                    source_lines.append(g.text)
         pass
     cnt = 0
     for target in root.findall('.//{urn:oasis:names:tc:xliff:document:1.2}target'):
         for e in target:
-            if "g" in e.tag:
-                e.text = translate_sentences(source_lines[cnt])
-                cnt += 1
+            for g in e:
+                if "mrk" in g.tag:
+                    g.text = translate_sentences(source_lines[cnt])
+                    cnt += 1
 
     tree.write(t_url, xml_declaration=True, encoding='UTF-8')
 
