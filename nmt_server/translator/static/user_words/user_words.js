@@ -14,7 +14,7 @@ function load_lexitron(_s){
                         _ul.textContent = data.content[_d];
                         document.getElementById("list_lexitron").appendChild(_ul);
                     }
-                    setTimeout(load_lexitron(data.content[_d]), 2000);
+                    setInterval(load_lexitron(data.content[_d]), 2000);
                 }
             } else  {
                 
