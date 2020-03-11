@@ -387,6 +387,7 @@ def delete_vocabulary(request):
 def lexitron_list(request):
     _word = request.GET.get('word')
     lang = request.GET.get('s_lang')
+    mode = int(request.GET.get('mode'))
     dict = TranslatorConfig.en_th_dict
     if lang == 'th':
         dict = TranslatorConfig.th_en_dict
@@ -394,14 +395,15 @@ def lexitron_list(request):
     max_count = 50
     list_count = 0
     start_flag = False
-    # if _word == "": start_flag = True
+    if _word == "": start_flag = True
     for key in dict.idx.keys():
-        if key >= _word:
-            start_flag = True
-        if list_count > max_count:
-            start_flag = False
-            return JsonResponse({'content': _list})
         if start_flag:
             _list.append(key)
             list_count += 1
+        if key == _word:
+            if mode == 0:
+                _list.append(key)
+            start_flag = True
+        if list_count > max_count:
+            return JsonResponse({'content': _list})
     return JsonResponse({'content': _list})
