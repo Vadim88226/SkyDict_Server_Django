@@ -29,13 +29,13 @@ var suburl = "{{suburl}}";
     <div id="list_lexitron"></div>
     <div class="add_words">
         <!-- <form action="" method="post"> -->
-            <div style="text-align: right;" class="form_vocabulary"> 
+            <div class="form_vocabulary"> 
                 <div> Translate from {{ add_words_form.s_lang}}</div>
                 <div> to {{ add_words_form.t_lang}} </div>
             </div>
             <div class="form_vocabulary">
                 <div> Vocabulary: {{ add_words_form.Vocabulary}} </div>
-                <div> type <button id="btn_vtype" class=''>please select</button>(can select more than 1 item)</div>
+                <div style="min-width: 400px;"> type <button id="btn_vtype" class=''>please select</button>(can select more than 1 item)</div>
             </div>
             <div id='clear'>
                 <div class='word_type'>{{ add_words_form.chk_box1 }}</div>

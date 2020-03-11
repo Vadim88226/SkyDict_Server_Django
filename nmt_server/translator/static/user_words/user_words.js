@@ -1,4 +1,6 @@
 var flag_lexitron_load = true;
+var end_word = "";
+
 function load_lexitron(_s){
     $.ajax({
         url: lexitron_list,
@@ -8,14 +10,12 @@ function load_lexitron(_s){
         dataType: 'json',
         success: function (data) {
             if (data != "") {
-                if(data.content.length) {
-                    for( _d in data.content ) { 
-                        _ul = document.createElement("ul");
-                        _ul.textContent = data.content[_d];
-                        document.getElementById("list_lexitron").appendChild(_ul);
-                    }
-                    setTimeout(load_lexitron(data.content[_d]), 2000);
+                for( _d in data.content ) { 
+                    _ul = document.createElement("ul");
+                    _ul.textContent = data.content[_d];
+                    document.getElementById("list_lexitron").appendChild(_ul);
                 }
+                end_word = data.content[_d];
             } else  {
                 
             }

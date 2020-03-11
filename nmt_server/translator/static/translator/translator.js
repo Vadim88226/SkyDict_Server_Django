@@ -217,7 +217,6 @@ $(function(){
     });
     $(".translate_convert").on("click", swap_language);
     $(".target_toolbar__copy").on('click', function(e){
-        $("#ta_target").val()
         var $temp = $("<textarea>");
         $("body").append($temp);
         $temp.val($("#ta_target").val()).select();
@@ -225,7 +224,7 @@ $(function(){
         $temp.remove();
     });
     $(".target_toolbar__save").click(function(e){
-        if($("#ta_target").val())
+        if($("#ta_target").val()) {
             $("<a />", {
                 download: $.now() + ".txt",
                 href: URL.createObjectURL(
@@ -237,6 +236,7 @@ $(function(){
             $(window).one("focus", function() {
                 $("a").last().remove()
             })
+        }
     });
     $("#menu_any").click(function(){
         $(".PopupMenu").remove();
