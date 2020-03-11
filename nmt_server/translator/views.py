@@ -394,9 +394,9 @@ def lexitron_list(request):
     max_count = 50
     list_count = 0
     start_flag = False
-    if _word == "": start_flag = True
+    # if _word == "": start_flag = True
     for key in dict.idx.keys():
-        if key == _word:
+        if key.lower() > _word.lower():
             start_flag = True
         if list_count > max_count:
             start_flag = False

@@ -38,7 +38,6 @@ function load_lexitron(){
 }
 function ShowVocabulary()
 {
-    if(document.querySelector('input[name="allowed"]:checked').value > 2) return;
     var selectedText = $('#id_find_word').val().trim();
     $.ajax({
         url: vocabulary_list,
@@ -60,10 +59,6 @@ function ShowVocabulary()
                         document.getElementById("list_vocabulary").appendChild(_ul);
                     }
                 }
-                $("#content_add_words").css('display', 'none');
-                $("#content_user_vocabulary").css('position', 'relative'); 
-                $("#content_user_vocabulary").css('height', '100%'); 
-                $("#content_user_vocabulary").css('visibility', 'visible'); 
             } else  {
                 
             }
@@ -88,7 +83,7 @@ $(function(){
         }
     });
     $('#id_find_word').on('change', function(e) {
-        ShowVocabulary();
+        $(".btn_search").click();
     });
     $('input[type=radio][name=allowed]').change(function() {
         switch (document.querySelector('input[name="allowed"]:checked').value) {
@@ -109,16 +104,14 @@ $(function(){
         }
         ShowVocabulary();
     });
-    $(document).on('click',"#wordDict_help_popup ul", function(e){
-        var _content = e.currentTarget.children[0];
-        $('#id_find_word').val(_content.textContent);
-        $(".btn_search").click();
-    });
-    $(document).on('click',"html", function(e){
-        document.getElementById('wordDict_help_popup').style.display = "none";
-    });
     $(".btn_search").on('click', function(){
-        ShowVocabulary();
+        if($("#content_add_words").css('display') == 'none') {
+            ShowVocabulary();
+        } else {
+            end_word = $('#id_find_word').val().trim();
+            document.getElementById("list_lexitron").innerHTML = "";
+            load_lexitron();
+        }
     })
     $("#view_add_word").on('click', function(){
         $("#content_user_vocabulary").css('visibility', 'hidden');
@@ -127,7 +120,11 @@ $(function(){
         $("#content_add_words").css('display', 'flex');
     })
     $("#view_user_dict").on('click', function(){
-        ShowVocabulary();
+        // ShowVocabulary();
+        $("#content_add_words").css('display', 'none');
+        $("#content_user_vocabulary").css('position', 'relative'); 
+        $("#content_user_vocabulary").css('height', '100%'); 
+        $("#content_user_vocabulary").css('visibility', 'visible'); 
     })
     $(".add_words li").on('click', function(e){
         if(e.target.type != 'checkbox') return;
