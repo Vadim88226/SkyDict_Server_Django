@@ -1,5 +1,40 @@
+var flag_lexitron_load = true;
+function load_lexitron(_s){
+    $.ajax({
+        url: lexitron_list,
+        data: {
+            'word': _s
+        },
+        dataType: 'json',
+        success: function (data) {
+            if (data != "") {
+                if(data.content.length) {
+                    for( _d in data.content ) { 
+                        _ul = document.createElement("ul");
+                        _ul.textContent = data.content[_d];
+                        document.getElementById("list_lexitron").appendChild(_ul);
+                    }
+                    setTimeout(load_lexitron(data.content[_d]), 2000);
+                }
+            } else  {
+                
+            }
+        },
+        error: function() {
+            $.alert({
+                title: 'Alert', content: 'SERVER ERROR',
+                icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                buttons: {
+                    okay: {  }
+                }
+            });
+        },
+        timeout: 2000
+    })
+}
 function ShowVocabulary()
 {
+    if(document.querySelector('input[name="allowed"]:checked').value > 2) return;
     var selectedText = $('#id_find_word').val().trim();
     $.ajax({
         url: vocabulary_list,
@@ -52,14 +87,21 @@ $(function(){
         ShowVocabulary();
     });
     $('input[type=radio][name=allowed]').change(function() {
-        if(document.querySelector('input[name="allowed"]:checked').value == 1) {
-            $('.div_approved').css('border-style', 'solid solid none solid');
-            $('.div_unapproved').css('border-style', 'none none solid none');
-            $(".btn_approve").css('visibility', 'hidden');
-        } else {
-            $('.div_approved').css('border-style', 'none none solid none');
-            $('.div_unapproved').css('border-style', 'solid solid none solid');
-            $(".btn_approve").css('visibility', 'visible');
+        switch (document.querySelector('input[name="allowed"]:checked').value) {
+            case '0':
+                $('.div_unapproved').css('border-style', 'solid solid none solid');
+                $('.div_approved').css('border-style', 'none none solid none');
+                $('.div_lexitron').css('border-style', 'none none solid none');
+                $(".btn_approve").css('visibility', 'visible');
+                $("#list_vocabulary").css("display", "block");
+                break;
+            case '1':
+                $('.div_unapproved').css('border-style', 'none none solid none');
+                $('.div_approved').css('border-style', 'solid solid none solid');
+                $('.div_lexitron').css('border-style', 'none none solid none');
+                $(".btn_approve").css('visibility', 'hidden');
+                $("#list_vocabulary").css("display", "block");
+                break;
         }
         ShowVocabulary();
     });
@@ -78,7 +120,7 @@ $(function(){
         $("#content_user_vocabulary").css('visibility', 'hidden');
         $("#content_user_vocabulary").css('position', 'fixed'); 
         $("#content_user_vocabulary").css('height', 0); 
-        $("#content_add_words").css('display', 'block');
+        $("#content_add_words").css('display', 'flex');
     })
     $("#view_user_dict").on('click', function(){
         ShowVocabulary();
@@ -641,4 +683,5 @@ $(function(){
         });
     });
     if (suburl == 'dict')  ShowVocabulary();
+    load_lexitron("a");
 })

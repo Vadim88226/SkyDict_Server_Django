@@ -383,3 +383,8 @@ def delete_vocabulary(request):
     _user = request.GET.get('user')
     DictWords.objects.filter(word=_word, user=_user).delete()
     return JsonResponse({'content': "You deleted this vocabulary."})
+
+def lexitron_list(request):
+    _word = request.GET.get('word')
+    _list = ['a','b','c'];
+    return JsonResponse({'content': _list})

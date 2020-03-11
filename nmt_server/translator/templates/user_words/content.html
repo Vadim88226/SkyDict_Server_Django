@@ -24,8 +24,9 @@ var suburl = "{{suburl}}";
 {% if suburl != "index" %}
 <div id="content_add_words" {{ suburl }} style="text-align: -webkit-center;text-align: -moz-center;display: none;">
 {% else %}
-<div id="content_add_words" {{ suburl }} style="text-align: -webkit-center;text-align: -moz-center;">
+<div id="content_add_words" {{ suburl }} style="text-align: -webkit-center;text-align: -moz-center;display: flex;">
 {% endif %}
+    <div id="list_lexitron"></div>
     <div class="add_words">
         <!-- <form action="" method="post"> -->
             <div style="text-align: right;" class="form_vocabulary"> 
@@ -59,14 +60,14 @@ var suburl = "{{suburl}}";
 {% endif %}
     <div class="list_side">
         <div style="display: flex;position: relative;">
-        <div class="div_unapproved">
-            <input type="radio" id="Unapproved" name="allowed" value=0 checked>
-            <label for="Unapproved">Unapproved</label>
-        </div>
-        <div class="div_approved">
-            <input type="radio" id="Approved" name="allowed" value=1>
-            <label for="Approved">Approved</label>
-        </div>
+            <div class="div_unapproved">
+                <input type="radio" id="Unapproved" name="allowed" value=0 checked>
+                <label for="Unapproved">Unapproved</label>
+            </div>
+            <div class="div_approved">
+                <input type="radio" id="Approved" name="allowed" value=1>
+                <label for="Approved">Approved</label>
+            </div>
         </div>
         <div id="list_vocabulary"></div>
     </div>

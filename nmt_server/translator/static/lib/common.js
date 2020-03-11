@@ -15,6 +15,7 @@ var text_similar_words = "/translator/text_similar_words";
 var add_words_url = "/translator/add_words"
 var vocabulary_list = "/translator/vocabulary_list";
 var query_user_dictionary = "/translator/query_user_dictionary";
+var lexitron_list = "/translator/lexitron_list";
 
 var update_sentence = "/translator/update_sentence";
 var delete_sentence = "/translator/delete_sentence";

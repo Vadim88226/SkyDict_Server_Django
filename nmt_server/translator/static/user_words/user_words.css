@@ -128,7 +128,7 @@ kref {
     text-align:left;
 }
 .add_words {
-    max-width: 800px;
+    /* max-width: 800px; */
     padding-top:1%;
     /* height: fit-content; */
     min-height: calc(100vh - 155px);
@@ -139,7 +139,8 @@ kref {
     overflow: auto;
 }
 .add_words div{
-    padding: 2% 2% 0 2%;
+    padding: 1% 2% 0 2%;
+    width: 96%;
 }
 .add_words #clear{
     padding: 0;
@@ -199,13 +200,43 @@ textarea{
     font-style: italic;
 }
 .list_side{
-    max-width: 235px;
+    max-width: 260px;
     padding: 1%;
     height: calc(100vh - 155px);
 } 
 .list_side label {
     font-weight: 100;
 }
+#list_lexitron {
+    width: 300px;
+    height: calc(100vh - 155px);
+    overflow: auto;
+    overflow: -moz-scrollbars-none;
+    -ms-overflow-style: none;
+    background-color: white;
+    text-align: left;
+}
+/* width */
+::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  
 #list_vocabulary{
     padding: 0;
     padding-top: 10px;
@@ -214,28 +245,31 @@ textarea{
     overflow: auto;
     margin: -1px 0;
 }
-#list_vocabulary ul{
+#list_vocabulary ul, #list_lexitron ul{
     padding-top: 6px;
     border: 1px solid lightgray;
     border-style: none none solid;
-    margin: 0;
-    li
+    margin: 0px;
 }
-#list_vocabulary ul:hover{
+#list_vocabulary ul:hover, #list_lexitron ul:hover{
     background-color: #eee;
 }
-.div_unapproved, .div_approved {
+.div_unapproved, .div_approved, .div_lexitron {
     width: 50%; 
     text-align: center;
     border: 1px solid;
     border-radius: 5px 5px 0 0;
     background: white;
+    border-style: none none solid none;
+    /* background-image: url(/static/icons/tab.png); */
+    background-size: 100% 100%;
 }
 .div_unapproved {
     border-style: solid solid none solid;
+    border-color: black;
 }
-.div_approved {
-    border-style: none none solid none;
+#Unapproved, #Approved, #Lexitron{
+    display: none;
 }
 #view_word {
     font-size: x-large;
@@ -274,9 +308,6 @@ select{
 .form_vocabulary{
     display:flex;
 }
-#Unapproved, #Approved{
-    display: none;
-}
 @media (max-width: 767px) {
     #content_user_vocabulary {
         display: block;
@@ -286,7 +317,7 @@ select{
         max-width: 100%;
         font-size: small;
     }
-    #list_vocabulary{
+    #list_vocabulary, #list_lexitron{
         max-height: 100px;
     }
     #content_user_vocabulary .add_words {
