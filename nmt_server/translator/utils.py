@@ -151,7 +151,7 @@ def translate_sdlxliff_file(s_url, t_url, s_lang, t_lang):
         Target =  element.attrib['target-language']
 
     source_lines = []
-    for source in root.findall('.//{urn:oasis:names:tc:xliff:document:1.2}source'):
+    for source in root.findall('.//{urn:oasis:names:tc:xliff:document:1.2}seg-source'):
         for e in source:
             if "g" in e.tag:
                 source_lines.append(e.text)
