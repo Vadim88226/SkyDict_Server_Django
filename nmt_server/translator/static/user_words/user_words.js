@@ -19,7 +19,7 @@ function load_lexitron(){
                     document.getElementById("list_lexitron").appendChild(_ul);
                 }
                 if(data.content.length < 50) flag_lexitron_load = true;
-                end_word = data.content[_d];
+                end_word = data.content[_d]+" ";
             } else  {
                 
             }
