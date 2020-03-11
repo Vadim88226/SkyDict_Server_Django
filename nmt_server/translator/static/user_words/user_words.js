@@ -1,20 +1,24 @@
-var flag_lexitron_load = true;
+var flag_lexitron_load = false;
 var end_word = "";
 
-function load_lexitron(_s){
+function load_lexitron(){
+    if(flag_lexitron_load) return;
     $.ajax({
         url: lexitron_list,
         data: {
-            'word': _s
+            'word': end_word,
+            's_lang' : $("#id_s_lang").val().toLowerCase().substr(0,2),
+            't_lang' : $("#id_t_lang").val().toLowerCase().substr(0,2),
         },
         dataType: 'json',
         success: function (data) {
-            if (data != "") {
+            if (data.content.length) {
                 for( _d in data.content ) { 
                     _ul = document.createElement("ul");
                     _ul.textContent = data.content[_d];
                     document.getElementById("list_lexitron").appendChild(_ul);
                 }
+                if(data.content.length < 50) flag_lexitron_load = true;
                 end_word = data.content[_d];
             } else  {
                 
@@ -683,5 +687,10 @@ $(function(){
         });
     });
     if (suburl == 'dict')  ShowVocabulary();
-    load_lexitron("a");
+    load_lexitron();
+    $('#list_lexitron').on('scroll', function() {
+        if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+            load_lexitron();
+        }
+    })
 })

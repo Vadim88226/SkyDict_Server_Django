@@ -394,10 +394,11 @@ def lexitron_list(request):
     max_count = 50
     list_count = 0
     start_flag = False
+    if _word == "": start_flag = True
     for key in dict.idx.keys():
         if key == _word:
             start_flag = True
-        if list_count > 50:
+        if list_count > max_count:
             start_flag = False
             return JsonResponse({'content': _list})
         if start_flag:
