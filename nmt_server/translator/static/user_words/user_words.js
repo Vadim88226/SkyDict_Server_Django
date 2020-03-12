@@ -690,5 +690,8 @@ $(function(){
         if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
             load_lexitron(1);
         }
-    })
+    });
+    $('#id_s_lang').on('change', function(e) {
+        $(".btn_search").click();
+    });
 })
