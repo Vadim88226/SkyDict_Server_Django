@@ -28,6 +28,7 @@ urlpatterns = [
     path('translator/', include('translator.urls')),
     path('dictionary/', views.DictionaryView, name="dictionary_view"),
     path('Concondance/', views.Concondance, name="Concondance"),
+    path('transMemories/', views.transMemories, name="transMemories"),
     path('user_words/<str:suburl>/', views.User_WordsView, name="user_words_view"),
     path('account_activation_sent/', views.account_activation_sent, name='account_activation_sent'),
     path('activate/<uidb64>/<token>/', views.activate, name='activate'),

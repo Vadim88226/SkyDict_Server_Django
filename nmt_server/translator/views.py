@@ -31,7 +31,7 @@ from django_tables2 import MultiTableMixin, RequestConfig, SingleTableMixin, Sin
 from django_tables2.export.views import ExportMixin
 from django_tables2.paginators import LazyPaginator
 
-from .tables import tm_table
+from .tables import tmTable, concondanceTable
 from .filters import tmFilter
 
 class IndexView(generic.TemplateView):
@@ -418,6 +418,20 @@ def lexitron_list(request):
 def Concondance(request):
     search_input_form = DictForm()
     add_words_form = AddWordsForm(initial={'t_lang': 'th'})
+    sort = request.GET.get('sort', 'name')
+    concondance_table = concondanceTable(tm_model.objects.all().order_by(sort));
+    conForm = ConcondanceSearchForm()
+
+    return render(request, "Concondance/content.html", {
+        'concondance_table': concondance_table, 
+        'search_input_form': search_input_form, 
+        'add_words_form': add_words_form, 
+        'conForm' : conForm,
+        })
+
+def transMemories(request):
+    search_input_form = DictForm()
+    add_words_form = AddWordsForm(initial={'t_lang': 'th'})
 
     delID = request.GET.getlist('check')
     for _id in delID:
@@ -427,19 +441,20 @@ def Concondance(request):
             print("An exception occurred")
 
     sort = request.GET.get('sort', 'name')
+    # print(request.GET.get('name', ''))
     tm_filter = tmFilter(request.GET, queryset = tm_model.objects.all().order_by(sort))
-    table = tm_table(tm_filter.qs)
+    # tm_filter = tm_model.objects.all().filter(name__contains='k').order_by(sort)
+    # print(tm_filter)
+    table = tmTable(tm_filter.qs)
 
-    concondance_table = table;
     tm_form = TransMemoryForm(initial={'t_lang': 'th'})
     conForm = ConcondanceSearchForm()
-    return render(request, "Concondance/content.html", {
+
+    return render(request, "Concondance/transMemories.html", {
         'table': table, 
-        'concondance_table': concondance_table, 
         'search_input_form': search_input_form, 
         'add_words_form': add_words_form, 
         'tm_form':tm_form,
-        'conForm' : conForm,
         'filter': tm_filter,
         })
 

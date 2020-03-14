@@ -1,0 +1,78 @@
+{% extends 'Concondance/index.html' %}
+<!-- ============================== Dictionary ============================== -->
+{% load django_tables2 %}
+{% block content %}
+{% csrf_token %}
+
+<script type="text/javascript"> 
+    var suburl = "concondance";
+</script>
+<div class='DictSearch'>
+    <!-- <form action="" method="post"> -->
+        {{ search_input_form }}
+        <button type='button' class='btn_search'></button>
+    <!-- </form> -->
+    <div id="wordDict_help_popup"></div>
+</div>
+<div id="dict_menu_bar">
+    <a href="/dictionary/" id="view_dict_area">Dictionary</a>
+    {% if not request.user.is_authenticated %}
+    <a class="menu__login" href="#">Add Words</a>
+    {% else %}
+    <a href="/user_words/index" id="view_add_word">Add Words</a>
+    <a href="#" style="color: black;">Concondance Search</a>
+    {% endif %}
+    {% if request.user.is_staff %}
+    <a href="/user_words/dict" id="view_user_dict">User Dictionary</a>
+    {% endif %}
+</div>
+<div class="dict_area">
+    <div class="submenu">
+        <button type='button' class='btn_search_form sky_button'>Search</button>
+        <button type='button' class='btn_memories_form sky_button'>Translation Memories</button>
+    </div>
+    <div id="div_content"></div>
+</div>
+<template id="div_concondance_form">
+    <div style="display: flex;">
+        <div style="width: -webkit-fill-available;padding:11px;">{{ conForm.searchCondance }}</div>
+        <div><button type="button" class = 'btn_setting sky_button glyphicon glyphicon-cog' data-toggle = "modal" data-target = "#modal_setting">Search settings</button></div>
+    </div>
+    {% render_table concondance_table %}
+</template>
+<!-- Modal -->
+<div id="modal_setting" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id="modal-title">Search Setting...</h4>
+        </div>
+        <div class="modal-body">
+            <table>
+                <tr><td>Source Language*</td><td>{{ add_words_form.s_lang }}</td></tr>
+                <tr><td>Target Language*</td><td>{{ add_words_form.t_lang }}</td></tr>
+                <tr><td>Minimum match rate(%)</td>
+                    <td>
+                            <div class="input-group spinner">
+                            <input type="text" class="form-control" value="50">
+                            <div class="input-group-btn-vertical">
+                                <div class="btn btn-default"><i class="fa fa-caret-up"></i></div>
+                                <div class="btn btn-default"><i class="fa fa-caret-down"></i></div>
+                            </div>
+                            </div>
+                    </td>
+                </tr>
+                <tr><td colspan="2">{{ conForm.ignoreTags }} {{ conForm.ignoreTags.label_tag }}</td></tr>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-setting-save">Save</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock content %}
+<!-- =============================== -->
