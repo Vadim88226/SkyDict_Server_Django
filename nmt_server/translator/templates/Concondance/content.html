@@ -26,6 +26,7 @@
     <a href="/user_words/dict" id="view_user_dict">User Dictionary</a>
     {% endif %}
 </div>
+<form method="get"> 
 <div class="dict_area">
     <div class="submenu">
         <button type='button' class='btn_search_form sky_button'>Search</button>
@@ -35,8 +36,13 @@
 </div>
 <template id="div_concondance_form">
     <div style="display: flex;">
-        <div style="width: -webkit-fill-available;padding:11px;">{{ conForm.searchCondance }}</div>
-        <div><button type="button" class = 'btn_setting sky_button glyphicon glyphicon-cog' data-toggle = "modal" data-target = "#modal_setting">Search settings</button></div>
+        <div style="width: -webkit-fill-available;padding:11px;">
+                {{ conForm.searchCondance }}
+                <button type="submit" style="display: none;">Search</button>
+        </div>
+        <div>
+            <button type="button" class = 'btn_setting sky_button' data-toggle = "modal" data-target = "#modal_setting">
+                <span class='glyphicon glyphicon-cog'></span> Search settings</button></div>
     </div>
     {% render_table concondance_table %}
 </template>
@@ -49,30 +55,31 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title" id="modal-title">Search Setting...</h4>
         </div>
-        <div class="modal-body">
-            <table>
-                <tr><td>Source Language*</td><td>{{ add_words_form.s_lang }}</td></tr>
-                <tr><td>Target Language*</td><td>{{ add_words_form.t_lang }}</td></tr>
-                <tr><td>Minimum match rate(%)</td>
-                    <td>
+            <div class="modal-body">
+                <table>
+                    <tr><td>Source Language*</td><td>{{ conForm.s_lang }}</td></tr>
+                    <tr><td>Target Language*</td><td>{{ conForm.t_lang }}</td></tr>
+                    <tr><td>Minimum match rate(%)</td>
+                        <td>
                             <div class="input-group spinner">
-                            <input type="text" class="form-control" value="50">
+                            {{conForm.matchRate}}
                             <div class="input-group-btn-vertical">
                                 <div class="btn btn-default"><i class="fa fa-caret-up"></i></div>
                                 <div class="btn btn-default"><i class="fa fa-caret-down"></i></div>
                             </div>
                             </div>
-                    </td>
-                </tr>
-                <tr><td colspan="2">{{ conForm.ignoreTags }} {{ conForm.ignoreTags.label_tag }}</td></tr>
-            </table>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default btn-setting-save">Save</button>
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
+                        </td>
+                    </tr>
+                    <tr><td colspan="2">{{ conForm.ignoreTags }} {{ conForm.ignoreTags.label_tag }}</td></tr>
+                </table> 
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-default btn-setting-save">Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
       </div>
     </div>
 </div>
+</form>
 {% endblock content %}
 <!-- =============================== -->

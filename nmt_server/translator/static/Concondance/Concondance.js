@@ -87,7 +87,6 @@ $(function(){
     });
     $('.btn_memories_form').on('click', function (e) {
         window.location="/transMemories/";
-        // view_template("div_memories_form");
     });
     $("#tm_list_form input[type='checkbox']").on('click', function(e){
         if(this.value == 'on') {
@@ -167,15 +166,15 @@ $(function(){
         if($('.spinner input').val() == 100){
             return false;
         }else{
-            $('.spinner input').val( parseInt($('.spinner input').val(), 10) + 1);
+            $('.spinner input').val( parseInt($('.spinner input').val()*1, 10) + 1);
         }
     });
 
     $('.spinner .btn:last-of-type').on('click', function() {
-        if($('.spinner input').val() == 1){
+        if($('.spinner input').val() <= 1){
             return false;
         }else{
-            $('.spinner input').val( parseInt($('.spinner input').val(), 10) - 1);
+            $('.spinner input').val( parseInt($('.spinner input').val()*1, 10) - 1);
         }
     });
     $('.btn-setting-save').on('click', function(){

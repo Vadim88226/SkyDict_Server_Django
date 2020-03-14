@@ -419,9 +419,21 @@ def Concondance(request):
     search_input_form = DictForm()
     add_words_form = AddWordsForm(initial={'t_lang': 'th'})
     sort = request.GET.get('sort', 'name')
-    concondance_table = concondanceTable(tm_model.objects.all().order_by(sort));
-    conForm = ConcondanceSearchForm()
-
+    
+    searchCon = request.GET.get('searchCondance', '')
+    s_lang = request.GET.get('s_lang', 'en')
+    t_lang = request.GET.get('t_lang', 'th')
+    matchRate = request.GET.get('matchRate', '50')
+    # tm_filter = tm_model.objects.all().filter(name__contains='k').order_by(sort)
+    # print(request.GET.get('name', ''))
+    # concondance_table = concondanceTable(tm_model.objects.all().filter(name__contains=searchCon).order_by(sort));
+    # tm_filter = tmFilter(request.GET, queryset = tm_model.objects.all().order_by(sort))
+    # tm_filter.form.cleaned_data["name"] = request.GET.get('name')
+    # tm_filter = tm_model.objects.all().filter(name__contains='k').order_by(sort)
+    # print(tm_filter)
+    # table = tmTable(tm_filter.qs)
+    concondance_table = concondanceTable(tm_model.objects.all().filter(name__contains=searchCon).order_by(sort));
+    conForm = ConcondanceSearchForm(initial={'searchCondance':searchCon,'s_lang':s_lang,'t_lang':t_lang,'matchRate':matchRate})
     return render(request, "Concondance/content.html", {
         'concondance_table': concondance_table, 
         'search_input_form': search_input_form, 
@@ -439,23 +451,19 @@ def transMemories(request):
             tm_model.objects.get(id = _id).delete()
         except:
             print("An exception occurred")
-
     sort = request.GET.get('sort', 'name')
-    # print(request.GET.get('name', ''))
-    tm_filter = tmFilter(request.GET, queryset = tm_model.objects.all().order_by(sort))
-    # tm_filter = tm_model.objects.all().filter(name__contains='k').order_by(sort)
-    # print(tm_filter)
-    table = tmTable(tm_filter.qs)
+    
+    searchTM = request.GET.get('searchTM', '')
+    table = tmTable(tm_model.objects.all().filter(name__contains=searchTM).order_by(sort))
 
     tm_form = TransMemoryForm(initial={'t_lang': 'th'})
-    conForm = ConcondanceSearchForm()
+    conForm = ConcondanceSearchForm(initial={'searchTM':searchTM})
 
     return render(request, "Concondance/transMemories.html", {
         'table': table, 
         'search_input_form': search_input_form, 
-        'add_words_form': add_words_form, 
         'tm_form':tm_form,
-        'filter': tm_filter,
+        'conForm':conForm
         })
 
 def upload_translationMemories(request):

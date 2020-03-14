@@ -36,12 +36,12 @@
 <template id="div_transMemories_form">
     <div style="display: flex;">
         <div>
-            <button type='button' class='btn_new sky_button glyphicon glyphicon-plus'>New</button>
+            <button type='button' class='btn_new sky_button'><span class='glyphicon glyphicon-plus'></span> New</button>
             <input type="file" style="display: none;" name='TransFiles' id="TransFiles"/>
         </div>
         <div style="width: 100%; text-align: right;">
             <form method="get" style="display: contents;"> 
-                {{filter.form.name }}
+                {{ conForm.searchTM }}
                 <button type="submit" style="display: none;">Search</button>
             </form>
             <button type='button' class='btn_delete sky_button'>Delete</button></div>
