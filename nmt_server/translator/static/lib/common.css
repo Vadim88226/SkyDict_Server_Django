@@ -180,7 +180,7 @@ button:focus {
 }
 input[type=text], input[type=email], input[type=password]{
     padding: 10px 15px;
-    border: 2px solid #666;
+    border: 1px solid #666;
     border-radius: 5px;
     line-height: 1;
     font-size: 1em;
@@ -261,7 +261,7 @@ input[type=text]:focus, input[type=email]:focus, input[type=password]:focus, inp
     background-color: #0F2B46 !important;
     border: none;
     border-radius: 3px;
-    font-family: "Montserrat", sans-serif;
+    /* font-family: "Montserrat", sans-serif; */
     font-size: 16px;
     font-weight: 500;
     line-height: 1.5em;
@@ -384,6 +384,62 @@ dictionary, copus {
     transition: 1s;
     overflow: hidden;
 }
+.DictSearch {
+    border-radius: 50px;
+    border: 1px solid #d2d2d2;
+    background: #fff;
+    position: relative;
+    /* margin: 0 10px; */
+    box-sizing: border-box;
+    max-width: 500px;
+}
+.DictSearch>input{
+    font-size: x-large;
+    padding: 5px 0px;
+    margin: 0 50px 0 20px;
+    border: 0;
+    line-height: 38px;
+}
+.DictSearch>button {
+    background-color: #3f556b !important;
+    color: white;
+    border: 0;
+    width: 44px;
+    position: absolute;
+    top: -1px;
+    bottom: -1px;
+    height: auto;
+    cursor: pointer;
+}
+select {
+    border-radius: 5px;
+    min-height: 35px;
+    border: 1px solid #ccc;
+    min-width:  100px;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 5px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
 @media (max-width: 768px) {
     .container{
         width: 99% !important;
@@ -413,5 +469,17 @@ dictionary, copus {
     }
     .navbar-nav{
         display: block;
+    }
+    .DictSearch>Button{
+        width: 35px;
+    }
+    .DictSearch>Button.btn_sound{
+        right: 35px;
+    }
+    .DictSearch>Button.btn_sound>span{
+        right: 4px;
+    }
+    .DictSearch>input{
+        margin: 0 70px 0 20px;
     }
 }

@@ -684,7 +684,10 @@ $(function(){
             }
         });
     });
-    if (suburl == 'dict')  ShowVocabulary();
+    if (suburl == 'dict') {
+        ShowVocabulary();
+        $('#view_user_dict').click();
+    }
     load_lexitron(0);
     $('#list_lexitron').on('scroll', function() {
         if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {

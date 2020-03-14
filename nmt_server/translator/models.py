@@ -32,3 +32,14 @@ class DictSentences(models.Model):
     # updated_at = models.DateTimeField(auto_now=True)
     # def __str__(self):
     #     return self.part
+
+class tm_model(models.Model):
+    file_url = models.FileField(upload_to='Concondances/')
+    name = models.CharField(max_length=50,default='none')
+    s_lang = models.CharField(max_length=5,default='en')
+    t_lang = models.CharField(max_length=5,default='th')
+    subject = models.CharField(max_length=50,default='')
+    note = models.TextField(blank=True)
+    user = models.CharField(max_length=70, default='unknown')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

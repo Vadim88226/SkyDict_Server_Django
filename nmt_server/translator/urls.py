@@ -23,4 +23,5 @@ urlpatterns = [
     path('update_vocabulary', views.update_vocabulary, name='index'),
     path('approve_vocabulary', views.approve_vocabulary, name='index'),
     path('delete_vocabulary', views.delete_vocabulary, name='index'),
+    path('upload_translationMemories', views.upload_translationMemories, name='index'),
 ]

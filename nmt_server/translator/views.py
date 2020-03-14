@@ -17,15 +17,22 @@ from django.views.decorators.csrf import requires_csrf_token
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
-from .forms import SignupForm, DictForm, AddWordsForm
+from .forms import SignupForm, DictForm, AddWordsForm,TransMemoryForm, ConcondanceSearchForm
 from .tokens import account_activation_token
 from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-from .models import DictWords, DictSentences
+from .models import DictWords, DictSentences, tm_model
 from .utils import translate_sentences, translate_file
 from django.db.models import Count
+from django.views.generic import ListView
 
+from django_tables2 import MultiTableMixin, RequestConfig, SingleTableMixin, SingleTableView, tables
+from django_tables2.export.views import ExportMixin
+from django_tables2.paginators import LazyPaginator
+
+from .tables import tm_table
+from .filters import tmFilter
 
 class IndexView(generic.TemplateView):
     template_name = 'translator/content.html'
@@ -38,7 +45,7 @@ def DictionaryView(request):
 # display User_Words Page
 def User_WordsView(request, suburl = ""):
     search_input_form = DictForm()
-    add_words_form = AddWordsForm(initial={'t_lang': 'Thai'})
+    add_words_form = AddWordsForm(initial={'t_lang': 'th'})
     return render(request, 'user_words/content.html', {'search_input_form': search_input_form, 'add_words_form': add_words_form, 'suburl': suburl})
 
 # query word for Lexitron dictionary
@@ -407,3 +414,47 @@ def lexitron_list(request):
         if list_count > max_count:
             return JsonResponse({'content': _list})
     return JsonResponse({'content': _list})
+
+def Concondance(request):
+    search_input_form = DictForm()
+    add_words_form = AddWordsForm(initial={'t_lang': 'th'})
+
+    delID = request.GET.getlist('check')
+    for _id in delID:
+        try:
+            tm_model.objects.get(id = _id).delete()
+        except:
+            print("An exception occurred")
+
+    sort = request.GET.get('sort', 'name')
+    tm_filter = tmFilter(request.GET, queryset = tm_model.objects.all().order_by(sort))
+    table = tm_table(tm_filter.qs)
+
+    concondance_table = table;
+    tm_form = TransMemoryForm(initial={'t_lang': 'th'})
+    conForm = ConcondanceSearchForm()
+    return render(request, "Concondance/content.html", {
+        'table': table, 
+        'concondance_table': concondance_table, 
+        'search_input_form': search_input_form, 
+        'add_words_form': add_words_form, 
+        'tm_form':tm_form,
+        'conForm' : conForm,
+        'filter': tm_filter,
+        })
+
+def upload_translationMemories(request):
+    if request.method == 'POST':
+        form = TransMemoryForm(request.POST, request.FILES)
+        if form.is_valid():
+            fs = FileSystemStorage()
+            file_url = request.FILES['file_url']
+            filename = fs.save(file_url.name, file_url)
+            uploaded_file_url = fs.path(filename)
+            tm = form.save()
+            return JsonResponse({'status': 'ok', 'content': 'You successfully added this translation memories file'})
+        else:
+            return JsonResponse({'content': str(form.errors)})
+    else:
+        tm_form = TransMemoryForm()
+    return render(request, 'Concondance/content.html', {'tm_form': tm_form})
