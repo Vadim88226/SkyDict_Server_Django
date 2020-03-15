@@ -13,8 +13,8 @@ var detect_similar_words = "/translator/detect_similar_words";
 var text_similar_words = "/translator/text_similar_words";
 
 var add_words_url = "/translator/add_words"
-var vocabulary_list = "/translator/vocabulary_list";
-var query_user_dictionary = "/translator/query_user_dictionary";
+var query_UserDictionaryList = "/translator/query_UserDictionaryList";
+var query_WordContents = "/translator/query_WordContents";
 var lexitron_list = "/translator/lexitron_list";
 
 var update_sentence = "/translator/update_sentence";

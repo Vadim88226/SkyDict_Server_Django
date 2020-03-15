@@ -17,12 +17,12 @@ from django.views.decorators.csrf import requires_csrf_token
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
-from .forms import SignupForm, DictForm, AddWordsForm,TransMemoryForm, ConcondanceSearchForm
+from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSettingForm
 from .tokens import account_activation_token
 from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-from .models import DictWords, DictSentences, tm_model
+from .models import DictWords, DictSentences, TransMemories, UserSetting
 from .utils import translate_sentences, translate_file
 from django.db.models import Count
 from django.views.generic import ListView
@@ -38,15 +38,15 @@ class IndexView(generic.TemplateView):
     template_name = 'translator/content.html'
 
 # display Dictionary Page
-def DictionaryView(request):
-    search_input_form = DictForm()
-    return render(request, 'dictionary/content.html', {'search_input_form': search_input_form})
+def view_Dictionary(request):
+    search_Form = SearchForm()
+    return render(request, 'dictionary/content.html', {'search_Form': search_Form})
 
 # display User_Words Page
-def User_WordsView(request, suburl = ""):
-    search_input_form = DictForm()
+def view_AddWords(request, suburl = ""):
+    search_Form = SearchForm()
     add_words_form = AddWordsForm(initial={'t_lang': 'th'})
-    return render(request, 'user_words/content.html', {'search_input_form': search_input_form, 'add_words_form': add_words_form, 'suburl': suburl})
+    return render(request, 'user_words/content.html', {'search_Form': search_Form, 'add_words_form': add_words_form, 'suburl': suburl})
 
 # query word for Lexitron dictionary
 def search_dict(word, lang):
@@ -126,7 +126,7 @@ def trans_sentences(request):
     sentences = request.GET.get('seltext', '')
     s_lang = request.GET.get('sl', '')
     t_lang = request.GET.get('tl', '')
-
+    print(sentences)
     if s_lang == t_lang:
         selectedText = sentences.strip()
         data = {
@@ -315,7 +315,7 @@ def add_words(request):
     return JsonResponse({'content': "Successfully Rigistry!"})
 
 # vocabulary list query
-def vocabulary_list(request):
+def query_UserDictionaryList(request):
     _word = request.GET.get('seltext', "")
     _is_approved = request.GET.get('is_approved', 0)
     if len(_word) and _is_approved == '2':
@@ -333,7 +333,7 @@ def vocabulary_list(request):
     
     return JsonResponse(response)
 
-def query_user_dictionary(request):
+def query_WordContents(request):
     _word = request.GET.get('seltext')
     _user = request.GET.get('user')
     _is_approved = request.GET.get('is_approved', 0)
@@ -415,55 +415,56 @@ def lexitron_list(request):
             return JsonResponse({'content': _list})
     return JsonResponse({'content': _list})
 
-def Concondance(request):
-    search_input_form = DictForm()
-    add_words_form = AddWordsForm(initial={'t_lang': 'th'})
-    sort = request.GET.get('sort', 'name')
+def view_ConcondanceSearch(request):
     
+    sort = request.GET.get('sort', 'name')
     searchCon = request.GET.get('searchCondance', '')
-    s_lang = request.GET.get('s_lang', 'en')
-    t_lang = request.GET.get('t_lang', 'th')
-    matchRate = request.GET.get('matchRate', '50')
-    # tm_filter = tm_model.objects.all().filter(name__contains='k').order_by(sort)
-    # print(request.GET.get('name', ''))
-    # concondance_table = concondanceTable(tm_model.objects.all().filter(name__contains=searchCon).order_by(sort));
-    # tm_filter = tmFilter(request.GET, queryset = tm_model.objects.all().order_by(sort))
-    # tm_filter.form.cleaned_data["name"] = request.GET.get('name')
-    # tm_filter = tm_model.objects.all().filter(name__contains='k').order_by(sort)
-    # print(tm_filter)
-    # table = tmTable(tm_filter.qs)
-    concondance_table = concondanceTable(tm_model.objects.all().filter(name__contains=searchCon).order_by(sort));
-    conForm = ConcondanceSearchForm(initial={'searchCondance':searchCon,'s_lang':s_lang,'t_lang':t_lang,'matchRate':matchRate})
-    return render(request, "Concondance/content.html", {
-        'concondance_table': concondance_table, 
-        'search_input_form': search_input_form, 
-        'add_words_form': add_words_form, 
-        'conForm' : conForm,
-        })
 
-def transMemories(request):
-    search_input_form = DictForm()
+    if UserSetting.objects.filter(user=request.user.id).exists() == False:
+        row = UserSetting(user=request.user, s_lang='en', t_lang='th', matchRate='50', ignoreTags=0)
+        row.save()
+
+    own_settings=UserSetting.objects.get(user=request.user.id)
+    setForm = UserSettingForm(instance=own_settings)
+    search_Form = SearchForm(initial={'searchCondance':searchCon})
+    concondance_table = concondanceTable(TransMemories.objects.all().filter(name__contains=searchCon).order_by(sort))
+
+    return render(request, "concondance/content.html", {
+        'concondance_table': concondance_table, 
+        'search_Form' : search_Form,
+        'setForm' : setForm,
+    })
+
+def update_UserSetting(request):
+    if request.method == 'POST':
+        own_settings = UserSetting.objects.get(user=request.user.id)
+        form = UserSettingForm(data=request.POST, instance=own_settings)
+        if form.is_valid():
+            form.save()
+    return redirect("/concondance/")
+
+
+def manipulate_TM(request):
     add_words_form = AddWordsForm(initial={'t_lang': 'th'})
 
-    delID = request.GET.getlist('check')
+    sort = request.GET.get('sort', 'name')
+    searchTM = request.GET.get('searchTM', '')
+    delID = request.POST.getlist('check')
     for _id in delID:
         try:
-            tm_model.objects.get(id = _id).delete()
+            TransMemories.objects.get(id = _id).delete()
         except:
             print("An exception occurred")
-    sort = request.GET.get('sort', 'name')
-    
-    searchTM = request.GET.get('searchTM', '')
-    table = tmTable(tm_model.objects.all().filter(name__contains=searchTM).order_by(sort))
+
+    table = tmTable(TransMemories.objects.all().filter(name__contains=searchTM).order_by(sort))
 
     tm_form = TransMemoryForm(initial={'t_lang': 'th'})
-    conForm = ConcondanceSearchForm(initial={'searchTM':searchTM})
+    search_Form = SearchForm(initial={'searchTM':searchTM})
 
-    return render(request, "Concondance/transMemories.html", {
+    return render(request, "concondance/transMemories.html", {
         'table': table, 
-        'search_input_form': search_input_form, 
         'tm_form':tm_form,
-        'conForm':conForm
+        'search_Form':search_Form
         })
 
 def upload_translationMemories(request):
@@ -480,4 +481,4 @@ def upload_translationMemories(request):
             return JsonResponse({'content': str(form.errors)})
     else:
         tm_form = TransMemoryForm()
-    return render(request, 'Concondance/content.html', {'tm_form': tm_form})
+    return render(request, 'concondance/content.html', {'tm_form': tm_form})

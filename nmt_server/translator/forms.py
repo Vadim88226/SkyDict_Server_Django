@@ -1,15 +1,12 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import tm_model
+from .models import TransMemories, UserSetting
 
 class SignupForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('email', 'username', 'first_name', 'last_name', 'password1','password2')
-
-class DictForm(forms.Form):
-    find_word = forms.CharField(label='',required=False, widget=forms.TextInput(attrs={'placeholder': 'Enter word','autofocus':True, 'autocomplete': 'off'} ))
 
 class AddWordsForm(forms.Form):
     s_language = [('en', 'English'), ('th','Thai')]
@@ -34,16 +31,21 @@ class TransMemoryForm(forms.ModelForm):
     note = forms.CharField(label="Note: ", widget=forms.Textarea(attrs={'rows': 5}))
     user = forms.CharField(label='', widget=forms.HiddenInput())
     class Meta:
-        model = tm_model
+        model = TransMemories
         fields = ['name', 'subject', 's_lang', 't_lang', 'file_url', 'user', 'note']
 
-class ConcondanceSearchForm(forms.Form):
-    ignoreTags = forms.BooleanField(label='Ignore inline tags', required=False)
+class SearchForm(forms.Form):
     searchTM = forms.CharField(label='Search TM', required=False, widget=forms.TextInput(attrs={'placeholder':'Search TM'}))
-    searchCondance = forms.CharField(label='Entry Words', required=False, widget=forms.TextInput(attrs={'placeholder':'Entry Words'}))
-    
+    searchCondance = forms.CharField(label='Search Words', required=False, widget=forms.TextInput(attrs={'placeholder':'Entry Words'}))
+    searchWord = forms.CharField(label='',required=False, widget=forms.TextInput(attrs={'placeholder': 'Enter word','autofocus':True, 'autocomplete': 'off'} ))
+
+class UserSettingForm(forms.ModelForm):
     s_language = [('en', 'English'), ('th','Thai')]
     s_lang = forms.ChoiceField(label='Source Language', choices=s_language)
     t_lang = forms.ChoiceField(label='Target Language', choices=s_language)
-    matchRate = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder':'Entry Value','class':'form-control'}))
-    
+    matchRate = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder':'Match Rate','class':'form-control'}))
+    ignoreTags = forms.BooleanField(label='Ignore inline tags', required=False)
+    class Meta:
+        model = UserSetting
+        fields = ['user', 's_lang', 't_lang', 'ignoreTags', 'matchRate']
+

@@ -1,5 +1,5 @@
 function similar_words() {
-	var selectedText = $('#id_find_word').val();
+	var selectedText = $('#id_searchWord').val();
     if (s_text == selectedText) return; 
     s_text = selectedText;
     if(selectedText == "" || selectedText.split(" ").length > 1 || selectedText.split(",").length > 1) {
@@ -17,7 +17,7 @@ function similar_words() {
         },
         dataType: 'json',
         success: function (data) {  //console.log(data);
-            if(selectedText != $('#id_find_word').val()) return;
+            if(selectedText != $('#id_searchWord').val()) return;
             if(data.content) {
                 document.getElementById('wordDict_help_popup').innerHTML = data.content; 
                 document.getElementById('wordDict_help_popup').style.display = "block";
@@ -57,7 +57,7 @@ function ShowSelection(selectedText)
         },
         dataType: 'json',
         success: function (data) {
-            if($('#id_find_word').val() != selectedText) return;
+            if($('#id_searchWord').val() != selectedText) return;
             if (data != "") {
                 $(".dict_area").css('display', 'flex');
                 var dText = "";
@@ -98,7 +98,7 @@ function ShowSelection(selectedText)
     });
 }
 $(function(){
-    $('#id_find_word').on('keyup', function(e) {
+    $('#id_searchWord').on('keyup', function(e) {
         var keycode = (e.keyCode ? e.keyCode : e.which);
         suggest_navigation_keys_check(e);
         if(keycode != 13 && keycode != 32) {
@@ -108,25 +108,25 @@ $(function(){
             $(".btn_search").click();
         }
     });
-    $('#id_find_word').on('change', function(e) {
-        ShowSelection($('#id_find_word').val());
+    $('#id_searchWord').on('change', function(e) {
+        ShowSelection($('#id_searchWord').val());
     });
     $(document).on('click',"#wordDict_help_popup ul", function(e){
         var _content = e.currentTarget.children[0];
-        $('#id_find_word').val(_content.textContent);
+        $('#id_searchWord').val(_content.textContent);
         $(".btn_search").click();
     });
     $(document).on('click',"html", function(e){
         document.getElementById('wordDict_help_popup').style.display = "none";
     });
     $(".btn_search").on('click', function(){
-        ShowSelection($('#id_find_word').val());
+        ShowSelection($('#id_searchWord').val());
         document.getElementById('wordDict_help_popup').style.display = "none"
         $("#view_dict_area").click();
     })
     $(document).on('dblclick', "kref", function(e){
         var _content = e.currentTarget;
-        $('#id_find_word').val(_content.textContent);
+        $('#id_searchWord').val(_content.textContent);
         $(".btn_search").click();
     })
     $(".btn_sound").on('click', function(){

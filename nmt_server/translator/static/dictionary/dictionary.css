@@ -1,42 +1,5 @@
-.btn_search {
-    right: 0;
-    border-radius: 0;
-    border-top-right-radius: 25px;
-    border-bottom-right-radius: 25px;
-}
-.btn_search::before {
-    width: 1em;
-    border-radius: 1em;
-    transform: translate(-50%,-50%);
-    border: 2px solid;
-}
-.btn_search::after {
-    width: 2px;
-    transform-origin: 0 0;
-    transform: rotate(-45deg) translate(-0.5px,0.5em);
-    background-color: white;
-}
-.btn_search::before, .btn_search::after {
-    content: "";
-    height: 1em;
-    display: block;
-    position: absolute;
-    top: 45%;
-    left: 40%;
-}
-.btn_sound{
-    right:44px;
-}
-.btn_sound span{
-    position: absolute;
-    right: 10px;
-    top: 13px;
-    background-repeat: no-repeat;
-    height: 24px!important;
-    width: 24px!important;
-    background-position: 0px -360px;
-    color: white;
-    background-image: url(../icons/1x_mobile.png);
+.DictSearch>input {
+    margin: 0 90px 0 20px;
 }
 #translator_dict, .sentence_area {
     /* padding: 0px 32px 0px 24px; */

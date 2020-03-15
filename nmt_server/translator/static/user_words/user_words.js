@@ -39,9 +39,9 @@ function load_lexitron(_mode){
 }
 function ShowVocabulary()
 {
-    var selectedText = $('#id_find_word').val().trim();
+    var selectedText = $('#id_searchWord').val().trim();
     $.ajax({
-        url: vocabulary_list,
+        url: query_UserDictionaryList,
         data: {
             'seltext': selectedText,
             'is_approved': document.querySelector('input[name="allowed"]:checked').value
@@ -77,13 +77,13 @@ function ShowVocabulary()
     });
 }
 $(function(){
-    $('#id_find_word').on('keyup', function(e) {
+    $('#id_searchWord').on('keyup', function(e) {
         var keycode = (e.keyCode ? e.keyCode : e.which);
         if(keycode == 13) {
             $(".btn_search").click();
         }
     });
-    $('#id_find_word').on('change', function(e) {
+    $('#id_searchWord').on('change', function(e) {
         $(".btn_search").click();
     });
     $('input[type=radio][name=allowed]').change(function() {
@@ -109,7 +109,7 @@ $(function(){
         if($("#content_add_words").css('display') == 'none') {
             ShowVocabulary();
         } else {
-            end_word = $('#id_find_word').val().trim();
+            end_word = $('#id_searchWord').val().trim();
             document.getElementById("list_lexitron").innerHTML = "";
             load_lexitron(0);
         }
@@ -320,12 +320,13 @@ $(function(){
     $("#btn_vtype").on('click', function(){ 
         if ($('#clear').css('display') =='none') {
             $('#clear').css('display', 'flex');
-            $('#btn_vtype').css('color', '#0F2B46' )
-            $('#btn_vtype').css('background-position', 'center bottom !important;');
+            $('#btn_vtype').removeClass('sky_button');
+            $('#btn_vtype').css('border-radius', '5px 5px 0 0');
             document.getElementById('btn_vtype').style.backgroundPosition = 'center bottom';
         } else {
             $('#clear').css('display', 'none');
-            $('#btn_vtype').css('color', 'white' );
+            $('#btn_vtype').addClass('sky_button')
+            $('#btn_vtype').css('border-radius', '3px');
             document.getElementById('btn_vtype').style.backgroundPosition = 'center top';
         }
     });
@@ -385,7 +386,7 @@ $(function(){
             return;
         }
         $.ajax({
-            url: vocabulary_list,
+            url: query_UserDictionaryList,
             data: {
                 'seltext': $("#id_Vocabulary").val().trim(),
                 'is_approved': 2
@@ -464,7 +465,7 @@ $(function(){
         var csrftoken = $("[name=csrfmiddlewaretoken]").val();
         $.ajax({
             // type: "POST",
-            url: query_user_dictionary,
+            url: query_WordContents,
             headers:{
                 "X-CSRFToken": csrftoken
             },
@@ -686,7 +687,7 @@ $(function(){
     });
     if (suburl == 'dict') {
         ShowVocabulary();
-        $('#view_user_dict').click();
+        $('#view_user_dict').click();console.log("------------");
     }
     load_lexitron(0);
     $('#list_lexitron').on('scroll', function() {

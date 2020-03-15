@@ -1,43 +1,3 @@
-.btn_search {
-    right: 0;
-    border-radius: 0;
-    border-top-right-radius: 25px;
-    border-bottom-right-radius: 25px;
-}
-.btn_search::before {
-    width: 1em;
-    border-radius: 1em;
-    transform: translate(-50%,-50%);
-    border: 2px solid;
-}
-.btn_search::after {
-    width: 2px;
-    transform-origin: 0 0;
-    transform: rotate(-45deg) translate(-0.5px,0.5em);
-    background-color: white;
-}
-.btn_search::before, .btn_search::after {
-    content: "";
-    height: 1em;
-    display: block;
-    position: absolute;
-    top: 45%;
-    left: 40%;
-}
-.btn_sound{
-    right:44px;
-}
-.btn_sound span{
-    position: absolute;
-    right: 10px;
-    top: 13px;
-    background-repeat: no-repeat;
-    height: 24px!important;
-    width: 24px!important;
-    background-position: 0px -360px;
-    color: white;
-    background-image: url(../icons/1x_mobile.png);
-}
 #translator_dict,#translator_sentences {
     padding: 0px 32px 1px 24px;
     /* margin:3px; */
@@ -113,7 +73,6 @@ kref {
 }
 .add_words div{
     padding: 1% 2% 0 2%;
-    /* width: 96%; */
 }
 .add_words #clear{
     padding: 0;
@@ -156,16 +115,16 @@ textarea{
 }
 .add_words input[type=text] {
     /* width : auto; */
-    padding: 0 3px;
-    margin:0 10px;
+    padding: 5px 3px;
+    /* margin:0 10px; */
 }
 .add_words #btn_vtype {
-    padding: 5px 1em 5px 1em;
-    margin: 0;
-    background-image: url(../icons/bt-word-type.png) !important;
-    background-position: center bottom;
-    background-size: 100% 200% !important;
-    /* color:white; */
+    padding: 3px 5px 3px 5px;
+    margin: 0 5px;
+    background-color:white;
+    border: 1px solid;
+    border-radius: 5px 5px 0 0;
+    border-style: solid solid none solid;
     display: inline-block;
 }
 .add_words .txtlabel{
@@ -176,9 +135,6 @@ textarea{
     max-width: 260px;
     padding: 1%;
     height: calc(100vh - 155px);
-} 
-.list_side label {
-    font-weight: 100;
 }
 #list_lexitron {
     width: 300px;
@@ -246,20 +202,15 @@ textarea{
     padding: 0.25em 0.75em;
     min-width: 100px;
 }
-.modal-dialog-centered {
-    /* top:auto; */
-    display: flex;
-    -webkit-box-align: center;
-    align-items: center;
-    min-height: calc(100% - (1.75rem * 2));
-}
-
 select{
     width: 100px;
     margin: 0 20px;
 }
 .form_vocabulary{
     display:flex;
+}
+.form_vocabulary div{
+    width: 96%;
 }
 @media (max-width: 767px) {
     #content_user_vocabulary {

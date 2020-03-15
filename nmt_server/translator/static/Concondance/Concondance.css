@@ -1,47 +1,18 @@
-.btn_search {
-    right: 0;
-    border-radius: 0;
-    border-top-right-radius: 25px;
-    border-bottom-right-radius: 25px;
-}
-.btn_search::before, .btn_search_form::before {
-    width: 1em;
-    border-radius: 1em;
-    transform: translate(-50%,-50%);
-    border: 2px solid;
-}
-.btn_search::after, .btn_search_form::after {
-    width: 2px;
-    transform-origin: 0 0;
-    transform: rotate(-45deg) translate(-0.5px,0.5em);
-    background-color: white;
-}
-.btn_search::before, .btn_search::after  {
-    content: "";
-    height: 1em;
-    display: block;
-    position: absolute;
-    top: 45%;
-    left: 40%;
-}
-.btn_search_form::before , .btn_search_form::after {
-    content: "";
-    height: 1em;
-    display: block;
-    position: absolute;
-    top: 45%;
-    left: 10%;
-}
-.btn_search_form::after{
-    background-color: black;
+.modal-body{
+    text-align: -webkit-center;
 }
 .btn_search_form, .btn_memories_form{
-    height: 50px;
+    border: 1px solid;
+    border-style: solid solid none solid;
+    border-radius: 5px 5px 0 0;
+    background-color: white;
+    padding: 0 10px;
+    cursor: pointer;
 }
 .dict_area .sky_button{
     margin: 10px 0 10px 0;
     width: 160px;
-    padding: 0 10px 0 10px;
+    padding: 5px 10px 5px 10px;
     background:-webkit-linear-gradient(#E0E0E0, #FFF, #E0E0E0) !important;
     color: black;
 }
@@ -49,23 +20,27 @@
     width: 80px !important;
 }
 .dict_area, .form_vocabulary{
-    display: flex;
     padding: 10px;
 }
 .submenu{
-    max-width: 210px;
+    display: flex;
+    padding: 0 10px;
 }
 #div_content{
     width: 100%;
+    padding: 5px;
     overflow: auto;
     text-align: -webkit-center;
+    border: 1px solid;
+    border-style: solid none;
+    margin-top:-1px;
 }
 div.table-container{
     width: 100%;
-    height: calc(100vh - 230px);
+    height: calc(100vh - 270px);
 }
 #div_content input[type=text]{
-    padding: 0px 10px;
+    padding: 5px 10px;
 }
 td, th{
     padding:10px;

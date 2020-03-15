@@ -17,7 +17,7 @@ function ShowSelection(selectedText)
         },
         dataType: 'json',
         success: function (data) {
-            if($('#id_find_word').val() != selectedText) return;
+            if($('#id_searchWord').val() != selectedText) return;
             if (data != "") {
                 $(".dict_area").css('display', 'flex');
                 var dText = "";
@@ -66,27 +66,27 @@ function view_template(_templateID){
 view_template("div_"+suburl+"_form");
 
 $(function(){
-    $('#id_find_word').on('keyup', function(e) {
+    $('#id_searchWord').on('keyup', function(e) {
         var keycode = (e.keyCode ? e.keyCode : e.which);
         if(keycode != 13 && keycode != 32) {
         } else {
             $(".btn_search").click();
         }
     });
-    $('#id_find_word').on('change', function(e) {
-        // ShowSelection($('#id_find_word').val());
+    $('#id_searchWord').on('change', function(e) {
+        // ShowSelection($('#id_searchWord').val());
     });
     $(".btn_search").on('click', function(){
-        // ShowSelection($('#id_find_word').val());
+        // ShowSelection($('#id_searchWord').val());
     })
     $(document).on('click', ".btn_new", function(e) {
         view_template("tm_new");
     });
     $('.btn_search_form').on('click', function (e) {
-        window.location="/Concondance/";
+        window.location="/concondance/";
     });
     $('.btn_memories_form').on('click', function (e) {
-        window.location="/transMemories/";
+        window.location="/manipulate_TM/";
     });
     $("#tm_list_form input[type='checkbox']").on('click', function(e){
         if(this.value == 'on') {

@@ -87,7 +87,7 @@ body{
     align-self: flex-end;
 }
 button {
-    border: none !important;
+    /* border: none !important; */
     /* background: transparent !important; */
 }
 button:focus {
@@ -98,6 +98,45 @@ button:focus {
 }
 .btn:active:focus, .btn:focus, .btn.focus{
     outline:0;
+}.btn_search {
+    right: 0;
+    border-radius: 0;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+}
+.btn_search::before {
+    width: 1em;
+    border-radius: 1em;
+    transform: translate(-50%,-50%);
+    border: 2px solid;
+}
+.btn_search::after {
+    width: 2px;
+    transform-origin: 0 0;
+    transform: rotate(-45deg) translate(-0.5px,0.5em);
+    background-color: white;
+}
+.btn_search::before, .btn_search::after  {
+    content: "";
+    height: 1em;
+    display: block;
+    position: absolute;
+    top: 45%;
+    left: 40%;
+}
+.btn_sound{
+    right:44px;
+}
+.btn_sound span{
+    position: absolute;
+    right: 10px;
+    top: 13px;
+    background-repeat: no-repeat;
+    height: 24px!important;
+    width: 24px!important;
+    background-position: 0px -360px;
+    color: white;
+    background-image: url(../icons/1x_mobile.png);
 }
 #menu{
     box-sizing: border-box;
@@ -178,6 +217,13 @@ button:focus {
     display: flex;
     flex-direction: column;
 }
+.modal-dialog-centered {
+    /* top:auto; */
+    display: grid;
+    -webkit-box-align: center;
+    align-items: center;
+    min-height: calc(100% - (1.75rem * 2));
+}
 input[type=text], input[type=email], input[type=password]{
     padding: 10px 15px;
     border: 1px solid #666;
@@ -203,6 +249,10 @@ input[type=text]:placeholder-shown[required], input[type=email]:placeholder-show
 input[type=text]:focus, input[type=email]:focus, input[type=password]:focus, input:focus{
     /* border-bottom: 1px solid #006494; */
     outline: none;
+}
+
+label {
+    font-weight: 100;
 }
 .text_input label {
     position: absolute;
@@ -417,7 +467,9 @@ select {
     border: 1px solid #ccc;
     min-width:  100px;
 }
-
+textarea {
+    border-radius: 5px;
+}
 /* width */
 ::-webkit-scrollbar {
     width: 5px;

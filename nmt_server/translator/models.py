@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from django.db import models
+from django.contrib.auth.models import User
 from datetime import datetime
 
 # class TransModel(models.Model):
@@ -33,7 +34,7 @@ class DictSentences(models.Model):
     # def __str__(self):
     #     return self.part
 
-class tm_model(models.Model):
+class TransMemories(models.Model):
     file_url = models.FileField(upload_to='Concondances/')
     name = models.CharField(max_length=50,default='none')
     s_lang = models.CharField(max_length=5,default='en')
@@ -43,3 +44,10 @@ class tm_model(models.Model):
     user = models.CharField(max_length=70, default='unknown')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class UserSetting(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    s_lang = models.CharField(max_length=5,default='en')
+    t_lang = models.CharField(max_length=5,default='th')
+    matchRate = models.IntegerField(default=50)
+    ignoreTags = models.BooleanField(default=False)

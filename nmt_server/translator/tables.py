@@ -1,7 +1,7 @@
 from django.utils.safestring import mark_safe
 from django_tables2.utils import Accessor, AttributeDict
 import django_tables2 as tables
-from .models import tm_model
+from .models import TransMemories
 
 class MaterializeCheckColumn(tables.CheckBoxColumn):
     def render(self, value, bound_column, record):
@@ -18,14 +18,14 @@ class MaterializeCheckColumn(tables.CheckBoxColumn):
 class tmTable(tables.Table):
     check = MaterializeCheckColumn(accessor='id')
     class Meta:
-        model = tm_model
+        model = TransMemories
         template_name = "django_tables2/bootstrap-responsive.html"
         fields = ('check', 'name', 'subject', 'note', 's_lang', 't_lang', 'user', 'file_url')
         attrs = {"class": "table table-hover paleblue"}
 
 class concondanceTable(tables.Table):
     class Meta:
-        model = tm_model
+        model = TransMemories
         template_name = "django_tables2/bootstrap-responsive.html"
         fields = ('id', 'name', 'subject', 'note', 's_lang', 't_lang', 'user', 'file_url')
         attrs = {"class": "table table-hover paleblue"}
