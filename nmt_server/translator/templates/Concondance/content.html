@@ -25,8 +25,6 @@
     <a href="/user_words/dict" id="view_user_dict">User Dictionary</a>
     {% endif %}
 </div>
-<form method="POST" action="/update_UserSetting/"> 
-    {% csrf_token %}
 <div class="dict_area">
     <div class="submenu">
         <div class='btn_search_form'>Search</div>
@@ -49,6 +47,7 @@
     {% render_table concondance_table %}
 </template>
 <!-- Modal -->
+
 <div id="modal_setting" class="modal fade" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <!-- Modal content-->
@@ -57,32 +56,34 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title" id="modal-title">Search Setting...</h4>
         </div>
-            <div class="modal-body">
-                <table>
-                    <tr><td>Source Language*</td><td>{{ setForm.s_lang }}</td></tr>
-                    <tr><td>Target Language*</td><td>{{ setForm.t_lang }}</td></tr>
-                    <tr><td>Minimum match rate(%)</td>
-                        <td>
-                            <div class="input-group spinner">
-                            {{setForm.matchRate}}
-                            <div class="input-group-btn-vertical">
-                                <div class="btn btn-default"><i class="fa fa-caret-up"></i></div>
-                                <div class="btn btn-default"><i class="fa fa-caret-down"></i></div>
-                            </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr><td colspan="2" style="text-align: center;">{{ setForm.ignoreTags }} {{ setForm.ignoreTags.label_tag }}</td></tr>
-                </table> 
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-default btn-setting-save">Save</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
+            <form method="POST" action="/update_UserSetting/"> 
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <input type="hidden" id="user" name="user" value="{{request.user.id}}"/>
+                    <table>
+                        <tr><td>Source Language*</td><td class='s_lang'></td></tr>
+                        <tr><td>Target Language*</td><td class='t_lang'></td></tr>
+                        <tr><td>Minimum match rate(%)</td>
+                            <td>
+                                <div class="input-group spinner">
+                                    <div class = "matchRate"></div>
+                                <div class="input-group-btn-vertical">
+                                    <div class="btn btn-default"><i class="fa fa-caret-up"></i></div>
+                                    <div class="btn btn-default"><i class="fa fa-caret-down"></i></div>
+                                </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr><td colspan="2" style="text-align: center;" class='ignoreTags'></td></tr>
+                    </table> 
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-default btn-setting-save">Save</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
       </div>
     </div>
 </div>
-<div style="display: none;">{{ setForm.user }}</div>
-</form>
 {% endblock content %}
 <!-- =============================== -->

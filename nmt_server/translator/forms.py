@@ -26,9 +26,9 @@ class TransMemoryForm(forms.ModelForm):
     s_lang = forms.ChoiceField(label='Source Language: ', choices=s_language)
     t_lang = forms.ChoiceField(label='Target Language: ', choices=s_language)
     file_url = forms.FileField(label="File: ")
-    name = forms.CharField(label="Name: ")
-    subject = forms.CharField(label="Subject: ")
-    note = forms.CharField(label="Note: ", widget=forms.Textarea(attrs={'rows': 5}))
+    name = forms.CharField(label="Name: ", widget=forms.TextInput(attrs={'placeholder':'Enter Name','class':'form-control'}))
+    subject = forms.CharField(label="Subject: ", widget=forms.TextInput(attrs={'placeholder':'Enter Subject'}))
+    note = forms.CharField(label="Note: ", widget=forms.Textarea(attrs={'rows': 5,'class':'form-control'}))
     user = forms.CharField(label='', widget=forms.HiddenInput())
     class Meta:
         model = TransMemories
@@ -40,7 +40,7 @@ class SearchForm(forms.Form):
     searchWord = forms.CharField(label='',required=False, widget=forms.TextInput(attrs={'placeholder': 'Enter word','autofocus':True, 'autocomplete': 'off'} ))
 
 class UserSettingForm(forms.ModelForm):
-    s_language = [('en', 'English'), ('th','Thai')]
+    s_language = [('all', 'All'), ('en', 'English'), ('th','Thai')]
     s_lang = forms.ChoiceField(label='Source Language', choices=s_language)
     t_lang = forms.ChoiceField(label='Target Language', choices=s_language)
     matchRate = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder':'Match Rate','class':'form-control'}))

@@ -416,7 +416,6 @@ def lexitron_list(request):
     return JsonResponse({'content': _list})
 
 def view_ConcondanceSearch(request):
-    
     sort = request.GET.get('sort', 'name')
     searchCon = request.GET.get('searchCondance', '')
 
@@ -441,14 +440,13 @@ def update_UserSetting(request):
         form = UserSettingForm(data=request.POST, instance=own_settings)
         if form.is_valid():
             form.save()
+        return redirect("/concondance/")
     else:
-        form = UserSettingForm()
-    return redirect("/concondance/")
-
+        own_settings=UserSetting.objects.get(user=request.user.id)
+        form = UserSettingForm(instance=own_settings)
+        return HttpResponse(form)
 
 def manipulate_TM(request):
-    add_words_form = AddWordsForm(initial={'t_lang': 'th'})
-
     sort = request.GET.get('sort', 'name')
     searchTM = request.GET.get('searchTM', '')
     delID = request.POST.getlist('check')
@@ -460,7 +458,7 @@ def manipulate_TM(request):
 
     table = tmTable(TransMemories.objects.all().filter(name__contains=searchTM).order_by(sort))
 
-    tm_form = TransMemoryForm(initial={'t_lang': 'th'})
+    tm_form = TransMemoryForm(initial={'t_lang': 'th', 'user':request.user})
     search_Form = SearchForm(initial={'searchTM':searchTM})
 
     return render(request, "concondance/transMemories.html", {
@@ -473,14 +471,10 @@ def upload_translationMemories(request):
     if request.method == 'POST':
         form = TransMemoryForm(request.POST, request.FILES)
         if form.is_valid():
-            fs = FileSystemStorage()
-            file_url = request.FILES['file_url']
-            filename = fs.save(file_url.name, file_url)
-            uploaded_file_url = fs.path(filename)
             tm = form.save()
-            return JsonResponse({'status': 'ok', 'content': 'You successfully added this translation memories file'})
-        else:
-            return JsonResponse({'content': str(form.errors)})
+            # return JsonResponse({'status': 'ok', 'content': 'You successfully added this translation memories file'})
+        # else:
+            # return JsonResponse({'content': str(form.errors)})
     else:
-        tm_form = TransMemoryForm()
-    return render(request, 'concondance/content.html', {'tm_form': tm_form})
+        form = TransMemoryForm()
+    return redirect('/manipulate_TM/')

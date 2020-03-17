@@ -23,8 +23,6 @@ var update_vocabulary = "/translator/update_vocabulary";
 var approve_vocabulary = "/translator/approve_vocabulary";
 var delete_vocabulary = "/translator/delete_vocabulary";
 
-var upload_translationMemories = "/translator/upload_translationMemories";
-
 var s_text = "";
 var wait, wait1;
 var _ajax_communication;
