@@ -35,15 +35,15 @@ class DictSentences(models.Model):
     #     return self.part
 
 class TransMemories(models.Model):
-    file_url = models.FileField(upload_to='Concondances/')
+    file_url = models.FileField(upload_to='concondances/')
     name = models.CharField(max_length=50,default='none')
     s_lang = models.CharField(max_length=5,default='en')
     t_lang = models.CharField(max_length=5,default='th')
     subject = models.CharField(max_length=50,default='')
     note = models.TextField(blank=True)
     user = models.CharField(max_length=70, default='unknown')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
 
 class UserSetting(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

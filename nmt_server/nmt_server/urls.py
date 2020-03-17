@@ -33,6 +33,7 @@ urlpatterns = [
     path('user_words/<str:suburl>/', views.view_AddWords, name="user_words_view"),
     path('account_activation_sent/', views.account_activation_sent, name='account_activation_sent'),
     path('activate/<uidb64>/<token>/', views.activate, name='activate'),
+    path('upload_translationMemories/', views.upload_translationMemories, name='upload_translationMemories'),
 ]
 
 

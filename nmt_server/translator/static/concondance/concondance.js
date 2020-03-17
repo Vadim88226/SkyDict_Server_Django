@@ -73,12 +73,6 @@ $(function(){
             $(".btn_search").click();
         }
     });
-    $('#id_searchWord').on('change', function(e) {
-        // ShowSelection($('#id_searchWord').val());
-    });
-    $(".btn_search").on('click', function(){
-        // ShowSelection($('#id_searchWord').val());
-    })
     $(document).on('click', ".btn_new", function(e) {
         view_template("tm_new");
     });
@@ -91,6 +85,11 @@ $(function(){
     $("#tm_list_form input[type='checkbox']").on('click', function(e){
         if(this.value == 'on') {
             $("#tm_list_form input[type='checkbox']").prop('checked', this.checked);
+            if (this.checked) {
+                $('#tm_list_form > div > table > tbody > tr').css('background-color','orangered');
+            } else {
+                $('#tm_list_form > div > table > tbody > tr').css('background-color','');
+            }
         }
     })
     $(document).on('click', ".btn_delete", function(e) {
@@ -117,51 +116,6 @@ $(function(){
             });
         }
     });
-    $(document).on('click', ".btn_uploadTm", function(e) { 
-        e.preventDefault();
-        tm_upload_form.user.value = $("#U_name").val();
-        var form_data = new FormData(tm_upload_form);
-        $.ajax({
-            type: "POST",
-            url: upload_translationMemories,
-            data: form_data,
-            processData: false,
-            contentType: false,
-            enctype: "multipart/form-data",
-            success: function (data) {
-                if(data.status == 'ok'){
-                    $.confirm({
-                        icon: 'fa fa-smile-o',
-                        theme: 'modern', content: data.content,
-                        animation: 'scale',
-                        type: 'blue',
-                        autoClose: 'okay|3000',
-                        escapeKey: 'okay',
-                        buttons: {
-                            okay: { action: view_template("tm_new") }
-                        }
-                    });
-                } else {
-                    $.alert({
-                        title: 'Alert', content: data.content,
-                        icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
-                        buttons: {
-                            okay: {  }
-                        }
-                    });
-                }
-            },
-            error: function() {
-                $.alert({
-                    title: 'Alert', content: 'SERVER ERROR',
-                    icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
-                    buttons: {
-                        okay: {  }
-                    }
-                });
-            }
-        })
-    });
     $('.spinner .btn:first-of-type').on('click', function() {
         if($('.spinner input').val() == 100){
             return false;
@@ -177,7 +131,37 @@ $(function(){
             $('.spinner input').val( parseInt($('.spinner input').val()*1, 10) - 1);
         }
     });
-    $('.btn-setting-save').on('click', function(){
-        
+    $('#tm_list_form > div > table > tbody > tr input[type="checkbox"]').on('click', function(e){
+        this.checked = 1 - this.checked;
+    });
+    $('#tm_list_form > div > table > tbody > tr').on('click', function(e){
+        e.currentTarget.cells[5].childNodes[0].checked = 1 - (e.currentTarget.cells[5].childNodes[0].checked);
+        if(e.currentTarget.cells[5].childNodes[0].checked)
+            $(this).css('background-color','orangered');
+        else
+            $(this).css('background-color','');
+    });
+    $(document).on('click', ".btn_uploadTm_back", function(e) {
+        $('.btn_memories_form').click();
+        // view_template("div_"+suburl+"_form");
+    })
+    $('.btn_setting').on('click', function(e){
+        $.ajax({
+            url: "/update_UserSetting/",
+            type: "get",
+            // data: {id: id},
+            success: function(response) {
+                var _form = document.createElement('form');
+                _form.innerHTML = response;
+                $(".modal-body .s_lang").html(_form.s_lang);
+                $(".modal-body .t_lang").html(_form.t_lang);
+                $(".modal-body .matchRate").html(_form.matchRate);
+                $(".modal-body .ignoreTags").html(_form.ignoreTags);
+                _lbl = document.createElement('label');
+                _lbl.setAttribute('for','id_ignoreTags');
+                _lbl.textContent = ' Ignore inner tags';
+                $(".modal-body .ignoreTags").append(_lbl);
+            }
+        })
     })
 })

@@ -61,13 +61,13 @@ table.paleblue thead th.orderable.desc > a {
     /*background-image: url(../img/arrow-active-down.png);*/
 }
 
-table.paleblue tr.odd {
+/* table.paleblue tr.odd {
     background-color: #EDF3FE;
 }
 
 table.paleblue tr.even {
     background-color: white;
-}
+} */
 
 table.paleblue + ul.pagination {
     background: white url(../img/pagination-bg.gif) left 180% repeat-x;

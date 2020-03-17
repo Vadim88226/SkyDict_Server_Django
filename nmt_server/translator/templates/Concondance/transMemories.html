@@ -53,7 +53,7 @@
     </form>
 </template>
 <template id="tm_new">
-    <form method="POST" id="tm_upload_form" name = "tm_upload_form">
+    <form method="POST" action="/upload_translationMemories/" enctype="multipart/form-data" id="tm_upload_form" name = "tm_upload_form">
         <div style="text-align: left;">New Translation Memory</div>
         <hr>
         {% csrf_token %} {{tm_form.user}}
@@ -64,7 +64,10 @@
             <tr><td>Target Language: </td><td>{{tm_form.t_lang}}</td></tr>
             <tr><td>Subject: </td><td>{{tm_form.subject}}</td></tr>
             <tr><td>Note: </td><td>{{tm_form.note}}</td></tr>
-            <tr><td></td><td style="text-align: center;"><button type="submit" class="btn_uploadTm sky_button">Submit</button></td></tr>
+            <tr><td></td><td style="text-align: center;">
+                <button type="button" class="btn_uploadTm_back sky_button">Back</button>
+                <button type="submit" class="sky_button">Submit</button>
+            </td></tr>
         </table>
     </form>
 </template>

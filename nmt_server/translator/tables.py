@@ -20,7 +20,7 @@ class tmTable(tables.Table):
     check = MaterializeCheckColumn(accessor='id')
     counter = tables.Column(verbose_name='No', empty_values=(), orderable=False)
     name = tables.Column(verbose_name='TM Name')
-    updated_at = tables.Column(verbose_name='Last Modified')
+    updated_at = tables.DateTimeColumn(verbose_name='Last Modified', format='d/m/Y')
     s_lang = tables.Column(verbose_name="Languages")
     user = tables.Column(verbose_name='Owner')
     class Meta:
@@ -32,7 +32,7 @@ class tmTable(tables.Table):
         self.row_counter = getattr(self, 'row_counter', itertools.count(1))
         return next(self.row_counter)
     def render_s_lang(self, value, record):
-        return mark_safe('''%s -> %s''' % (value, record.t_lang))
+        return mark_safe('''%s > %s''' % (value.upper(), record.t_lang.upper()))
 
 class concondanceTable(tables.Table):
     class Meta:

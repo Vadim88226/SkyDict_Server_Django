@@ -469,6 +469,7 @@ select {
 }
 textarea {
     border-radius: 5px;
+    resize: none;
 }
 /* width */
 ::-webkit-scrollbar {
