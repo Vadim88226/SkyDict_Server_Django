@@ -441,6 +441,8 @@ def update_UserSetting(request):
         form = UserSettingForm(data=request.POST, instance=own_settings)
         if form.is_valid():
             form.save()
+    else:
+        form = UserSettingForm()
     return redirect("/concondance/")
 
 
