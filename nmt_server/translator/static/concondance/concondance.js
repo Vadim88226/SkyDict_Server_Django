@@ -74,7 +74,22 @@ $(function(){
         }
     });
     $(document).on('click', ".btn_new", function(e) {
-        view_template("tm_new");
+        $.ajax({
+            url: "/upload_translationMemories/",
+            type: "get",
+            // data: {id: id},
+            success: function(response) {
+                view_template("tm_new");
+                var _form = document.createElement('form');
+                _form.innerHTML = response;
+                $("#tm_upload_form .file_url").html(_form.file_url);
+                $("#tm_upload_form .name").html(_form.name);
+                $("#tm_upload_form .s_lang").html(_form.s_lang);
+                $("#tm_upload_form .t_lang").html(_form.t_lang);
+                $("#tm_upload_form .subject").html(_form.subject);
+                $("#tm_upload_form .Note").html(_form.Note);
+            }
+        })
     });
     $('.btn_search_form').on('click', function (e) {
         window.location="/concondance/";
@@ -137,7 +152,7 @@ $(function(){
     $('#tm_list_form > div > table > tbody > tr').on('click', function(e){
         e.currentTarget.cells[5].childNodes[0].checked = 1 - (e.currentTarget.cells[5].childNodes[0].checked);
         if(e.currentTarget.cells[5].childNodes[0].checked)
-            $(this).css('background-color','orangered');
+            $(this).css('background-color','lightgrey');
         else
             $(this).css('background-color','');
     });

@@ -54,16 +54,16 @@
 </template>
 <template id="tm_new">
     <form method="POST" action="/upload_translationMemories/" enctype="multipart/form-data" id="tm_upload_form" name = "tm_upload_form">
-        <div style="text-align: left;">New Translation Memory</div>
+        <div style='margin-top:18px'>New Translation Memory</div>
         <hr>
-        {% csrf_token %} {{tm_form.user}}
+        {% csrf_token %}
         <table>
-            <tr><td>File: </td><td>{{tm_form.file_url}}</td></tr>
-            <tr><td>Name: </td><td>{{tm_form.name}}</td></tr>
-            <tr><td>Source Language: </td><td>{{tm_form.s_lang}}</td></tr>
-            <tr><td>Target Language: </td><td>{{tm_form.t_lang}}</td></tr>
-            <tr><td>Subject: </td><td>{{tm_form.subject}}</td></tr>
-            <tr><td>Note: </td><td>{{tm_form.note}}</td></tr>
+            <tr><td>File: </td><td class='file_url'></td></tr>
+            <tr><td>Name: </td><td class='name'></td></tr>
+            <tr><td>Source Language: </td><td class='s_lang'></td></tr>
+            <tr><td>Target Language: </td><td class='t_lang'></td></tr>
+            <tr><td>Subject: </td><td class='subject'></td></tr>
+            <tr><td>Note: </td><td class="note"></td></tr>
             <tr><td></td><td style="text-align: center;">
                 <button type="button" class="btn_uploadTm_back sky_button">Back</button>
                 <button type="submit" class="sky_button">Submit</button>
