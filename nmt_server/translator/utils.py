@@ -7,6 +7,10 @@ from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from lxml import etree
 from translator.translation_model.processing import evaluate, normalizeString, normalizeString_fix
 from .apps import TranslatorConfig
+
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
+
 # get filename and extention
 def get_nameNextention(url):
     return os.path.splitext(url)

@@ -1,4 +1,4 @@
-import re, json
+import re, json, os
 import linecache
 from langdetect import detect
 from django.shortcuts import render, get_object_or_404, redirect
@@ -31,8 +31,11 @@ from django_tables2 import MultiTableMixin, RequestConfig, SingleTableMixin, Sin
 from django_tables2.export.views import ExportMixin
 from django_tables2.paginators import LazyPaginator
 
+
 from .tables import tmTable, concondanceTable
 from .filters import tmFilter
+
+from translate.storage.tmx import tmxfile
 
 class IndexView(generic.TemplateView):
     template_name = 'translator/content.html'
@@ -425,14 +428,35 @@ def view_ConcondanceSearch(request):
         row.save()
 
     own_settings=UserSetting.objects.get(user=request.user.id)
-    setForm = UserSettingForm(instance=own_settings)
+
+    s_lang = own_settings.s_lang
+    t_lang = own_settings.t_lang
+    match_rate = own_settings.matchRate
+    tm_objects = None
+    if s_lang == 'all':
+        tm_objects = TransMemories.objects.all()
+    else:
+        tm_objects = TransMemories.objects.filter(s_lang = s_lang)
+    
+    for tm_object in tm_objects:
+        tm_url = getattr(tm_object, 'file_url').name
+        tm_s_lang = getattr(tm_object, 's_lang')
+        tm_t_lang = getattr(tm_object, 't_lang')
+        if os.path.isfile(tm_url):
+            fin = open(tm_url, 'rb')
+            tmx_file = tmx(fin, tm_s_lang, tm_t_lang)
+            if s_lang == "all":
+                pass
+            else:
+
     search_Form = SearchForm(initial={'searchCondance':searchCon})
     concondance_table = concondanceTable(TransMemories.objects.all().filter(name__contains=searchCon).order_by(sort))
+
+    print(concondance_table)
 
     return render(request, "concondance/content.html", {
         'concondance_table': concondance_table, 
         'search_Form' : search_Form,
-        'setForm' : setForm,
     })
 
 def update_UserSetting(request):
@@ -443,6 +467,7 @@ def update_UserSetting(request):
             form.save()
     else:
         form = UserSettingForm()
+        return form
     return redirect("/concondance/")
 
 
