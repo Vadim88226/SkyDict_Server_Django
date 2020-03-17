@@ -87,7 +87,7 @@ $(function(){
                 $("#tm_upload_form .s_lang").html(_form.s_lang);
                 $("#tm_upload_form .t_lang").html(_form.t_lang);
                 $("#tm_upload_form .subject").html(_form.subject);
-                $("#tm_upload_form .Note").html(_form.Note);
+                $("#tm_upload_form .note").html(_form.note);
             }
         })
     });
@@ -101,7 +101,7 @@ $(function(){
         if(this.value == 'on') {
             $("#tm_list_form input[type='checkbox']").prop('checked', this.checked);
             if (this.checked) {
-                $('#tm_list_form > div > table > tbody > tr').css('background-color','orangered');
+                $('#tm_list_form > div > table > tbody > tr').css('background-color','lightgrey');
             } else {
                 $('#tm_list_form > div > table > tbody > tr').css('background-color','');
             }

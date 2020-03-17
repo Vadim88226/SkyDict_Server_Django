@@ -469,5 +469,5 @@ def upload_translationMemories(request):
             tm = form.save()
         return redirect('/manipulate_TM/')
     else:
-        form = TransMemoryForm()
+        form = TransMemoryForm(initial={'t_lang':'th'})
         return HttpResponse(form)
