@@ -7,9 +7,45 @@ from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from lxml import etree
 from translator.translation_model.processing import evaluate, normalizeString, normalizeString_fix
 from .apps import TranslatorConfig
+from django.conf import settings
+
 
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
+from translate.storage.tmx import tmxfile
+
+def compare_matchrate(element):
+    return element['match_rate']
+# cocondance search
+def cocondance_search(tm_objects, searchCon, matchRate, search_lang):
+    out_sequences_per_tm = []
+    for tm_object in tm_objects:
+        tm_url = os.path.join(settings.MEDIA_ROOT, getattr(tm_object, 'file_url').name)
+        print(os.path.join(settings.MEDIA_ROOT, tm_url))
+        tm_s_lang = getattr(tm_object, 's_lang')
+        tm_t_lang = getattr(tm_object, 't_lang')
+        tm_name = getattr(tm_object, 'name')
+        if os.path.isfile( tm_url):
+            fin = open(tm_url, 'rb')
+            tmx_file = tmxfile(fin, tm_s_lang, tm_t_lang)
+            if search_lang == "all":
+                pass
+            else:
+                source_sequences = []
+                target_sequences = []
+                for node in tmx_file.unit_iter():
+                    source_sequences.append(node.getsource())
+                    target_sequences.append(node.gettarget())
+                extracted = process.extract(searchCon, source_sequences, scorer=fuzz.token_set_ratio, limit=len(source_sequences))
+                s_sequences = [sent for sent in extracted if sent[1] >= int(matchRate)]
+                for entry in s_sequences:
+                    for i, sequence in enumerate(source_sequences):
+                        if entry[0] == sequence:
+                            out_sequences_per_tm.append({'source':entry[0], 'target': target_sequences[i], 'tm_name':tm_name, 'match_rate':entry[1]})
+                            break
+    out_sequences_per_tm.sort(key=compare_matchrate, reverse=True)
+    return out_sequences_per_tm
+
 
 # get filename and extention
 def get_nameNextention(url):

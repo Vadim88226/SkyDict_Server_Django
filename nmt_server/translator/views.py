@@ -23,7 +23,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from .models import DictWords, DictSentences, TransMemories, UserSetting
-from .utils import translate_sentences, translate_file
+from .utils import translate_sentences, translate_file, cocondance_search
 from django.db.models import Count
 from django.views.generic import ListView
 
@@ -35,7 +35,6 @@ from django_tables2.paginators import LazyPaginator
 from .tables import tmTable, concondanceTable
 from .filters import tmFilter
 
-from translate.storage.tmx import tmxfile
 
 class IndexView(generic.TemplateView):
     template_name = 'translator/content.html'
@@ -437,21 +436,12 @@ def view_ConcondanceSearch(request):
     else:
         tm_objects = TransMemories.objects.filter(s_lang = s_lang)
     
-    for tm_object in tm_objects:
-        tm_url = getattr(tm_object, 'file_url').name
-        tm_s_lang = getattr(tm_object, 's_lang')
-        tm_t_lang = getattr(tm_object, 't_lang')
-        if os.path.isfile(tm_url):
-            fin = open(tm_url, 'rb')
-            tmx_file = tmx(fin, tm_s_lang, tm_t_lang)
-            if s_lang == "all":
-                pass
-            else:
+    search_result = cocondance_search(tm_objects, searchCon, match_rate, search_lang= s_lang)
+    concondance_table = concondanceTable(search_result)
+
 
     search_Form = SearchForm(initial={'searchCondance':searchCon})
-    concondance_table = concondanceTable(TransMemories.objects.all().filter(name__contains=searchCon).order_by(sort))
-
-    print(concondance_table)
+    # concondance_table = concondanceTable(TransMemories.objects.all().filter(name__contains=searchCon).order_by(sort))
 
     return render(request, "concondance/content.html", {
         'concondance_table': concondance_table, 

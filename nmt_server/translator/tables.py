@@ -35,8 +35,7 @@ class tmTable(tables.Table):
         return mark_safe('''%s > %s''' % (value.upper(), record.t_lang.upper()))
 
 class concondanceTable(tables.Table):
-    class Meta:
-        model = TransMemories
-        template_name = "django_tables2/bootstrap-responsive.html"
-        fields = ('id', 'name', 'subject', 'note', 's_lang', 't_lang', 'user', 'file_url')
-        attrs = {"class": "table table-hover paleblue"}
+    source = tables.Column()
+    target = tables.Column()
+    tm_name = tables.Column()
+    match_rate = tables.Column()
