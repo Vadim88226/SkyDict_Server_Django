@@ -35,8 +35,8 @@ class tmTable(tables.Table):
         return mark_safe('''%s > %s''' % (value.upper(), record.t_lang.upper()))
 
 class concondanceTable(tables.Table):
-    source = tables.Column(orderable=False)
-    target = tables.Column(orderable=False)
+    source = tables.Column(orderable=False, attrs={"th":{'width':'40%'}})
+    target = tables.Column(orderable=False, attrs={"th":{'width':'40%'}})
     tm_name = tables.Column(orderable=False)
     match_rate = tables.Column(orderable=False)
     class Meta:
