@@ -39,7 +39,7 @@ table.paleblue thead th,
 table.paleblue thead td {
     background: #FCFCFC url(../img/header-bg.png) left bottom repeat-x;
     border-bottom: 1px solid #DDD;
-    padding: 2px 5px;
+    padding: 2px 0;
     vertical-align: middle;
     color: #666;
 }
