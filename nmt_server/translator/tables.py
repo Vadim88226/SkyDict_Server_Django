@@ -35,7 +35,14 @@ class tmTable(tables.Table):
         return mark_safe('''%s > %s''' % (value.upper(), record.t_lang.upper()))
 
 class concondanceTable(tables.Table):
-    source = tables.Column()
-    target = tables.Column()
-    tm_name = tables.Column()
-    match_rate = tables.Column()
+    counter = tables.Column(verbose_name='No', empty_values=(), orderable=False)
+    source = tables.Column(orderable=False)
+    target = tables.Column(orderable=False)
+    tm_name = tables.Column(orderable=False)
+    match_rate = tables.Column(orderable=False)
+    class Meta:
+        template_name = "django_tables2/bootstrap-responsive.html"
+        attrs = {"class": "table table-hover paleblue"}
+    def render_counter(self):
+        self.row_counter = getattr(self, 'row_counter', itertools.count(1))
+        return next(self.row_counter)
