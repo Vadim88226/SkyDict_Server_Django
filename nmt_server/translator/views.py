@@ -441,7 +441,7 @@ def view_ConcondanceSearch(request):
 
 
     search_Form = SearchForm(initial={'searchCondance':searchCon})
-    # concondance_table = concondanceTable(TransMemories.objects.all().filter(name__contains=searchCon).order_by(sort))
+    concondance_table = concondanceTable(TransMemories.objects.filter(name__contains=searchCon).order_by(sort))
 
     return render(request, "concondance/content.html", {
         'concondance_table': concondance_table, 
@@ -470,14 +470,11 @@ def manipulate_TM(request):
         except:
             print("An exception occurred")
 
-    table = tmTable(TransMemories.objects.all().filter(name__contains=searchTM).order_by(sort))
-
-    tm_form = TransMemoryForm(initial={'t_lang': 'th', 'user':request.user})
+    table = tmTable(TransMemories.objects.filter(name__contains=searchTM).order_by(sort))
     search_Form = SearchForm(initial={'searchTM':searchTM})
 
     return render(request, "concondance/transMemories.html", {
         'table': table, 
-        'tm_form':tm_form,
         'search_Form':search_Form
         })
 
@@ -486,9 +483,7 @@ def upload_translationMemories(request):
         form = TransMemoryForm(request.POST, request.FILES)
         if form.is_valid():
             tm = form.save()
-            # return JsonResponse({'status': 'ok', 'content': 'You successfully added this translation memories file'})
-        # else:
-            # return JsonResponse({'content': str(form.errors)})
+        return redirect('/manipulate_TM/')
     else:
-        form = TransMemoryForm()
-    return redirect('/manipulate_TM/')
+        form = TransMemoryForm(initial={'t_lang':'th'})
+        return HttpResponse(form)

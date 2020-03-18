@@ -32,7 +32,7 @@
     overflow: auto;
     text-align: -webkit-center;
     border: 1px solid;
-    border-style: solid none;
+    border-style: solid none none;
     margin-top:-1px;
 }
 div.table-container{
@@ -92,5 +92,7 @@ table.paleblue td, table.paleblue th {
     font-weight: normal;
 }
 hr{
-    margin: 0;
+    margin-bottom: 30px;
+    width: 50%;
+    min-width: 500px;
 }
