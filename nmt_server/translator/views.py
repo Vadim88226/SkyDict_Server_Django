@@ -326,12 +326,10 @@ def query_UserDictionaryList(request):
         _filter = DictWords.objects.filter(word=_word, is_approved=_is_approved)
     else:
         _filter = DictWords.objects.filter(is_approved=_is_approved)
-    # print(_filter)
     datas = list(_filter.order_by('word').values("word", "user").annotate(Count('word'), Count('user')))
     response = {}
     for i, data in enumerate(datas):
         response[i] = data
-    # print( response )
     
     return JsonResponse(response)
 
@@ -440,10 +438,7 @@ def view_ConcondanceSearch(request):
     else:
         search_result = {}
     concondance_table = concondanceTable(search_result)
-
-
     search_Form = SearchForm(initial={'searchCondance':searchCon})
-    # concondance_table = concondanceTable(TransMemories.objects.filter(name__contains=searchCon).order_by(sort))
 
     return render(request, "concondance/content.html", {
         'concondance_table': concondance_table, 
