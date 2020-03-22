@@ -326,8 +326,6 @@ def add_words(request):
             if int(_sentence[0]):
                 DictSentences.objects.filter(id=_sentence[0]).update(s_sentence = _sentence[1], t_sentence = _sentence[2])
             else:
-                print("_d------------------------")
-                print(_d)
                 DictSentences(part= _part, s_sentence= _sentence[1], t_sentence = _sentence[2], dictwords=_d).save()
 
     return JsonResponse({'content': "Successfully Rigistry!"})
@@ -478,7 +476,10 @@ def view_ConcondanceSearch(request):
     else:
         search_result = {}
     concondance_table = concondanceTable(search_result)
+
+
     search_Form = SearchForm(initial={'searchCondance':searchCon})
+    # concondance_table = concondanceTable(TransMemories.objects.filter(name__contains=searchCon).order_by(sort))
 
     return render(request, "concondance/content.html", {
         'concondance_table': concondance_table, 

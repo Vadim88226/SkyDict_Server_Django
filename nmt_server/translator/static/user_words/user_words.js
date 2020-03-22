@@ -2,7 +2,7 @@ var s_text = "", similar_text = "";
 var flag_lexitron_load = false;
 var end_lexitron = 0;
 
-function ShowVocabulary(_mode, _is_approved)
+function ShowVocabulary(_mode)
 {
     if(!_mode) {
         document.getElementById("list_lexitron").innerHTML="";
