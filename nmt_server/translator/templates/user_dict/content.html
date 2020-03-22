@@ -1,0 +1,80 @@
+{% extends 'user_dict/index.html' %}
+<!-- ============================== Dictionary ============================== -->
+{% block content %}
+<script type="text/javascript"> 
+var suburl = "{{suburl}}";
+</script>
+<div class='DictSearch'>
+    <!-- <form action="" method="post"> -->
+        {{ search_Form.searchWord }}
+        <button type='button' class='btn_search'></button>
+    <!-- </form> -->
+    <div id="wordDict_help_popup"></div>
+</div>
+<div id="dict_menu_bar" class="active">
+    <a href="/dictionary" id="view_dict_area">Dictionary</a>
+    {% if request.user.is_authenticated %}
+    <a href="/user_words" id="view_add_word">Add Words</a>
+    <a href="/concondance">Concondance Search</a>
+    {% endif %}
+    {% if request.user.is_staff %}
+    <a href="#" id="view_user_dict" style="color:black">User Dictionary</a>
+    {% endif %}
+</div>
+{% csrf_token %}
+<div id="content_user_vocabulary">
+    <div class="list_side">
+        <div style="display: flex;position: relative;">
+            <div class="div_unapproved">
+                <input type="radio" id="Unapproved" name="allowed" value=0 checked>
+                <label for="Unapproved">Unapproved</label>
+            </div>
+            <div class="div_approved">
+                <input type="radio" id="Approved" name="allowed" value=1>
+                <label for="Approved">Approved</label>
+            </div>
+        </div>
+        <div id="list_vocabulary"></div>
+    </div>
+    <div class='content'>
+        <div class="form_vocabulary"> 
+            <div> Translate from {{ user_dict_form.s_lang}}</div>
+            <div> to {{ user_dict_form.t_lang}} </div>
+        </div>
+        <div id='view_content'>
+            <div> Vocabulary: <span id="view_word"></span></div>
+            <div id='db_vocabulary'></div>
+            <div style="text-align:right;">
+                <div>
+                    <button type='button' class='btn_approve sky_button'>Approve</button>
+                    <button type='button' class='btn_delete sky_button'>Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id="modal-title">Please Enter Example Sentence</h4>
+          <input type="hidden" id='request_frm' value=""/>
+        </div>
+        <div class="modal-body">
+            Origin Sentence
+            <textarea id='first_exam'></textarea>
+            Translation Sentence
+            <textarea id='second_exam'></textarea>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-add">Save</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+<!-- =============================== -->

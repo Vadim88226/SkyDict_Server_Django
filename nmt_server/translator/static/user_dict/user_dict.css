@@ -1,0 +1,191 @@
+#translator_dict,#translator_sentences {
+    padding: 0px 32px 1px 24px;
+    /* margin:3px; */
+    width:100%;
+    background: white;
+}
+.dictionary_dict_area ul {
+    list-style-type: none;
+    padding: 0%;
+    border: 1px solid #ddd;
+    background-color: aliceblue;
+    display: flex;
+}
+.dictionary_dict_area ul li{
+    width: 50%;
+    padding: 1%;
+}
+.dictionary_dict_area{
+    width: 100%;
+    margin-top: 10px;
+}
+.content{
+    max-width: 100%;
+    height: calc(100vh - 155px);
+    overflow: auto;
+}
+.content, .language_bar, .list_side {
+    width: 100%;
+    background-color: white;
+    text-align: left;
+}
+.content div{
+    padding: 1% 0 0 0;
+}
+.content #clear{
+    padding: 0;
+    margin: -1px 2%;
+    display: flex;
+    border: 1px solid #0F2B46;
+    border-radius: 10px;
+}
+.content ul{
+    list-style-type: none;
+    margin: 0;
+}
+.content .frame{
+    position: relative;
+    margin: 12px 0;    
+    padding: 10px 15px;
+    border: 1px solid #666;
+    border-radius: 5px;
+}
+.content .frame .frm_label{
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0 15px 0 15px;
+    line-height: 1;
+    font-size: 1em;
+    transition: 0.2s;
+    transform: translate(3px, -50%) scale(0.8);
+    color: #004c03;
+    opacity: 1;
+    background-color: white;
+}
+.content .word_type{
+    width: -webkit-fill-available;
+    width: -moz-available;
+    padding: 2% 0;
+}
+textarea{
+    width:100%;
+}
+.content input[type=text] {
+    /* width : auto; */
+    padding: 5px 3px;
+    /* margin:0 10px; */
+}
+.content #btn_vtype {
+    padding: 3px 5px 3px 5px;
+    margin: 0 5px;
+    background-color:white;
+    border: 1px solid;
+    border-radius: 5px 5px 0 0;
+    border-style: solid solid none solid;
+    display: inline-block;
+}
+.content .txtlabel{
+    font-size: smaller;
+    font-style: italic;
+}
+.list_side{
+    max-width: 260px;
+    padding: 1%;
+    height: calc(100vh - 155px);
+}
+#view_content {
+    display: none;
+}
+#list_vocabulary{
+    padding: 0;
+    padding-top: 10px;
+    border: 1px solid #0F2B46;
+    height: 97%;
+    overflow: auto;
+    margin: -1px 0;
+}
+#list_vocabulary ul{
+    padding-top: 6px;
+    border: 1px solid lightgray;
+    border-style: none none solid;
+    margin: 0px;
+}
+#list_vocabulary ul:hover{
+    background-color: #eee;
+}
+.div_unapproved, .div_approved {
+    width: 50%; 
+    text-align: center;
+    border: 1px solid;
+    border-radius: 5px 5px 0 0;
+    background: white;
+    border-style: none none solid none;
+    background-size: 100% 100%;
+}
+.div_unapproved {
+    border-style: solid solid none solid;
+    border-color: black;
+}
+#Unapproved, #Approved{
+    display: none;
+}
+#view_word {
+    font-size: x-large;
+    font-style: oblique;
+    font-weight: 600;
+}
+#content_user_vocabulary{ 
+    display: flex;
+}
+.content{
+    background-color: white;width: -webkit-fill-available; width: -moz-available;
+    padding: 1% ;
+}
+.glyphicon{
+    margin-left: 10px;
+    border-radius: 24px;
+    background: none;
+}
+.btn_save, .btn_approve, .btn_delete {
+    margin: 0;
+    margin-left: 3em;
+    padding: 0.25em 0.75em;
+    min-width: 100px;
+}
+select{
+    width: 100px;
+    margin: 0 20px;
+}
+.form_vocabulary{
+    display:flex;
+}
+.form_vocabulary div{
+    width: 96%;
+}
+@media (max-width: 767px) {
+    #content_user_vocabulary {
+        display: block;
+    }
+    .list_side {
+        max-height: 200px;
+        max-width: 100%;
+        font-size: small;
+    }
+    #list_vocabulary, #list_lexitron{
+        max-height: 100px;
+    }
+    #content_user_vocabulary .content {
+        max-height: 100%;
+    }
+    .content ul {
+        padding: 0;
+        font-size: small;
+    }
+    .content div {
+        font-size: small;
+    }
+    .form_vocabulary{
+        display:block;
+    }
+}
