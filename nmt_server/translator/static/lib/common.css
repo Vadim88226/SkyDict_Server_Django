@@ -492,7 +492,6 @@ textarea {
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
-
 @media (max-width: 768px) {
     .container{
         width: 99% !important;

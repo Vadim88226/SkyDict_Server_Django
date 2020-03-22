@@ -1,98 +1,35 @@
-#translator_dict,#translator_sentences {
-    padding: 0px 32px 1px 24px;
-    /* margin:3px; */
-    width:100%;
-    background: white;
-}
-.dictionary_dict_area {
-    display: none;
-}
-.dictionary_dict_area ul {
-    list-style-type: none;
-    padding: 0%;
-    border: 1px solid #ddd;
-    background-color: aliceblue;
-    display: flex;
-}
-.dictionary_dict_area ul li{
-    width: 50%;
-    padding: 1%;
-}
-#more_sentences, #few_sentences {
-    /* display: none; */
-    background-repeat: no-repeat;
-    padding-left: 5%;
-    color: aliceblue;
-    width: 100%;
-    background-image: url(../icons/1x_mobile.png);
-    background-color: #d2d2d2;
-    border: 1px solid #d2d2d2;
-    transition: background-color 0.15s ease-out, color 0.15s ease-out, color 0.15s ease-out, color 0.15s ease-out, border 0.15s ease-out, color 0.15s ease-out;
-}
-#more_sentences:hover {
-    background-color: cadetblue;
-}
-.sentence_area{
-    position: relative;
-}
-.sentence_more{
-    display: none;
-    position: relative;
-}
-#more_sentences {
-    background-position: 10px -217px;
-}
-#few_sentences {
-    background-position: 10px -336px;
-}
-#more_sentences:hover, #few_sentences:hover {
-    background-color: cadetblue;
-}
-kref {
-    color:#990000
-}
-.dictionary_dict_area{
-    width: 100%;
-    margin-top: 10px;
-}
-.add_words, .language_bar, .list_side{
+.content, .language_bar, .list_side{
     width:100%;
     background-color: white;
     text-align:left;
 }
-.add_words {
-    /* max-width: 800px; */
+.content {
     padding-top:1%;
-    /* height: fit-content; */
-    min-height: calc(100vh - 155px);
-}
-#content_user_vocabulary .add_words{
-    max-width: 100%;
-    max-height: calc(100vh - 155px);
+    height: calc(100vh - 155px);
     overflow: auto;
 }
-.add_words div{
+.content div{
     padding: 1% 2% 0 2%;
 }
-.add_words #clear{
+.content #part{
     padding: 0;
     margin: -1px 2%;
     display: flex;
     border: 1px solid #0F2B46;
     border-radius: 10px;
 }
-.add_words ul{
+.content ul{
     list-style-type: none;
     margin: 0;
 }
-.add_words .frame{
+.content .frame{
     position: relative;
     margin: 24px 0;    
     padding: 10px 15px;
     border: 1px solid #666;
     border-radius: 5px;
 }
-.add_words .frame .frm_label{
+.content .frame .frm_label{
     position: absolute;
     top: 0;
     left: 0;
@@ -105,20 +42,23 @@ kref {
     opacity: 1;
     background-color: white;
 }
-.add_words .word_type{
+.content .word_type{
     width: -webkit-fill-available;
     width: -moz-available;
     padding: 2% 0;
 }
+.content .word_type ul{
+    width: max-content;
+}
 textarea{
     width:100%;
 }
-.add_words input[type=text] {
+.content input[type=text] {
     /* width : auto; */
     padding: 5px 3px;
     /* margin:0 10px; */
 }
-.add_words #btn_vtype {
+.content #btn_vtype {
     padding: 3px 5px 3px 5px;
     margin: 0 5px;
     background-color:white;
@@ -127,7 +67,7 @@ textarea{
     border-style: solid solid none solid;
     display: inline-block;
 }
-.add_words .txtlabel{
+.content .txtlabel{
     font-size: smaller;
     font-style: italic;
 }
@@ -145,25 +85,16 @@ textarea{
     background-color: white;
     text-align: left;
 }
-  
-#list_vocabulary{
-    padding: 0;
-    padding-top: 10px;
-    border: 1px solid #0F2B46;
-    height: 97%;
-    overflow: auto;
-    margin: -1px 0;
-}
-#list_vocabulary ul, #list_lexitron ul{
+#list_lexitron ul{
     padding-top: 6px;
     border: 1px solid lightgray;
     border-style: none none solid;
     margin: 0px;
 }
-#list_vocabulary ul:hover, #list_lexitron ul:hover{
+#list_lexitron ul:hover{
     background-color: #eee;
 }
-.div_unapproved, .div_approved, .div_lexitron {
+.div_lexitron {
     width: 50%; 
     text-align: center;
     border: 1px solid;
@@ -173,30 +104,17 @@ textarea{
     /* background-image: url(/static/icons/tab.png); */
     background-size: 100% 100%;
 }
-.div_unapproved {
-    border-style: solid solid none solid;
-    border-color: black;
-}
-#Unapproved, #Approved, #Lexitron{
-    display: none;
-}
 #view_word {
     font-size: x-large;
     font-style: oblique;
     font-weight: 600;
-}
-#content_user_vocabulary{ 
-    visibility: hidden;
-    display: flex;
-    height: 0;
-    position: fixed;
 }
 .glyphicon{
     margin-left: 10px;
     border-radius: 24px;
     background: none;
 }
-.btn_save, .btn_approve, .btn_delete {
+.btn_new, .btn_save {
     margin: 0;
     margin-left: 3em;
     padding: 0.25em 0.75em;
@@ -206,32 +124,51 @@ select{
     width: 100px;
     margin: 0 20px;
 }
-.form_vocabulary{
+.content .form_vocabulary{
     display:flex;
+    padding: 0;
 }
 .form_vocabulary div{
     width: 96%;
 }
+.frame .close {
+    font-size: inherit;
+}
+#part input[type=checkbox]{
+    display: none;
+}
+#part label:before{
+    content: "\f055";
+    font-family: 'FontAwesome';
+}
+#part label{
+    cursor: pointer;
+}
+#part label:hover{
+    background-color: darkslategray;
+    color: white;
+}
+#user_vocabulary{
+    font-style: italic;
+    padding: 0 15px;
+    background-color: darkslategray;
+    color: white;
+    border-radius: 20px;
+}
 @media (max-width: 767px) {
-    #content_user_vocabulary {
-        display: block;
-    }
     .list_side {
         max-height: 200px;
         max-width: 100%;
         font-size: small;
     }
-    #list_vocabulary, #list_lexitron{
+    #list_lexitron{
         max-height: 100px;
     }
-    #content_user_vocabulary .add_words {
-        max-height: 100%;
-    }
-    .add_words ul {
+    .content ul {
         padding: 0;
         font-size: small;
     }
-    .add_words div {
+    .content div {
         font-size: small;
     }
     .form_vocabulary{

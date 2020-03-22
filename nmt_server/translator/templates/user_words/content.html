@@ -1,9 +1,6 @@
 {% extends 'user_words/index.html' %}
 <!-- ============================== Dictionary ============================== -->
 {% block content %}
-<script type="text/javascript"> 
-var suburl = "{{suburl}}";
-</script>
 <div class='DictSearch'>
     <!-- <form action="" method="post"> -->
         {{ search_Form.searchWord }}
@@ -14,81 +11,45 @@ var suburl = "{{suburl}}";
 <div id="dict_menu_bar" class="active">
     <a href="/dictionary" id="view_dict_area">Dictionary</a>
     {% if request.user.is_authenticated %}
-    <a href="#" id="view_add_word" {% if suburl == "index" %} style="color:black" {% else %} style="color:grey" {% endif %}>Add Words</a>
+    <a href="#" id="view_add_word" style="color:black">Add Words</a>
     <a href="/concondance">Concondance Search</a>
     {% endif %}
     {% if request.user.is_staff %}
-    <a href="#" id="view_user_dict"{% if suburl != "index" %} style="color:black" {% else %} style="color:grey" {% endif %}>User Dictionary</a>
+    <a href="/user_dictionary">User Dictionary</a>
     {% endif %}
 </div>
 {% csrf_token %}
-{% if suburl != "index" %}
-<div id="content_add_words" {{ suburl }} style="text-align: -webkit-center;text-align: -moz-center;display: none;">
-{% else %}
 <div id="content_add_words" {{ suburl }} style="text-align: -webkit-center;text-align: -moz-center;display: flex;">
-{% endif %}
     <div id="list_lexitron"></div>
-    <div class="add_words">
+    <div class="content">
         <!-- <form action="" method="post"> -->
             <div class="form_vocabulary"> 
                 <div> Translate from {{ add_words_form.s_lang}}</div>
                 <div> to {{ add_words_form.t_lang}} </div>
             </div>
-                <div> Vocabulary: {{ add_words_form.Vocabulary}} </div>
+                <div> Vocabulary: (made by <span id='user_vocabulary'></span>) {{ add_words_form.Vocabulary}} </div>
                 <div style="min-width: 400px;"> type <button id="btn_vtype" class=''>please select</button>(can select more than 1 item)</div>
-            
-            <div id='clear'>
-                <div class='word_type'>{{ add_words_form.chk_box1 }}</div>
-                <div class='word_type'>{{ add_words_form.chk_box2 }}</div>
-                <div class='word_type'>{{ add_words_form.chk_box3 }}</div>
-            </div>
-            <div id='word_vocabulary'></div>
-            <div style="display: flex;">
-                <label style="font-weight: normal; padding-left: 10px;" for="id_chk_agree"> 
-                    {{ add_words_form.chk_agree }}
-                I have read the agreement and are happy to comply with conditions.</label>
-            </div>
-        <!-- </form> -->
-            <button type='button' class='btn_save sky_button' disabled='true'>Submit</button>
-            <div style="text-align:right;">    You can see more suggestions. About how to enter words Including various examples
-        </div>
-    </div>
-</div>
-{% if suburl == 'dict' %}
-<div id="content_user_vocabulary" style="text-align: -webkit-center;visibility: visible;">
-{% else %}
-<div id="content_user_vocabulary" style="text-align: -webkit-center;">
-{% endif %}
-    <div class="list_side">
-        <div style="display: flex;position: relative;">
-            <div class="div_unapproved">
-                <input type="radio" id="Unapproved" name="allowed" value=0 checked>
-                <label for="Unapproved">Unapproved</label>
-            </div>
-            <div class="div_approved">
-                <input type="radio" id="Approved" name="allowed" value=1>
-                <label for="Approved">Approved</label>
-            </div>
-        </div>
-        <div id="list_vocabulary"></div>
-    </div>
-    <div style="background-color: white;width: -webkit-fill-available;width: -moz-available;">
-        <div class="add_words" style="display: none;">
-        <!-- <form action="" method="post"> -->
-            <div> Vocabulary: <span id="view_word"></span></div>
-            <div id='db_vocabulary'></div>
+                <div id='part'>
+                    <div class='word_type'>{{ add_words_form.part1 }}</div>
+                    <div class='word_type'>{{ add_words_form.part2 }}</div>
+                    <div class='word_type'>{{ add_words_form.part3 }}</div>
+                </div>
+                <div id='db_vocabulary'></div>
+                <div style="display: flex;">
+                    <label style="font-weight: normal; padding-left: 10px;" for="id_chk_agree"> 
+                        {{ add_words_form.chk_agree }}
+                    I have read the agreement and are happy to comply with conditions.</label>
+                </div>
         <!-- </form> -->
             <div style="text-align:right;">
-                <div>
-                    <button type='button' class='btn_approve sky_button'>Approve</button>
-                    <button type='button' class='btn_delete sky_button'>Delete</button>
-                </div>
-                You can see more suggestions. About how to enter words Including various examples 
+                <button type='button' class='btn_new sky_button'>New</button>
+                <button type='button' class='btn_save sky_button' disabled='true'>Submit</button>
             </div>
-        </div>
+            <div style="text-align:right;">
+                You can see more suggestions. About how to enter words Including various examples
+            </div>
     </div>
 </div>
-
 <!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">

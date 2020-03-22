@@ -1,5 +1,5 @@
-import re, json, os
-import linecache
+import re, json, os, linecache
+
 from langdetect import detect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
@@ -10,28 +10,27 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
-from .apps import TranslatorConfig
 from translator.translation_model.processing import evaluate
 from django.contrib.auth import views as auth_views
 from django.views.decorators.csrf import requires_csrf_token
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
-from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSettingForm
-from .tokens import account_activation_token
 from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-from .models import DictWords, DictSentences, TransMemories, UserSetting
-from .utils import translate_sentences, translate_file, cocondance_search
-from django.db.models import Count
+from django.db.models import Count, Max
 from django.views.generic import ListView
 
 from django_tables2 import MultiTableMixin, RequestConfig, SingleTableMixin, SingleTableView, tables
 from django_tables2.export.views import ExportMixin
 from django_tables2.paginators import LazyPaginator
 
-
+from .apps import TranslatorConfig
+from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSettingForm, UserDictForm
+from .tokens import account_activation_token
+from .models import DictWords, DictSentences, TransMemories, UserSetting
+from .utils import translate_sentences, translate_file, cocondance_search
 from .tables import tmTable, concondanceTable
 from .filters import tmFilter
 
@@ -45,10 +44,15 @@ def view_Dictionary(request):
     return render(request, 'dictionary/content.html', {'search_Form': search_Form})
 
 # display User_Words Page
-def view_AddWords(request, suburl = ""):
+def view_AddWords(request):
     search_Form = SearchForm()
     add_words_form = AddWordsForm(initial={'t_lang': 'th'})
-    return render(request, 'user_words/content.html', {'search_Form': search_Form, 'add_words_form': add_words_form, 'suburl': suburl})
+    return render(request, 'user_words/content.html', {'search_Form': search_Form, 'add_words_form': add_words_form})
+
+def view_user_dictionary(request):
+    search_Form = SearchForm()
+    user_dict_form = UserDictForm(initial={'t_lang': 'th'})
+    return render(request, 'user_dict/content.html', {'search_Form': search_Form, 'user_dict_form': user_dict_form})
 
 # query word for Lexitron dictionary
 def search_dict(word, lang):
@@ -128,7 +132,7 @@ def trans_sentences(request):
     sentences = request.GET.get('seltext', '')
     s_lang = request.GET.get('sl', '')
     t_lang = request.GET.get('tl', '')
-    print(sentences)
+    # print(sentences)
     if s_lang == t_lang:
         selectedText = sentences.strip()
         data = {
@@ -306,56 +310,85 @@ def add_words(request):
     _content = json.loads(request.GET.get('content', None))
     
     for _cont in _content:
-        _part = _cont[0]
-        _trans = _cont[1]
-        _d = DictWords(word=_vocabulary, part= _part, s_lang=_s_lang, t_lang=_t_lang, trans= _trans, user= _user)
-        _d.save()
-        for _sentence in _cont[2:]:
-            _s = DictSentences(part= _part, s_sentence= _sentence[0], t_sentence = _sentence[1], dictwords=_d)
-            _s.save()
+        _word_id = int(_cont[0])
+        _part = _cont[1]
+        _trans = _cont[2]
+        _related = _cont[3]
+        _synonym = _cont[4]
+        _antonym = _cont[5]
+        if _word_id:
+            _d = DictWords.objects.get(pk=_word_id)
+            DictWords.objects.filter(id=_word_id).update(word=_vocabulary, s_lang=_s_lang, t_lang=_t_lang, trans= _trans, related=_related, synonym=_synonym, antonym=_antonym)
+        else:
+            _d = DictWords(word=_vocabulary, part= _part, s_lang=_s_lang, t_lang=_t_lang, user= _user, trans= _trans, related=_related, synonym=_synonym, antonym=_antonym)
+            _d.save()
+        for _sentence in _cont[6:]:
+            if int(_sentence[0]):
+                DictSentences.objects.filter(id=_sentence[0]).update(s_sentence = _sentence[1], t_sentence = _sentence[2])
+            else:
+                print("_d------------------------")
+                print(_d)
+                DictSentences(part= _part, s_sentence= _sentence[1], t_sentence = _sentence[2], dictwords=_d).save()
 
     return JsonResponse({'content': "Successfully Rigistry!"})
 
 # vocabulary list query
 def query_UserDictionaryList(request):
     _word = request.GET.get('seltext', "")
+    _end_id = request.GET.get('end_id', 0)
     _is_approved = request.GET.get('is_approved', 0)
-    if len(_word) and _is_approved == '2':
-        _filter = DictWords.objects.filter(word=_word)
-    elif len(_word):
-        _filter = DictWords.objects.filter(word=_word, is_approved=_is_approved)
+
+    if _is_approved == '2':
+        query = "SELECT max(id) as mid, id, word, user from translator_dictwords WHERE id>{0} AND word LIKE '{1}%%' GROUP BY word, user ORDER BY word, user limit 50;".format(_end_id, _word)
     else:
-        _filter = DictWords.objects.filter(is_approved=_is_approved)
-    datas = list(_filter.order_by('word').values("word", "user").annotate(Count('word'), Count('user')))
-    response = {}
-    for i, data in enumerate(datas):
-        response[i] = data
+        query = "SELECT max(id) as mid, id, word, user from translator_dictwords WHERE id>{0} AND word LIKE '{1}%%' AND is_approved='{2}' GROUP BY word, user ORDER BY word, user limit 50;".format(_end_id, _word, _is_approved)
+
+    results = DictWords.objects.raw(query)
+    response = [{'mid':result.mid, 'id':result.id, 'word':result.word, 'user':result.user} for result in results]
+
+    # if _is_approved == '2':
+    #     _filter = DictWords.objects.filter(id__gt=_end_id, word__icontains=_word)
+    # else:
+    #     _filter = DictWords.objects.filter(id__gt=_end_id, word__icontains=_word, is_approved=_is_approved)
+
+    # datas = list(_filter.values('id', 'word', 'user').annotate(Count('word'), Count('user'), Max('id')).order_by('word'))
     
-    return JsonResponse(response)
+    # response = {}
+    # # print(type(datas))
+    # for i, data in enumerate(datas):
+    #     # print(data)
+    #     response[i] = data
+    #     if i > 50:
+    #         return JsonResponse(response)
+    
+    return JsonResponse({'content':response})
 
 def query_WordContents(request):
     _word = request.GET.get('seltext')
     _user = request.GET.get('user')
-    _is_approved = request.GET.get('is_approved', 0)
+    _is_approved = int(request.GET.get('is_approved', 0))
+    if _is_approved == 2:
+        user_dict_records = DictWords.objects.filter(word=_word, user=_user)
+    else :
+        user_dict_records = DictWords.objects.filter(word=_word, user=_user, is_approved = _is_approved)
 
-
-    user_dict_records = DictWords.objects.filter(word=_word, user=_user, is_approved = _is_approved)
-    print(user_dict_records)
     user_dict_data = {}
     for i, data in enumerate(user_dict_records):
         user_dict_data[i] = {}
         user_dict_data[i]['word_id'] = getattr(data, 'id')
         user_dict_data[i]['part'] = getattr(data, 'part')
         user_dict_data[i]['trans']= getattr(data, 'trans')
+        user_dict_data[i]['related']= getattr(data, 'related')
+        user_dict_data[i]['synonym']= getattr(data, 'synonym')
+        user_dict_data[i]['antonym']= getattr(data, 'antonym')
         user_dict_data[i]['user']= getattr(data, 'user')
-        user_sentences_records = DictSentences.objects.filter(dictwords = data)
+        user_sentences_records = DictSentences.objects.filter(dictwords_id = getattr(data, 'id'))
         user_dict_data[i]['sentences'] = {}
         for j, sentence in enumerate(user_sentences_records):
             user_dict_data[i]['sentences'][j] = {}
             user_dict_data[i]['sentences'][j]['sent_id'] = getattr(sentence, 'id')
             user_dict_data[i]['sentences'][j]['s_sentence'] = getattr(sentence, 's_sentence')
             user_dict_data[i]['sentences'][j]['t_sentence'] = getattr(sentence, 't_sentence')
-
     return JsonResponse(user_dict_data)
 
 
@@ -375,8 +408,10 @@ def delete_sentence(request):
 
 def update_vocabulary(request):
     _word_id = request.GET.get('word_id')
-    _trans = request.GET.get('trans')
-    DictWords.objects.filter(id=int(_word_id)).update(trans=_trans)
+    _key_id = request.GET.get('key_id')
+    _content = request.GET.get('content')
+    _update = {_key_id:_content}
+    DictWords.objects.filter(id=int(_word_id)).update(**_update)
     return JsonResponse({'content': "You updated this vocabulary."})
 
 def approve_vocabulary(request):
@@ -386,9 +421,14 @@ def approve_vocabulary(request):
     return JsonResponse({'content': "You successfully approved this vocabulary."})
 
 def delete_vocabulary(request):
+    _id = int(request.GET.get('id', 0))
     _word = request.GET.get('word')
     _user = request.GET.get('user')
-    DictWords.objects.filter(word=_word, user=_user).delete()
+    if _id:
+        DictWords.objects.filter(id=_id).delete()
+    else:
+        DictWords.objects.filter(word=_word, user=_user).delete()
+
     return JsonResponse({'content': "You deleted this vocabulary."})
 
 def lexitron_list(request):
