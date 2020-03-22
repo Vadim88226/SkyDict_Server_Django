@@ -6,7 +6,6 @@ function ShowVocabulary(_mode)
 {
     _is_approved = document.querySelector('input[name="allowed"]:checked').value;
     if(!_mode) {
-        document.getElementById("list_vocabulary").innerHTML="";
         end_vocabulary = 0;
         flag_vocabulary_load = false;
     }
@@ -27,6 +26,7 @@ function ShowVocabulary(_mode)
                 if(response.content.length == 0) {
                     return;
                 } else {
+                    if(!_mode) document.getElementById("list_vocabulary").innerHTML="";
                     data = response.content;
                     for( _d in data ) {
                         end_vocabulary = data[_d]['mid'];

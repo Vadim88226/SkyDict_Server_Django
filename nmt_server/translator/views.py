@@ -333,32 +333,18 @@ def add_words(request):
 # vocabulary list query
 def query_UserDictionaryList(request):
     _word = request.GET.get('seltext', "")
+    _s_lang = request.GET.get('s_lang', "")
+    _t_lang = request.GET.get('t_lang', "")
     _end_id = request.GET.get('end_id', 0)
     _is_approved = request.GET.get('is_approved', 0)
 
     if _is_approved == '2':
-        query = "SELECT max(id) as mid, id, word, user from translator_dictwords WHERE id>{0} AND word LIKE '{1}%%' GROUP BY word, user ORDER BY word, user limit 50;".format(_end_id, _word)
+        query = "SELECT max(id) as mid, id, word, user from translator_dictwords WHERE id>{0} AND word LIKE '{1}%%' AND s_lang='{2}' GROUP BY word, user ORDER BY word, user limit 50;".format(_end_id, _word,_s_lang)
     else:
-        query = "SELECT max(id) as mid, id, word, user from translator_dictwords WHERE id>{0} AND word LIKE '{1}%%' AND is_approved='{2}' GROUP BY word, user ORDER BY word, user limit 50;".format(_end_id, _word, _is_approved)
+        query = "SELECT max(id) as mid, id, word, user from translator_dictwords WHERE id>{0} AND word LIKE '{1}%%' AND is_approved='{2}' AND s_lang='{3}' GROUP BY word, user ORDER BY word, user limit 50;".format(_end_id, _word, _is_approved,_s_lang)
 
     results = DictWords.objects.raw(query)
     response = [{'mid':result.mid, 'id':result.id, 'word':result.word, 'user':result.user} for result in results]
-
-    # if _is_approved == '2':
-    #     _filter = DictWords.objects.filter(id__gt=_end_id, word__icontains=_word)
-    # else:
-    #     _filter = DictWords.objects.filter(id__gt=_end_id, word__icontains=_word, is_approved=_is_approved)
-
-    # datas = list(_filter.values('id', 'word', 'user').annotate(Count('word'), Count('user'), Max('id')).order_by('word'))
-    
-    # response = {}
-    # # print(type(datas))
-    # for i, data in enumerate(datas):
-    #     # print(data)
-    #     response[i] = data
-    #     if i > 50:
-    #         return JsonResponse(response)
-    
     return JsonResponse({'content':response})
 
 def query_WordContents(request):
@@ -492,7 +478,10 @@ def update_UserSetting(request):
         form = UserSettingForm(data=request.POST, instance=own_settings)
         if form.is_valid():
             form.save()
-        return redirect("/concondance/")
+
+        return view_ConcondanceSearch(request)
+        # return reverse('concondance/')
+        # return redirect("/concondance/")
     else:
         own_settings=UserSetting.objects.get(user=request.user.id)
         form = UserSettingForm(instance=own_settings)

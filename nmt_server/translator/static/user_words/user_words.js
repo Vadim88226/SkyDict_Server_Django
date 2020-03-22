@@ -5,7 +5,6 @@ var end_lexitron = 0;
 function ShowVocabulary(_mode)
 {
     if(!_mode) {
-        document.getElementById("list_lexitron").innerHTML="";
         end_lexitron = 0;
         flag_lexitron_load = false;
     }
@@ -26,6 +25,7 @@ function ShowVocabulary(_mode)
                 if(response.content.length == 0) {
                     return;
                 } else {
+                    if(!_mode) document.getElementById("list_lexitron").innerHTML="";
                     data = response.content;
                     for( _d in data ) {
                         end_lexitron = data[_d]['mid'];
@@ -536,6 +536,8 @@ $(function(){
             url: query_UserDictionaryList,
             data: {
                 'seltext': $("#id_Vocabulary").val().trim(),
+                's_lang' : $("#id_s_lang").val().toLowerCase().substr(0,2),
+                't_lang' : $("#id_t_lang").val().toLowerCase().substr(0,2),
                 'is_approved': 2
             },
             dataType: 'json',
