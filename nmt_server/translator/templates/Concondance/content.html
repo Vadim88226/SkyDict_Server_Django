@@ -18,11 +18,11 @@
     {% if not request.user.is_authenticated %}
     <a class="menu__login" href="#">Add Words</a>
     {% else %}
-    <a href="/user_words/index" id="view_add_word">Add Words</a>
+    <a href="/user_words" id="view_add_word">Add Words</a>
     <a href="" style="color: black;">Concondance Search</a>
     {% endif %}
     {% if request.user.is_staff %}
-    <a href="/user_words/dict" id="view_user_dict">User Dictionary</a>
+    <a href="/user_dictionary" id="view_user_dict">User Dictionary</a>
     {% endif %}
 </div>
 <div class="dict_area">
@@ -34,7 +34,7 @@
 </div>
 <template id="div_concondance_form">
     <div style="display: flex;">
-        <div style="width: -webkit-fill-available;padding:11px;">
+        <div style="width: -webkit-fill-available;padding:12px 10px 12px 0px;">
             <form method="GET">
                 <!-- {% csrf_token %} -->
                 {{ search_Form.searchCondance }}

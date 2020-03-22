@@ -1,6 +1,9 @@
+var s_text = "", similar_text = "";
+var _ajax_communication = false;
+
 function ShowSentence()
 {
-    var selectedText = $('#ta_source').val().trim();
+    var selectedText = $('#ta_source').val();
     if (s_text == selectedText) return;
     s_text = selectedText;
     $.ajax({
@@ -59,7 +62,7 @@ function source_textarea_change() {
 }
 function similar_words() {
 	var selectedText = $('.source_textarea').val().trim();
-    if (s_text == selectedText) return;    
+    if (similar_text == selectedText) return;
     if(selectedText == "" || selectedText.split(" ").length > 1 
         || selectedText.split("\n").length > 1 || selectedText.split(",").length > 1) {
         document.getElementById('wordDict_help_popup').style.display = "none";
@@ -67,6 +70,7 @@ function similar_words() {
     }
     if (_ajax_communication) return; 
     _ajax_communication = true;
+    similar_text = selectedText;
     $.ajax({
         // type: "POST",
         url: text_similar_words,
@@ -75,13 +79,13 @@ function similar_words() {
         'sl' : source_language.toLowerCase().substr(0,2)
         },
         dataType: 'json',
-        success: function (data) {  //console.log(data);
+        success: function (data) {
             if(data.content) {
                 document.getElementById('wordDict_help_popup').innerHTML = data.content; 
                 document.getElementById('wordDict_help_popup').style.display = "block";
                 _ajax_communication = false;
             } else {
-                document.getElementById('wordDict_help_popup').style.display = "none"; //console.log("empty");
+                document.getElementById('wordDict_help_popup').style.display = "none";
                 _ajax_communication = false;
             }
         },

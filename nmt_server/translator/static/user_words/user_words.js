@@ -1,67 +1,41 @@
+var s_text = "", similar_text = "";
 var flag_lexitron_load = false;
-var end_word = "";
+var end_lexitron = 0;
 
-function load_lexitron(_mode){
-    if(flag_lexitron_load) return;
-    $.ajax({
-        url: lexitron_list,
-        data: {
-            'word': end_word,
-            's_lang' : $("#id_s_lang").val().toLowerCase().substr(0,2),
-            't_lang' : $("#id_t_lang").val().toLowerCase().substr(0,2),
-            'mode': _mode
-        },
-        dataType: 'json',
-        success: function (data) {
-            if (data.content.length) {
-                for( _d in data.content ) { 
-                    _ul = document.createElement("ul");
-                    _ul.textContent = data.content[_d];
-                    document.getElementById("list_lexitron").appendChild(_ul);
-                }
-                if(data.content.length < 50) flag_lexitron_load = true;
-                end_word = data.content[_d];
-            } else  {
-                
-            }
-        },
-        error: function() {
-            $.alert({
-                title: 'Alert', content: 'SERVER ERROR',
-                icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
-                buttons: {
-                    okay: {  }
-                }
-            });
-        },
-        timeout: 2000
-    })
-}
-function ShowVocabulary()
+function ShowVocabulary(_mode, _is_approved)
 {
+    if(!_mode) {
+        document.getElementById("list_lexitron").innerHTML="";
+        end_lexitron = 0;
+        flag_lexitron_load = false;
+    }
+    if(flag_lexitron_load) return;
     var selectedText = $('#id_searchWord').val().trim();
     $.ajax({
         url: query_UserDictionaryList,
         data: {
             'seltext': selectedText,
-            'is_approved': document.querySelector('input[name="allowed"]:checked').value
+            's_lang' : $("#id_s_lang").val().toLowerCase().substr(0,2),
+            't_lang' : $("#id_t_lang").val().toLowerCase().substr(0,2),
+            'is_approved': 2,
+            'end_id': end_lexitron
         },
         dataType: 'json',
-        success: function (data) {
-            if (data != "") {
-                if(data.length == 0) {
+        success: function (response) {
+            if (response != "") {
+                if(response.content.length == 0) {
                     return;
                 } else {
-                    document.getElementById("list_vocabulary").innerHTML="";
+                    data = response.content;
                     for( _d in data ) {
+                        end_lexitron = data[_d]['mid'];
                         _ul = document.createElement("ul");
                         _ul.textContent = data[_d]["word"];
                         _ul.setAttribute('user', data[_d]['user']);
-                        document.getElementById("list_vocabulary").appendChild(_ul);
+                        document.getElementById("list_lexitron").appendChild(_ul);
                     }
+                    if(data.length < 50) flag_lexitron_load = true;
                 }
-            } else  {
-                
             }
         },
         error: function() {
@@ -83,62 +57,28 @@ $(function(){
             $(".btn_search").click();
         }
     });
-    $('#id_searchWord').on('change', function(e) {
-        $(".btn_search").click();
-    });
-    $('input[type=radio][name=allowed]').change(function() {
-        switch (document.querySelector('input[name="allowed"]:checked').value) {
-            case '0':
-                $('.div_unapproved').css('border-style', 'solid solid none solid');
-                $('.div_approved').css('border-style', 'none none solid none');
-                $('.div_lexitron').css('border-style', 'none none solid none');
-                $(".btn_approve").css('visibility', 'visible');
-                $("#list_vocabulary").css("display", "block");
-                break;
-            case '1':
-                $('.div_unapproved').css('border-style', 'none none solid none');
-                $('.div_approved').css('border-style', 'solid solid none solid');
-                $('.div_lexitron').css('border-style', 'none none solid none');
-                $(".btn_approve").css('visibility', 'hidden');
-                $("#list_vocabulary").css("display", "block");
-                break;
-        }
-        ShowVocabulary();
-    });
+    // $('#id_searchWord').on('change', function(e) {
+    //     $(".btn_search").click();
+    // });
     $(".btn_search").on('click', function(){
-        if($("#content_add_words").css('display') == 'none') {
-            ShowVocabulary();
-        } else {
-            end_word = $('#id_searchWord').val().trim();
-            document.getElementById("list_lexitron").innerHTML = "";
-            load_lexitron(0);
-        }
-    })
-    $("#view_add_word").on('click', function(){
-        $("#content_user_vocabulary").css('visibility', 'hidden');
-        $("#content_user_vocabulary").css('position', 'fixed'); 
-        $("#content_user_vocabulary").css('height', 0); 
-        $("#content_add_words").css('display', 'flex');
-    })
-    $("#view_user_dict").on('click', function(){
-        // ShowVocabulary();
-        $("#content_add_words").css('display', 'none');
-        $("#content_user_vocabulary").css('position', 'relative'); 
-        $("#content_user_vocabulary").css('height', '100%'); 
-        $("#content_user_vocabulary").css('visibility', 'visible'); 
-    })
-    $(".add_words li").on('click', function(e){
+        ShowVocabulary(0);
+    });
+    $("#part li").on('click', function(e){
         if(e.target.type != 'checkbox') return;
-        _parent = document.getElementById('word_vocabulary');
+        _parent = document.getElementById('db_vocabulary');
         var name = e.target.value;
-        if(e.target.checked == true) {
+
             var _div = document.createElement('div');
             _div.id = "frm_" + name;
             _div.setAttribute('class', 'frame');
+            _div.setAttribute('word_id', 0);
             var _label = document.createElement('label');
             _label.textContent = e.currentTarget.textContent.trim();
             _label.setAttribute('class', 'frm_label');
             _div.appendChild(_label);
+            var _btnRemove = document.createElement('button');
+            _btnRemove.setAttribute('class', 'close glyphicon glyphicon-remove');
+            _div.appendChild(_btnRemove);
             var labelExample;
 
             if(name == "other") {
@@ -151,15 +91,38 @@ $(function(){
                 _div.appendChild(tInput)
                 _div.appendChild(document.createElement("br"));
             }
-            
-            labelExample = document.createElement("label");
-            labelExample.textContent = "Translation:";
-            labelExample.setAttribute('class', 'txtlabel');
-            _div.appendChild(labelExample);
 
-            var input = document.createElement("textarea");
-            input.id = 'txt_' + name;
-            _div.appendChild(input);
+            var labelTrans = document.createElement("label");
+            labelTrans.setAttribute('class', 'txtlabel');
+            labelTrans.textContent = "Translation:";
+            var inputTrans = document.createElement("textarea");
+            inputTrans.id = 'trans_' + name;
+            _div.appendChild(labelTrans);
+            _div.appendChild(inputTrans);
+
+            var labelRelated = document.createElement("label");
+            labelRelated.setAttribute('class', 'txtlabel');
+            labelRelated.textContent = "Related:";
+            var inputRelated = document.createElement("textarea");
+            inputRelated.id = 'related_' + name;
+            _div.appendChild(labelRelated);
+            _div.appendChild(inputRelated);
+
+            var labelSynonym = document.createElement("label");
+            labelSynonym.setAttribute('class', 'txtlabel');
+            labelSynonym.textContent = "Synonym:";
+            var inputSynonym = document.createElement("textarea");
+            inputSynonym.id = 'synonym_' + name;
+            _div.appendChild(labelSynonym);
+            _div.appendChild(inputSynonym);
+
+            var labelAntonym = document.createElement("label");
+            labelAntonym.setAttribute('class', 'txtlabel');
+            labelAntonym.textContent = "Antonym:";
+            var inputAntonym = document.createElement("textarea");
+            inputAntonym.id = 'antonym_' + name;
+            _div.appendChild(labelAntonym);
+            _div.appendChild(inputAntonym);
 
             labelExample = document.createElement("label");
             labelExample.textContent = "Example Sentences:";
@@ -167,27 +130,54 @@ $(function(){
             _div.appendChild(labelExample);
 
             var btn_add = document.createElement("button");
-            // btn_add.textContent='+';
             btn_add.setAttribute('class', 'btn_add glyphicon glyphicon-plus');
             btn_add.setAttribute('data-toggle',"modal");
             btn_add.setAttribute('data-target', "#myModal");
             _div.appendChild(btn_add);
-            
-            // var inputExample = document.createElement("textarea");
-            // inputExample.id = 'exm_' + name;
-            // _div.appendChild(inputExample);
-
-            // var div_exam = document.createElement('div');
-            // div_exam.id = "exam_" + name;
-            // _div.appendChild(div_exam);
             _parent.appendChild(_div);
-        } else {
-            // console.log(document.getElementById("frm_" + name));
-            _parent.removeChild(document.getElementById("frm_" + name));
-        }
     });
+    $(document).on('click', ".frame .close", function(e){
+        _parent = e.target.parentElement;
+        if(_parent.getAttribute('word_id') > 0){
+            $.confirm({
+                title: 'Delete Part', content: 'Are you sure you want to delete this part?',
+                icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                buttons: {
+                    okay: { text:'Yes',
+                        action: function(){
+                            $.ajax({
+                                url: delete_vocabulary,
+                                headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
+                                data: {
+                                    'id': _parent.getAttribute('word_id')
+                                },
+                                dataType: 'json',
+                                success: function (data) {
+                                    _parent.parentElement.removeChild(e.target.parentElement);
+                                },
+                                error: function() {
+                                    $.alert({
+                                        title: 'Alert', content: 'SERVER ERROR',
+                                        icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                                        buttons: {
+                                            okay: {  }
+                                        }
+                                    });
+                                },
+                                timeout: 2000
+                            });
+                        }
+                    },
+                    cancel :{text:'No'}
+                }
+            });
+        } else {
+            _parent.parentElement.removeChild(e.target.parentElement);
+        }
+    })
     $(document).on('click', ".frame .btn_add", function(e) {
         $("#request_frm").val(e.target.offsetParent.id);
+        e.target.parentElement.classList.add("AddStatus");
         $("#modal-title").html("Please enter example sentence for " + e.target.offsetParent.children[0].textContent);
         $('#first_exam').val("");
         $('#second_exam').val("");
@@ -202,8 +192,7 @@ $(function(){
         $('#second_exam').val(e.target.parentElement.parentElement.childNodes[0].children[1].textContent);
         setTimeout(function(){ document.getElementById("first_exam").focus();} , 500);
     });
-    $('.btn-add').on('click', function(){
-        var target = document.getElementById($('#request_frm').val());
+    $('#myModal .btn-add').on('click', function(){
         var f_text = $('#first_exam').val();
         var s_text = $('#second_exam').val();
         if(!f_text || !s_text) return;
@@ -229,43 +218,21 @@ $(function(){
 
         if($(".EditStatus").length) {
             target = document.getElementsByClassName("EditStatus")[0];
+            _ul.setAttribute('sent_id',target.querySelector('ul').getAttribute('sent_id'));
             target.innerHTML = "";
             target.appendChild(_ul);
             target.appendChild(_divtool);
             target.classList.remove("EditStatus");
-            if($('#request_frm').val().substr(0,4) == "frm1"){
-                // update sentence
-                $.ajax({
-                    url: update_sentence,
-                    headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
-                    data: {
-                        'sent_id': target.getAttribute("sent_id"),
-                        's_sentence': f_text,
-                        't_sentence': s_text
-                    },
-                    dataType: 'json',
-                    success: function (data) {
-                        // console.log(data);
-                    },
-                    error: function() {
-                        $.alert({
-                            title: 'Alert', content: 'SERVER ERROR',
-                            icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
-                            buttons: {
-                                okay: {  }
-                            }
-                        });
-                    },
-                    timeout: 2000
-                });
-            }
         } else {
+            target = document.getElementsByClassName("AddStatus")[0];
+            _ul.setAttribute('sent_id',0);
             _div.appendChild(_ul);
             _div.appendChild(_divtool);
             _div.setAttribute('style', 'display:flex;padding: 0;margin-bottom:5px;background: aliceblue;');
             target.appendChild(_div);
+            target.classList.remove("AddStatus");
         }
-        $(".close").click();
+        $("#myModal .close").click();
     });
     $(document).on('click', ".frame .btn_Del", function(e) {
         $.confirm({
@@ -281,14 +248,14 @@ $(function(){
                     text: 'Yes',
                     action: function(){
                         _exam = e.target.parentElement.parentElement;
-                        _frm = e.target.parentElement.parentElement.parentElement; //console.log(_frm.id);
-                        if(_frm.id.substr(0,4) == "frm1") {
+                        _frm = e.target.parentElement.parentElement.parentElement;
+                        if(e.target.parentElement.getAttribute("sent_id")) {
                             // delete sentence
                             $.ajax({
                                 url: delete_sentence,
                                 headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
                                 data: {
-                                    'sent_id': _exam.getAttribute("sent_id")
+                                    'sent_id': e.target.parentElement.getAttribute("sent_id")
                                 },
                                 dataType: 'json',
                                 success: function (data) {
@@ -311,158 +278,27 @@ $(function(){
                         }
                     }
                 },
-                cancel: { text:'No'
-                },
+                cancel: { text:'No' },
             }
         });
-        
     });
     $("#btn_vtype").on('click', function(){ 
-        if ($('#clear').css('display') =='none') {
-            $('#clear').css('display', 'flex');
+        if ($('#part').css('display') =='none') {
+            $('#part').css('display', 'flex');
             $('#btn_vtype').removeClass('sky_button');
             $('#btn_vtype').css('border-radius', '5px 5px 0 0');
             document.getElementById('btn_vtype').style.backgroundPosition = 'center bottom';
         } else {
-            $('#clear').css('display', 'none');
+            $('#part').css('display', 'none');
             $('#btn_vtype').addClass('sky_button')
             $('#btn_vtype').css('border-radius', '3px');
             document.getElementById('btn_vtype').style.backgroundPosition = 'center top';
         }
     });
-    $("#id_chk_agree").on('change', function(e){
-        $(".btn_save").attr('disabled', $(this).is(":not(:checked)"));
-    })
-    $(".btn_save").on('click', function(){ 
-        if(!$("#U_name").val()) {window.location.href = "/translator"; return;}
-        if($("#id_s_lang").val() == $("#id_t_lang").val()) {
-            $.alert({
-                title: 'Alert', content: "Source and target language is equal. <br> Please change!",
-                icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
-                autoClose: 'okay|3000',
-                buttons: {
-                    okay: {  }
-                }
-            });
-            $("#id_t_lang").focus(); return;
-        }
-        if($("#id_Vocabulary").val().trim() == "") {
-            obj_focus("#id_Vocabulary"); return;
-        }
-        var chk_boxes = $('#clear input[type=checkbox]');
-        var _data = [];
-        var data_len = 0;
-        for (_chk of chk_boxes) {
-            if( $(_chk).is(":not(:checked)")) continue; 
-            var _name = $(_chk).val();//console.log($(_chk).parent().text().trim());
-            _data[data_len] = [];
-            _data[data_len][0] = _name;
-            if(_name == "other") {
-                _data[data_len][0] = $("#key_other").val().trim();
-                if(_data[data_len][0] == "") { obj_focus("#key_other"); return;}
-            }
-            var _trans = $('#txt_' + _name).val().trim();
-            if(_trans == "") {
-                obj_focus('#txt_' + _name); return;
-            }
-            _data[data_len][1] = _trans;
-            var _ex = $('#frm_' + _name + ' ul');
-            for( i=0; i<_ex.length;i++ ){
-                _data[data_len][i+2] = []
-                _data[data_len][i+2][0] = _ex[i].children[0].textContent;
-                _data[data_len][i+2][1] = _ex[i].children[1].textContent;
-            }
-            data_len++;
-        }   //console.log(_data); return;
-        if(data_len == 0) {
-            $.alert({
-                title: 'Alert', content: "Data is empty. <br> Please enter data.",
-                icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
-                autoClose: 'okay|3000',
-                buttons: {
-                    okay: {  }
-                }
-            });
-            return;
-        }
-        $.ajax({
-            url: query_UserDictionaryList,
-            data: {
-                'seltext': $("#id_Vocabulary").val().trim(),
-                'is_approved': 2
-            },
-            dataType: 'json',
-            success: function (data) {
-                if(data[0]) {
-                    $.confirm({
-                        title: 'Add Words', content: 'This word exists in User Dictionary.<br> Are you sure you want to add this word?',
-                        icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
-                        buttons: {
-                            okay: { 
-                                text:'Yes',
-                                action: function() {
-                                    add_words_database(_data)
-                                }
-                            },
-                            cancel:{ text: 'No'}
-                        }
-                    })
-                } else {
-                    add_words_database(_data);
-                }
-            }
-        })
-    });
-    function add_words_database(_data){
+    $(document).on('click', "#list_lexitron ul", function(e) {
         var csrftoken = $("[name=csrfmiddlewaretoken]").val();
-        $.ajax({
-            url: add_words_url,
-            headers:{ "X-CSRFToken": csrftoken  },
-            data: {
-                'user' : $("#U_name").val(),
-                'sl' : $("#id_s_lang").val().toLowerCase().substr(0,2),
-                'tl' : $("#id_t_lang").val().toLowerCase().substr(0,2),
-                'vocabulary': $("#id_Vocabulary").val().trim(),
-                'content' : JSON.stringify(_data)
-            },
-            dataType: 'json',
-            success: function (data) {  
-                $.confirm({
-                    icon: 'fa fa-smile-o',
-                    theme: 'modern', content: data.content,
-                    animation: 'scale',
-                    type: 'blue',
-                    autoClose: 'okay|3000',
-                    escapeKey: 'okay',
-                    buttons: {
-                        okay: {
-                            action: function(){
-                                window.location = "/user_words/index";
-                            }
-                        }
-                    }
-                });
-            },
-            error: function() {
-                $.alert({
-                    title: 'Alert', content: 'SERVER ERROR',
-                    icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
-                    buttons: {
-                        okay: {  }
-                    }
-                });
-            },
-        }).always(function(e){
-            
-        });
-    }
-    function obj_focus( obj ){
-        $(obj).focus();
-        $(obj).css('border', '2px solid red');
-        $(obj).attr('placeholder', 'Please Enter');
-    }
-    $(document).on('click', "#list_vocabulary ul", function(e) {
-        var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+        $("#id_Vocabulary").val(e.target.textContent);
+        $("#user_vocabulary").text(e.target.attributes["user"].value);
         $.ajax({
             // type: "POST",
             url: query_WordContents,
@@ -472,40 +308,69 @@ $(function(){
             data: {
                 'user' : e.target.attributes["user"].value,
                 'seltext': e.target.textContent,
-                'is_approved': document.querySelector('input[name="allowed"]:checked').value
+                'is_approved': 2
             },
             dataType: 'json',
             success: function (data) {
-                if(data.length == 0) return;
-                $('.add_words').css('display', 'block');
-                document.getElementById("view_word").textContent = e.target.textContent;
-                document.getElementById("view_word").setAttribute('user', data[0]["user"]);
-                // console.log(data);
+
                 var target = document.getElementById('db_vocabulary');
                 target.innerHTML = "";
-                for (_d in data) { 
-                    var name = data[_d]["part"];
+                $("#id_chk_agree").prop('checked', false);
+
+                if(Object.keys(data).length == 0) return;
+                for (_d in data) {
+                    var name = data[_d]["part"].split('.')[0];
                     var _div = document.createElement('div');
-                    _div.id = "frm1_" + name;
+                    _div.id = "frm_" + name;
                     _div.setAttribute('word_id', data[_d]["word_id"]);
                     _div.setAttribute('class', 'frame');
                     var _label = document.createElement('label');
                     _label.textContent = name;
                     _label.setAttribute('class', 'frm_label');
                     _div.appendChild(_label);
-                    var labelExample;
+                    var _btnRemove = document.createElement('button');
+                    _btnRemove.setAttribute('class', 'close glyphicon glyphicon-remove');
+                    _div.appendChild(_btnRemove);
                     
-                    labelExample = document.createElement("label");
-                    labelExample.textContent = "Translation:";
-                    labelExample.setAttribute('class', 'txtlabel');
-                    _div.appendChild(labelExample);
-        
-                    var input = document.createElement("textarea");
-                    input.id = 'txt_' + name;
-                    input.value = data[_d]['trans'];
-                    _div.appendChild(input);
-                    if(data[_d]['sentences']) {
-                        labelExample = document.createElement("label");
+                    var labelTrans = document.createElement("label");
+                    labelTrans.setAttribute('class', 'txtlabel');
+                    labelTrans.textContent = "Translation:";
+                    var inputTrans = document.createElement("textarea");
+                    inputTrans.id = 'trans_' + name;
+                    inputTrans.value = data[_d]['trans'];
+                    _div.appendChild(labelTrans);
+                    _div.appendChild(inputTrans);
+
+                    var labelRelated = document.createElement("label");
+                    labelRelated.setAttribute('class', 'txtlabel');
+                    labelRelated.textContent = "Related:";
+                    var inputRelated = document.createElement("textarea");
+                    inputRelated.id = 'related_' + name;
+                    inputRelated.value = data[_d]['related'];
+                    _div.appendChild(labelRelated);
+                    _div.appendChild(inputRelated);
+
+                    var labelSynonym = document.createElement("label");
+                    labelSynonym.setAttribute('class', 'txtlabel');
+                    labelSynonym.textContent = "Synonym:";
+                    var inputSynonym = document.createElement("textarea");
+                    inputSynonym.id = 'synonym_' + name;
+                    inputSynonym.value = data[_d]['synonym'];
+                    _div.appendChild(labelSynonym);
+                    _div.appendChild(inputSynonym);
+
+                    var labelAntonym = document.createElement("label");
+                    labelAntonym.setAttribute('class', 'txtlabel');
+                    labelAntonym.textContent = "Antonym:";
+                    var inputAntonym = document.createElement("textarea");
+                    inputAntonym.id = 'antonym_' + name;
+                    inputAntonym.value = data[_d]['antonym'];
+                    _div.appendChild(labelAntonym);
+                    _div.appendChild(inputAntonym);
+                    
+                    // if(Object.keys(data[_d]['sentences']).length) 
+                    {
+                        var labelExample = document.createElement("label");
                         labelExample.textContent = "Example Sentences:";
                         labelExample.setAttribute('class', 'txtlabel');
                         _div.appendChild(labelExample);
@@ -514,7 +379,8 @@ $(function(){
                         btn_add.setAttribute('class', 'btn_add glyphicon glyphicon-plus');
                         btn_add.setAttribute('data-toggle',"modal");
                         btn_add.setAttribute('data-target', "#myModal");
-                        // _div.appendChild(btn_add);
+                        _div.appendChild(btn_add);
+
                         for(_s in data[_d]['sentences']){
                             var _div1 = document.createElement('div');
                             var _ul = document.createElement('ul');
@@ -525,6 +391,7 @@ $(function(){
                             _ul.appendChild(_fli);
                             _ul.appendChild(_sli);
                             _ul.setAttribute('style', 'width:calc(100% - 50px);');
+                            _ul.setAttribute('sent_id', data[_d]['sentences'][_s]["sent_id"]);
                             var _divtool = document.createElement('div');
                             var _btnEdit = document.createElement('button');
                             var _btnDel = document.createElement('button');
@@ -535,11 +402,9 @@ $(function(){
                             _divtool.appendChild(_btnEdit);
                             _divtool.appendChild(_btnDel);
                             _divtool.setAttribute('style', 'width:50px; padding:2px;');
-
                             _div1.appendChild(_ul);
                             _div1.appendChild(_divtool);
                             _div1.setAttribute('style', 'display:flex;padding: 0;margin-bottom:5px;background: aliceblue;');
-                            _div1.setAttribute('sent_id', data[_d]['sentences'][_s]["sent_id"]);
                             _div.appendChild(_div1);
                         }
                     }
@@ -567,19 +432,20 @@ $(function(){
             headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
             data: {
                 'word_id': e.target.parentElement.getAttribute("word_id"),
-                'trans': this.value
+                'key_id': this.id.split('_')[0],
+                'content': this.valu
             },
             dataType: 'json',
             success: function (data) {
-                $.confirm({
-                    icon: 'fa fa-smile-o',
-                    theme: 'modern', content: data.content,
-                    animation: 'scale', type: 'blue',
-                    autoClose: 'okay|2000', escapeKey: 'okay',
-                    buttons: {
-                        okay: {  }
-                    }
-                });
+                // $.confirm({
+                //     icon: 'fa fa-smile-o',
+                //     theme: 'modern', content: data.content,
+                //     animation: 'scale', type: 'blue',
+                //     autoClose: 'okay|2000', escapeKey: 'okay',
+                //     buttons: {
+                //         okay: {  }
+                //     }
+                // });
             },
             error: function() {
                 $.alert({
@@ -593,28 +459,133 @@ $(function(){
             timeout: 2000
         });
     });
-    $(".btn_approve").on('click', function(){  
-        var _obj = document.getElementById("view_word");
-        if(_obj.textContent == "") return;
+    $('#list_lexitron').on('scroll', function() {
+        if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+            ShowVocabulary(1);
+        }
+    });
+    $('#id_s_lang').on('change', function(e) {
+        $(".btn_search").click();
+    });
+    
+    $("#id_chk_agree").on('change', function(e){
+        $(".btn_save").attr('disabled', $(this).is(":not(:checked)"));
+    })
+    $(".btn_new").on('click', function(){
+        $("#db_vocabulary").html("");
+        $("#id_chk_agree").prop('checked', false);
+        $("#user_vocabulary").text($("#U_name").val());
+        $("#id_Vocabulary").val("");
+    })
+    $(".btn_save").on('click', function(){ 
+        if(!$("#user_vocabulary").text()) {window.location.href = "/translator"; return;}
+        if($("#id_s_lang").val() == $("#id_t_lang").val()) {
+            $.alert({
+                title: 'Alert', content: "Source and target language is equal. <br> Please change!",
+                icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                autoClose: 'okay|3000',
+                buttons: {
+                    okay: {  }
+                }
+            });
+            $("#id_t_lang").focus(); return;
+        }
+        if($("#id_Vocabulary").val().trim() == "") {
+            obj_focus("#id_Vocabulary"); return;
+        }
+
+        var frames = $('#db_vocabulary .frame');
+        var _data = [];
+        var data_len = 0;
+        for (_frm of frames) {
+            var _name = _frm.id.split('_')[1];
+            _data[data_len] = [];
+            _data[data_len][0] = _frm.getAttribute('word_id');
+            _data[data_len][1] = _name;
+            if(_name == "other") {
+                _data[data_len][1] = $(frm).children("#key_other").val().trim();
+                if(_data[data_len][1] == "") { obj_focus($(frm).children("#key_other")); return;}
+            }
+            var _trans = $(_frm).children('#trans_' + _name).val();
+            if(_trans == "") { obj_focus($(_frm).children('#trans_' + _name)); return; }
+            _data[data_len][2] = _trans;
+            _data[data_len][3] = $(_frm).children('#related_' + _name).val().trim();
+            _data[data_len][4] = $(_frm).children('#synonym_' + _name).val().trim();
+            _data[data_len][5] = $(_frm).children('#antonym_' + _name).val().trim();
+            var _ex = $(_frm).find('ul');
+            for( i=0; i<_ex.length;i++ ){
+                _data[data_len][i+6] = []
+                _data[data_len][i+6][0] = _ex[i].getAttribute('sent_id');
+                _data[data_len][i+6][1] = _ex[i].children[0].textContent;
+                _data[data_len][i+6][2] = _ex[i].children[1].textContent;
+            }
+            data_len++;
+        }
+        if(data_len == 0) {
+            $.alert({
+                title: 'Alert', content: "Data is empty. <br> Please enter data.",
+                icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                autoClose: 'okay|3000',
+                buttons: {
+                    okay: {  }
+                }
+            });
+            return;
+        }
         $.ajax({
-            url: approve_vocabulary,
-            headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
+            url: query_UserDictionaryList,
             data: {
-                'word': _obj.textContent,
-                'user': _obj.getAttribute("user")
+                'seltext': $("#id_Vocabulary").val().trim(),
+                'is_approved': 2
             },
             dataType: 'json',
             success: function (data) {
+                if(Object.keys(data.content).length) {
+                    $.confirm({
+                        title: 'Add Words', content: 'This word exists in User Dictionary.<br> Are you sure you want to add this word?',
+                        icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                        buttons: {
+                            okay: { 
+                                text:'Yes',
+                                action: function() {
+                                    add_words_database(_data)
+                                }
+                            },
+                            cancel:{ text: 'No'}
+                        }
+                    })
+                } else {
+                    add_words_database(_data);
+                }
+            }
+        })
+    });
+    function add_words_database(_data){
+        var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            url: add_words_url,
+            headers:{ "X-CSRFToken": csrftoken  },
+            data: {
+                'user' : $("#user_vocabulary").text(),
+                'sl' : $("#id_s_lang").val().toLowerCase().substr(0,2),
+                'tl' : $("#id_t_lang").val().toLowerCase().substr(0,2),
+                'vocabulary': $("#id_Vocabulary").val().trim(),
+                'content' : JSON.stringify(_data)
+            },
+            dataType: 'json',
+            success: function (data) {  
                 $.confirm({
                     icon: 'fa fa-smile-o',
-                    theme: 'modern', content: data.content, title: "Success!", 
-                    animation: 'scale', type: 'blue',
-                    autoClose: 'okay|3000', escapeKey: 'okay',
+                    theme: 'modern', content: data.content,
+                    animation: 'scale',
+                    type: 'blue',
+                    autoClose: 'okay|3000',
+                    escapeKey: 'okay',
                     buttons: {
-                        okay: { 
+                        okay: {
                             action: function(){
-                                ShowVocabulary();
-                             }
+                                window.location = "/user_words";
+                            }
                         }
                     }
                 });
@@ -628,74 +599,15 @@ $(function(){
                     }
                 });
             },
-            timeout: 2000
+        }).always(function(e){
+            
         });
-    });
-    $(".btn_delete").on('click', function(){ 
-        var _obj = document.getElementById("view_word");
-        if(_obj.textContent == "") return;
-        $.confirm({
-            title: 'Delete vocabulary', content: 'Are you sure you want to delete this vocabulary?',
-            icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
-            buttons: {
-                okay: { text:'Yes',
-                    action: function(){
-                        $.ajax({
-                            url: delete_vocabulary,
-                            headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
-                            data: {
-                                'word': _obj.textContent,
-                                'user': _obj.getAttribute("user")
-                            },
-                            dataType: 'json',
-                            success: function (data) {
-                                $.confirm({
-                                    icon: 'fa fa-smile-o',
-                                    theme: 'modern',title: 'Success!', content: data.content,
-                                    animation: 'scale',
-                                    type: 'blue',
-                                    autoClose: 'okay|3000',
-                                    escapeKey: 'okay',
-                                    buttons: {
-                                        okay: { 
-                                            action: function(){
-                                                ShowVocabulary();
-                                                document.getElementById("view_word").innerHTML="";
-                                                document.getElementById("db_vocabulary").innerHTML="";
-                                                $(".add_words").css('display', 'none');
-                                            }
-                                        }
-                                    }
-                                });
-                            },
-                            error: function() {
-                                $.alert({
-                                    title: 'Alert', content: 'SERVER ERROR',
-                                    icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
-                                    buttons: {
-                                        okay: {  }
-                                    }
-                                });
-                            },
-                            timeout: 2000
-                        });
-                    }
-                },
-                cancel :{text:'No'}
-            }
-        });
-    });
-    if (suburl == 'dict') {
-        ShowVocabulary();
-        $('#view_user_dict').click();console.log("------------");
     }
-    load_lexitron(0);
-    $('#list_lexitron').on('scroll', function() {
-        if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-            load_lexitron(1);
-        }
-    });
-    $('#id_s_lang').on('change', function(e) {
-        $(".btn_search").click();
-    });
+    function obj_focus( obj ){
+        $(obj).focus();
+        $(obj).css('border', '2px solid red');
+        $(obj).attr('placeholder', 'Please Enter');
+    }
+    ShowVocabulary(0);
+    $(".btn_new").click();
 })

@@ -23,7 +23,6 @@ var update_vocabulary = "/translator/update_vocabulary";
 var approve_vocabulary = "/translator/approve_vocabulary";
 var delete_vocabulary = "/translator/delete_vocabulary";
 
-var s_text = "";
 var wait, wait1;
 var _ajax_communication;
 
@@ -85,44 +84,6 @@ function source_textarea_change() {
     $('.source_textarea').css('height', height);
     $('.target_textarea').css('height', height);
     $('.textarea_separator').css('height', height+150);
-}
-function similar_words() {
-	var selectedText = $('.source_textarea').val().trim();
-    if (s_text == selectedText) return;    
-    if(selectedText == "" || selectedText.split(" ").length > 1 
-        || selectedText.split("\n").length > 1 || selectedText.split(",").length > 1) {
-        document.getElementById('wordDict_help_popup').style.display = "none";
-        return;
-    }
-    if (_ajax_communication) return; 
-    _ajax_communication = true;
-    $.ajax({
-        // type: "POST",
-        url: detect_similar_words,
-        data: {
-        'seltext': selectedText,
-        'sl' : source_language.toLowerCase().substr(0,2)
-        },
-        dataType: 'json',
-        success: function (data) {  //console.log(data);
-            if(data.content) {
-                document.getElementById('wordDict_help_popup').innerHTML = data.content; 
-                document.getElementById('wordDict_help_popup').style.display = "block";
-                _ajax_communication = false;
-            } else {
-                document.getElementById('wordDict_help_popup').style.display = "none"; //console.log("empty");
-                _ajax_communication = false;
-            }
-        },
-        error: function() {
-            document.getElementById('wordDict_help_popup').style.display = "none"; //console.log("error");
-            _ajax_communication = false;
-        },
-        timeout: 1000,
-    }).always(function(e){
-        // console.log(_ajax_communication);
-        _ajax_communication = false;
-    });
 }
 // arrow keycode event function
 var _suggest_wordposition = -1;

@@ -1,3 +1,6 @@
+var s_text = "";
+var _ajax_communication = false;
+
 function similar_words() {
 	var selectedText = $('#id_searchWord').val();
     if (s_text == selectedText) return; 
@@ -42,9 +45,9 @@ function ShowSelection(selectedText)
 {
     // selectedText = selectedText.trim();
     var sel = selectedText.split(' ');
-    if (sel.length > 1 || selectedText.length == 0) {$(".dict_area").css('display', 'none');return;}
+    if (sel.length > 1 || selectedText.length == 0) return;
     sel = sel[0].split(',');
-    if (sel.length > 1) {$(".dict_area").css('display', 'none');return;}
+    if (sel.length > 1) return;
     selectedText = sel[0];
 
     $.ajax({
@@ -92,7 +95,7 @@ function ShowSelection(selectedText)
             }
         },
         error: function() {
-            $(".dict_area").css('display', 'none');
+            // $(".dict_area").css('display', 'none');
         },
         timeout: 2000
     });
