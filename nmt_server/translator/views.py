@@ -478,10 +478,7 @@ def view_ConcondanceSearch(request):
     else:
         search_result = {}
     concondance_table = concondanceTable(search_result)
-
-
     search_Form = SearchForm(initial={'searchCondance':searchCon})
-    # concondance_table = concondanceTable(TransMemories.objects.filter(name__contains=searchCon).order_by(sort))
 
     return render(request, "concondance/content.html", {
         'concondance_table': concondance_table, 
