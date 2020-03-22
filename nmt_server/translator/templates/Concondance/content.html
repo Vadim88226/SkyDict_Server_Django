@@ -59,6 +59,7 @@
             <form method="POST" action="/update_UserSetting/"> 
                 <div class="modal-body">
                     {% csrf_token %}
+                    <input type="hidden" id="searchCon" name="searchCon"/>
                     <input type="hidden" id="user" name="user" value="{{request.user.id}}"/>
                     <table>
                         <tr><td>Source Language*</td><td class='s_lang'></td></tr>

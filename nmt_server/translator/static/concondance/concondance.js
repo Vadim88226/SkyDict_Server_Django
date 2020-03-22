@@ -176,6 +176,7 @@ $(function(){
                 _lbl.setAttribute('for','id_ignoreTags');
                 _lbl.textContent = ' Ignore inner tags';
                 $(".modal-body .ignoreTags").append(_lbl);
+                $(".modal-body #searchCon").val($("#id_searchCondance").val());
             }
         })
     })

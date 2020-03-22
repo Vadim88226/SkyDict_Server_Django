@@ -442,7 +442,6 @@ def lexitron_list(request):
 def view_ConcondanceSearch(request):
     sort = request.GET.get('sort', 'name')
     searchCon = request.GET.get('searchCondance', '')
-
     if UserSetting.objects.filter(user=request.user.id).exists() == False:
         row = UserSetting(user=request.user, s_lang='en', t_lang='th', matchRate='50', ignoreTags=0)
         row.save()
@@ -463,7 +462,6 @@ def view_ConcondanceSearch(request):
         search_result = {}
     concondance_table = concondanceTable(search_result)
 
-
     search_Form = SearchForm(initial={'searchCondance':searchCon})
     # concondance_table = concondanceTable(TransMemories.objects.filter(name__contains=searchCon).order_by(sort))
 
@@ -479,9 +477,8 @@ def update_UserSetting(request):
         if form.is_valid():
             form.save()
 
-        return view_ConcondanceSearch(request)
-        # return reverse('concondance/')
-        # return redirect("/concondance/")
+        searchCon = request.POST.get('searchCon', '')
+        return redirect("/concondance/?searchCondance=" + searchCon)
     else:
         own_settings=UserSetting.objects.get(user=request.user.id)
         form = UserSettingForm(instance=own_settings)
