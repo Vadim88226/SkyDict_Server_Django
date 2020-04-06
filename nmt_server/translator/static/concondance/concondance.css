@@ -47,6 +47,7 @@ td{
 }
 th{
     position: sticky;
+    box-shadow: 1px 0px 0px 1px #DDDDDDFF;
     top: 0;
 }
 table.paleblue td, table.paleblue th {
