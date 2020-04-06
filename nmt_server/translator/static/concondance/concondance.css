@@ -42,8 +42,12 @@ div.table-container{
 #div_content input[type=text]{
     padding: 5px 10px;
 }
-td, th{
+td{
     padding:10px;
+}
+th{
+    position: sticky;
+    top: 0;
 }
 table.paleblue td, table.paleblue th {
     text-align: center;

@@ -111,11 +111,13 @@ def query_dict(request):
     for i, data in enumerate(user_dict_records):
         if i == 0:
             user_dict_data += "<k>" + getattr(data, 'word') + "</k>\n"
-        user_dict_data += "<i><co><abr>" + getattr(data, 'part') + "</abr></co></i>\n"
-        user_dict_data += "<dtrn>" + getattr(data, 'trans') + "</dtrn>"
+        user_dict_data += "<i><co><abr>" + getattr(data, 'part') + "</abr></co></i>"
+        user_dict_data += "<dtrn>" + getattr(data, 'trans') + "</dtrn>\n"
         user_sentences_records = DictSentences.objects.filter(dictwords = data)
-        for j, sentence in enumerate(user_sentences_records):
-            user_sentences_data += "<ul><li>" + getattr(sentence, 's_sentence') + "</li>"
+        for j, sentence in enumerate(user_sentences_records):            
+            s_sentence = getattr(sentence, 's_sentence')
+            s_sentence = re.sub(r'\b({0})\b'.format(selectedText), "<b>" + selectedText + "</b>", s_sentence)
+            user_sentences_data += "<ul><li>" + s_sentence + "</li>"
             user_sentences_data += "<li>" + getattr(sentence, 't_sentence') + "</li></ul>"
     response = {}
     response["dictionary"] = {}
@@ -123,8 +125,8 @@ def query_dict(request):
     response["dictionary"]["User Dictionary"] = user_dict_data
     sentences = query_example_sentences(selectedText, s_lang)
     response["sentences"] = {}
-    response["sentences"]["WIT Copus"] = sentences
     response["sentences"]["User Dictionary"] = user_sentences_data
+    response["sentences"]["WIT Copus"] = sentences
     return JsonResponse(response)
 
 # translate the senteces
