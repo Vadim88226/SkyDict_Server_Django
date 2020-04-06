@@ -10,11 +10,13 @@ from .apps import TranslatorConfig
 from django.conf import settings
 from translate.storage.tmx import tmxfile
 
-import Levenshtein
-from fuzzywuzzy import fuzz
-from fuzzywuzzy import process
-# from similarity.levenshtein import Levenshtein
-# from similarity.normalized_levenshtein import NormalizedLevenshtein
+import textdistance
+import difflib
+# from nltk.corpus import stopwords
+# cachedStopWords = stopwords.words("english")
+
+def removeStopwords(text):
+    return ' '.join([word for word in text.split() if word not in cachedStopWords])
 def compare_matchrate(element):
     return element['match_rate']
 # cocondance search
@@ -51,6 +53,7 @@ def compare_matchrate(element):
 def cocondance_search(tm_objects, searchCon, matchRate, search_lang):
     # normalized_levenshtein = NormalizedLevenshtein()
     out_sequences = []
+    q_tokens = searchCon.split()
     for tm_object in tm_objects:
         tm_url = os.path.join(settings.MEDIA_ROOT, getattr(tm_object, 'file_url').name)
         tm_s_lang = getattr(tm_object, 's_lang')
@@ -59,22 +62,41 @@ def cocondance_search(tm_objects, searchCon, matchRate, search_lang):
         if os.path.isfile( tm_url):
             fin = open(tm_url, 'rb')
             tmx_file = tmxfile(fin, tm_s_lang, tm_t_lang)
-            for node in tmx_file.unit_iter():
-                s_sentence = node.getsource()
-                t_sentence = node.gettarget()
-                match_rate = 0
-                if search_lang == 'all':
-                    s_distance = Levenshtein.distance(searchCon, s_sentence)
-                    t_distance = Levenshtein.distance(searchCon, t_sentence)
-                    s_match_rate = round(float(len(s_sentence)-s_distance)/len(s_sentence) * fuzz.ratio(searchCon, s_sentence))
-                    t_match_rate = round( float(len(t_sentence)-t_distance)/len(t_sentence) * fuzz.ratio(searchCon, t_sentence))
-                    match_rate = max(s_match_rate, t_match_rate)
+            # for node in tmx_file.unit_iter():
+            #     s_sentence = node.getsource()
+            #     t_sentence = node.gettarget()
+            #     match_rate = 0
+            #     if search_lang == 'all':
+            #         # s_distance = Levenshtein.distance(searchCon, s_sentence)
+            #         # t_distance = Levenshtein.distance(searchCon, t_sentence)
+            #         s_match_rate = int(100 * textdistance.ratcliff_obershelp(searchCon, s_sentence))#round(1 - float(s_distance/len(searchCon + s_sentence)) * 
+            #         t_match_rate = int(100 * textdistance.ratcliff_obershelp(searchCon, t_sentence))#round(1 - float(t_distance/len(searchCon + t_sentence)) * 
+            #         match_rate = max(s_match_rate, t_match_rate)
 
-                else:
-                    s_distance = Levenshtein.distance(searchCon, s_sentence)
-                    match_rate = round(float(len(s_sentence)-s_distance)/len(s_sentence)* fuzz.ratio(searchCon, s_sentence))
-                if match_rate >= matchRate:
-                    out_sequences.append({'source':s_sentence, 'target':t_sentence, 'tm_name':tm_name, 'match_rate':match_rate})
+            #     else:
+            #         # s_distance = Levenshtein.distance(searchCon, s_sentence)
+            #         match_rate = int(100 * textdistance.ratcliff_obershelp(searchCon, s_sentence))#round(float(len(searchCon)-s_distance)/len(searchCon)* 
+            #     if match_rate >= matchRate:
+            #         out_sequences.append({'source':s_sentence, 'target':t_sentence, 'tm_name':tm_name, 'match_rate':match_rate})
+            for node in tmx_file.unit_iter():
+                sequence = node.getsource()
+                s_tokens = sequence.split()
+                average_rate = 0
+                index_list = []
+                ordering = False
+                for q_token in q_tokens:
+                    q_index = s_tokens.index(q_token) if q_token in s_tokens else -1
+                    if q_index == -1:
+                        matched = difflib.get_close_matches(q_token, s_tokens, n=1, cutoff=0.7)
+                        if len(matched) > 0:
+                            average_rate += float(textdistance.ratcliff_obershelp(q_token,matched[0]))
+                    else:
+                        average_rate += 1
+                        index_list.append([q_token, q_index])
+                average_rate = int(average_rate / max(len(s_tokens), len(q_tokens)) * 100)
+                if average_rate >= matchRate:
+                    out_sequences.append({'source':sequence, 'target': node.gettarget(), 'tm_name':tm_name, 'match_rate':average_rate})
+        # out_sequences.sort(key=compare_matchrate, reverse=True)
 
     out_sequences.sort(key=compare_matchrate, reverse=True)
     return out_sequences

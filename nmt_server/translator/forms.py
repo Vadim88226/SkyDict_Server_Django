@@ -13,12 +13,12 @@ class AddWordsForm(forms.Form):
     s_lang = forms.ChoiceField(label='Translate from ', choices=s_language)
     t_lang = forms.ChoiceField(label=' to ', choices=s_language)
     Vocabulary = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Enter Vocabulary'}))
-    fields = ('noun','verb_trans','verb_intrans','modal_verb','aux','adj','adv','prep','conj','pron','phrase','jargon','colloqial','abbreviation_or_acronym','slang','vulgar','name','organization','unique_name','other')
-    labels = ('noun','verb(trans)','verb(intrans)','modal verb','aux. verb','adj.','adv.','prep.','conj.','pron.','phrase','jargon','colloqial','abbreviation or acronym','slang','vulgar','name','organization','unique name','other')
+    fields = ('noun','verb','adj',      'adv',   'idiom', 'prep',       'conj',       'pron',   'classifier', 'abbreviation','interjection', 'prefix', 'suffix', 'determiner', 'slang','article', 'other')
+    labels = ('noun','verb','adjective','adverb','idiom', 'preposition','conjunction','pronoun','classifier', 'abbreviation','interjection', 'prefix', 'suffix', 'determiner', 'slang','article', 'other')
     chklabels = list(zip(fields,labels))
-    part1 = forms.MultipleChoiceField(label='', widget=forms.CheckboxSelectMultiple, choices=chklabels[0:7])
-    part2 = forms.MultipleChoiceField(label='', widget=forms.CheckboxSelectMultiple, choices=chklabels[7:14])
-    part3 = forms.MultipleChoiceField(label='', widget=forms.CheckboxSelectMultiple, choices=chklabels[14:])
+    part1 = forms.MultipleChoiceField(label='', widget=forms.CheckboxSelectMultiple, choices=chklabels[0:6])
+    part2 = forms.MultipleChoiceField(label='', widget=forms.CheckboxSelectMultiple, choices=chklabels[6:12])
+    part3 = forms.MultipleChoiceField(label='', widget=forms.CheckboxSelectMultiple, choices=chklabels[12:])
     chk_agree = forms.ChoiceField(label='', widget=forms.CheckboxInput)
 
 class UserDictForm(forms.Form):
