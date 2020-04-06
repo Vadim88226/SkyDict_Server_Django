@@ -24,6 +24,7 @@ function ShowVocabulary(_mode)
         success: function (response) {
             if (response != "") {
                 if(response.content.length == 0) {
+                    document.getElementById("list_vocabulary").innerHTML="";
                     return;
                 } else {
                     if(!_mode) document.getElementById("list_vocabulary").innerHTML="";
