@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include "common/header.html" %}
+<link rel="stylesheet" type="text/css" href="{% static 'lib/django_tables2/bootstrap.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'lib/django_tables2/themes/paleblue/css/screen.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'concordance/concordance.css' %}">
+</head>
+<body>
+{% include "common/menu.html" %}
+<div class="container">
+{% block content %}
+<p>Placeholder text in base template. Replace with page content.</p>
+{% endblock content %}
+{% include "common/popup_template.html" %}
+</div>
+</body>
+</html>
+{% include "common/footer.html" %}
+<script src="{% static 'concordance/concordance.js' %}"></script>

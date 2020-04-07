@@ -1,0 +1,76 @@
+{% extends 'concordance/index.html' %}
+<!-- ============================== Dictionary ============================== -->
+{% load django_tables2 %}
+{% block content %}
+{% csrf_token %}
+
+<script type="text/javascript"> 
+    var suburl = "transMemories";
+</script>
+<div class='DictSearch'>
+    <!-- <form action="" method="post"> -->
+        {{ search_Form.searchWord }}
+        <button type='button' class='btn_search'></button>
+    <!-- </form> -->
+    <div id="wordDict_help_popup"></div>
+</div>
+<div id="dict_menu_bar">
+    <a href="/dictionary/" id="view_dict_area">Dictionary</a>
+    {% if not request.user.is_authenticated %}
+    <a class="menu__login" href="#">Add Words</a>
+    {% else %}
+    <a href="/user_words" id="view_add_word">Add Words</a>
+    <a href="" style="color: black;">Concordance Search</a>
+    {% endif %}
+    {% if request.user.is_staff %}
+    <a href="/user_dictionary" id="view_user_dict">User Dictionary</a>
+    {% endif %}
+</div>
+<div class="dict_area">
+    <div class="submenu">
+        <div class='btn_search_form' style="border-style: none none solid none;">Search</div>
+        <div class='btn_memories_form'>Translation Memories</div>
+    </div>
+    <div id="div_content"></div>
+</div>
+<template id="div_transMemories_form">
+    <div style="display: flex;">
+        <div>
+            <button type='button' class='btn_new sky_button'><span class='glyphicon glyphicon-plus'></span> New</button>
+            <input type="file" style="display: none;" name='TransFiles' id="TransFiles"/>
+        </div>
+        <div style="width: 100%; text-align: right;">
+            <form method="GET" style="display: contents;"> 
+                <!-- {% csrf_token %} -->
+                {{ search_Form.searchTM }}
+                <button type="submit" style="display: none;">Search</button>
+            </form>
+            <button type='button' class='btn_delete sky_button'>Delete</button></div>
+    </div>
+    <form method="POST" id="tm_list_form" action="#">
+        {% csrf_token %}
+        {% render_table table %}
+    </form>
+</template>
+<template id="tm_new">
+    <form method="POST" action="/upload_translationMemories/" enctype="multipart/form-data" id="tm_upload_form" name = "tm_upload_form">
+        <div style='margin-top:18px'>New Translation Memory</div>
+        <hr>
+        {% csrf_token %}
+        <input type="hidden" id="user" name="user" value="{{request.user.username}}"/>
+        <table>
+            <tr><td>File: </td><td class='file_url'></td></tr>
+            <tr><td>Name: </td><td class='name'></td></tr>
+            <tr><td>Source Language: </td><td class='s_lang'></td></tr>
+            <tr><td>Target Language: </td><td class='t_lang'></td></tr>
+            <tr><td>Subject: </td><td class='subject'></td></tr>
+            <tr><td>Note: </td><td class="note"></td></tr>
+            <tr><td></td><td style="text-align: center;">
+                <button type="button" class="btn_uploadTm_back sky_button">Back</button>
+                <button type="submit" class="sky_button">Submit</button>
+            </td></tr>
+        </table>
+    </form>
+</template>
+{% endblock content %}
+<!-- =============================== -->
