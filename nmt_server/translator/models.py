@@ -33,7 +33,7 @@ class DictSentences(models.Model):
     t_sentence = models.TextField(blank=True)
 
 class TransMemories(models.Model):
-    file_url = models.FileField(upload_to='concondances/')
+    file_url = models.FileField(upload_to='concordances/')
     name = models.CharField(max_length=50,default='none')
     s_lang = models.CharField(max_length=5,default='en')
     t_lang = models.CharField(max_length=5,default='th')

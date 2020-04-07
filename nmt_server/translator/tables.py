@@ -17,7 +17,7 @@ class MaterializeCheckColumn(tables.CheckBoxColumn):
         return mark_safe("<input %s/>" % attrs.as_html())
         
 class tmTable(tables.Table):
-    check = MaterializeCheckColumn(accessor='id')
+    check = MaterializeCheckColumn(accessor='id', attrs={"td":{'class': 'match_rate'}})
     counter = tables.Column(verbose_name='#', empty_values=(), orderable=False)
     name = tables.Column(verbose_name='TM Name')
     updated_at = tables.DateTimeColumn(verbose_name='Last Modified', format='d/m/Y')
@@ -34,11 +34,11 @@ class tmTable(tables.Table):
     def render_s_lang(self, value, record):
         return mark_safe('''%s > %s''' % (value.upper(), record.t_lang.upper()))
 
-class concondanceTable(tables.Table):
+class concordanceTable(tables.Table):
     source = tables.Column(orderable=False, attrs={"th":{'width':'40%'}})
     target = tables.Column(orderable=False, attrs={"th":{'width':'40%'}})
     tm_name = tables.Column(orderable=False)
-    match_rate = tables.Column(orderable=False)
+    match_rate = tables.Column(orderable=False, attrs={"td":{'class': 'match_rate'}})
     class Meta:
         template_name = "django_tables2/bootstrap-responsive.html"
         attrs = {"class": "table table-hover paleblue"}

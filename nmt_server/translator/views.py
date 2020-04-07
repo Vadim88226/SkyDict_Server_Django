@@ -31,7 +31,7 @@ from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSe
 from .tokens import account_activation_token
 from .models import DictWords, DictSentences, TransMemories, UserSetting
 from .utils import translate_sentences, translate_file, cocondance_search
-from .tables import tmTable, concondanceTable
+from .tables import tmTable, concordanceTable
 from .filters import tmFilter
 
 
@@ -441,7 +441,7 @@ def lexitron_list(request):
             return JsonResponse({'content': _list})
     return JsonResponse({'content': _list})
 
-def view_ConcondanceSearch(request):
+def view_ConcordanceSearch(request):
     sort = request.GET.get('sort', 'name')
     searchCon = request.GET.get('searchCondance', '')
     if UserSetting.objects.filter(user=request.user.id).exists() == False:
@@ -462,13 +462,13 @@ def view_ConcondanceSearch(request):
         search_result = cocondance_search(tm_objects, searchCon, match_rate, search_lang= s_lang)
     else:
         search_result = {}
-    concondance_table = concondanceTable(search_result)
+    concordance_table = concordanceTable(search_result)
 
     search_Form = SearchForm(initial={'searchCondance':searchCon})
-    # concondance_table = concondanceTable(TransMemories.objects.filter(name__contains=searchCon).order_by(sort))
+    # concordance_table = concordanceTable(TransMemories.objects.filter(name__contains=searchCon).order_by(sort))
 
-    return render(request, "concondance/content.html", {
-        'concondance_table': concondance_table, 
+    return render(request, "concordance/content.html", {
+        'concordance_table': concordance_table, 
         'search_Form' : search_Form,
     })
 
@@ -480,7 +480,7 @@ def update_UserSetting(request):
             form.save()
 
         searchCon = request.POST.get('searchCon', '')
-        return redirect("/concondance/?searchCondance=" + searchCon)
+        return redirect("/concordance/?searchCon=" + searchCon)
     else:
         own_settings=UserSetting.objects.get(user=request.user.id)
         form = UserSettingForm(instance=own_settings)
@@ -499,7 +499,7 @@ def manipulate_TM(request):
     table = tmTable(TransMemories.objects.filter(name__contains=searchTM).order_by(sort))
     search_Form = SearchForm(initial={'searchTM':searchTM})
 
-    return render(request, "concondance/transMemories.html", {
+    return render(request, "concordance/transMemories.html", {
         'table': table, 
         'search_Form':search_Form
         })

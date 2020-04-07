@@ -12,8 +12,8 @@ from translate.storage.tmx import tmxfile
 
 import textdistance
 import difflib
-# from nltk.corpus import stopwords
-# cachedStopWords = stopwords.words("english")
+from nltk.corpus import stopwords
+cachedStopWords = stopwords.words("english")
 
 def removeStopwords(text):
     return ' '.join([word for word in text.split() if word not in cachedStopWords])
@@ -53,7 +53,7 @@ def compare_matchrate(element):
 def cocondance_search(tm_objects, searchCon, matchRate, search_lang):
     # normalized_levenshtein = NormalizedLevenshtein()
     out_sequences = []
-    q_tokens = searchCon.split()
+    q_tokens = removeStopwords(searchCon).split()
     for tm_object in tm_objects:
         tm_url = os.path.join(settings.MEDIA_ROOT, getattr(tm_object, 'file_url').name)
         tm_s_lang = getattr(tm_object, 's_lang')
@@ -80,14 +80,14 @@ def cocondance_search(tm_objects, searchCon, matchRate, search_lang):
             #         out_sequences.append({'source':s_sentence, 'target':t_sentence, 'tm_name':tm_name, 'match_rate':match_rate})
             for node in tmx_file.unit_iter():
                 sequence = node.getsource()
-                s_tokens = sequence.split()
+                s_tokens = removeStopwords(sequence).split()
                 average_rate = 0
                 index_list = []
                 ordering = False
                 for q_token in q_tokens:
                     q_index = s_tokens.index(q_token) if q_token in s_tokens else -1
                     if q_index == -1:
-                        matched = difflib.get_close_matches(q_token, s_tokens, n=1, cutoff=0.7)
+                        matched = difflib.get_close_matches(q_token, s_tokens, n=1, cutoff=0.85)
                         if len(matched) > 0:
                             average_rate += float(textdistance.ratcliff_obershelp(q_token,matched[0]))
                     else:

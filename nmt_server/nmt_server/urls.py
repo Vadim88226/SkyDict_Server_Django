@@ -27,7 +27,7 @@ urlpatterns = [
     path('', include('translator.urls'), name = 'translator'),
     path('translator/', include('translator.urls')),
     path('dictionary/', views.view_Dictionary, name="dictionary_view"),
-    path('concondance/', views.view_ConcondanceSearch, name="view_ConcondanceSearch"),
+    path('concordance/', views.view_ConcordanceSearch, name="view_ConcordanceSearch"),
     path('manipulate_TM/', views.manipulate_TM, name="manipulate_TM"),
     path('update_UserSetting/', views.update_UserSetting, name="update_UserSetting"),
     path('user_words/', views.view_AddWords, name="view_user_words"),
