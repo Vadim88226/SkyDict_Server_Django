@@ -62,22 +62,6 @@ def cocondance_search(tm_objects, searchCon, matchRate, search_lang):
         if os.path.isfile( tm_url):
             fin = open(tm_url, 'rb')
             tmx_file = tmxfile(fin, tm_s_lang, tm_t_lang)
-            # for node in tmx_file.unit_iter():
-            #     s_sentence = node.getsource()
-            #     t_sentence = node.gettarget()
-            #     match_rate = 0
-            #     if search_lang == 'all':
-            #         # s_distance = Levenshtein.distance(searchCon, s_sentence)
-            #         # t_distance = Levenshtein.distance(searchCon, t_sentence)
-            #         s_match_rate = int(100 * textdistance.ratcliff_obershelp(searchCon, s_sentence))#round(1 - float(s_distance/len(searchCon + s_sentence)) * 
-            #         t_match_rate = int(100 * textdistance.ratcliff_obershelp(searchCon, t_sentence))#round(1 - float(t_distance/len(searchCon + t_sentence)) * 
-            #         match_rate = max(s_match_rate, t_match_rate)
-
-            #     else:
-            #         # s_distance = Levenshtein.distance(searchCon, s_sentence)
-            #         match_rate = int(100 * textdistance.ratcliff_obershelp(searchCon, s_sentence))#round(float(len(searchCon)-s_distance)/len(searchCon)* 
-            #     if match_rate >= matchRate:
-            #         out_sequences.append({'source':s_sentence, 'target':t_sentence, 'tm_name':tm_name, 'match_rate':match_rate})
             for node in tmx_file.unit_iter():
                 sequence = node.getsource()
                 s_tokens = removeStopwords(sequence).split()
@@ -96,8 +80,6 @@ def cocondance_search(tm_objects, searchCon, matchRate, search_lang):
                 average_rate = int(average_rate / max(len(s_tokens), len(q_tokens)) * 100)
                 if average_rate >= matchRate:
                     out_sequences.append({'source':sequence, 'target': node.gettarget(), 'tm_name':tm_name, 'match_rate':average_rate})
-        # out_sequences.sort(key=compare_matchrate, reverse=True)
-
     out_sequences.sort(key=compare_matchrate, reverse=True)
     return out_sequences
 

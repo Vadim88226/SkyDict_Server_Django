@@ -249,13 +249,14 @@ $(function(){
                     action: function(){
                         _exam = e.target.parentElement.parentElement;
                         _frm = e.target.parentElement.parentElement.parentElement;
-                        if(e.target.parentElement.getAttribute("sent_id")) {
+                        _sent_id = _exam.getElementsByTagName('ul')[0].getAttribute("sent_id");
+                        if(_sent_id) {
                             // delete sentence
                             $.ajax({
                                 url: delete_sentence,
                                 headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
                                 data: {
-                                    'sent_id': e.target.parentElement.getAttribute("sent_id")
+                                    'sent_id':_sent_id
                                 },
                                 dataType: 'json',
                                 success: function (data) {
