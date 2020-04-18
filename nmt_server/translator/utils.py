@@ -86,7 +86,6 @@ def concordance_search(tm_objects, searchCon, matchRate, search_lang):
 
 # Concordance Search by SDL SDK
 def concordance_search_sdk(tm_objects, searchCon, matchRate, search_lang):
-    print(matchRate)
     out_sequences = []
     q_tokens = removeStopwords(searchCon).split()
     for tm_object in tm_objects:
