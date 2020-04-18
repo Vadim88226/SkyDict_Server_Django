@@ -1,5 +1,5 @@
 import re, json, os, linecache
-
+import subprocess 
 from langdetect import detect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
@@ -30,7 +30,7 @@ from .apps import TranslatorConfig
 from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSettingForm, UserDictForm
 from .tokens import account_activation_token
 from .models import DictWords, DictSentences, TransMemories, UserSetting
-from .utils import translate_sentences, translate_file, cocondance_search
+from .utils import translate_sentences, translate_file, concordance_search_sdk
 from .tables import tmTable, concordanceTable
 from .filters import tmFilter
 
@@ -459,7 +459,7 @@ def view_ConcordanceSearch(request):
     else:
         tm_objects = TransMemories.objects.filter(s_lang = s_lang)
     if searchCon:
-        search_result = cocondance_search(tm_objects, searchCon, match_rate, search_lang= s_lang)
+        search_result = concordance_search_sdk(tm_objects, searchCon, match_rate, search_lang= s_lang)
     else:
         search_result = {}
     concordance_table = concordanceTable(search_result)
@@ -480,7 +480,7 @@ def update_UserSetting(request):
             form.save()
 
         searchCon = request.POST.get('searchCon', '')
-        return redirect("/concordance/?searchCon=" + searchCon)
+        return redirect("/concordance/?searchCondance=" + searchCon)
     else:
         own_settings=UserSetting.objects.get(user=request.user.id)
         form = UserSettingForm(instance=own_settings)
@@ -509,6 +509,27 @@ def upload_translationMemories(request):
         form = TransMemoryForm(request.POST, request.FILES)
         if form.is_valid():
             tm = form.save()
+            filename, file_extension = os.path.splitext(tm.file_url.name)
+            tm.sdltm_url.name = filename + ".sdltm"
+            tmx_url = os.path.join(settings.MEDIA_ROOT, tm.file_url.name)
+            sdltm_url = os.path.join(settings.MEDIA_ROOT, filename + ".sdltm")
+            exe_path = r"C:\\Program Files (x86)\\SDL\\SDL Trados Studio\\Studio15\\ImportTmx.exe"
+            s_lang = "en-US"
+            if tm.s_lang == "th":
+                s_lang = "th-TH"
+            t_lang = "en-US"
+            if tm.t_lang == "th":
+                t_lang = "th-TH"
+            cmd = [exe_path, sdltm_url, tmx_url, s_lang, t_lang] 
+            param = []
+            p = subprocess.Popen(cmd,
+                                    stdin=subprocess.PIPE,
+                                    stdout=subprocess.PIPE,
+                                    stderr=subprocess.PIPE,
+                                    universal_newlines=True,
+                                    encoding='utf-8')
+            out, err = p.communicate('\n'.join(map(str, param)))
+            tm.save()
         return redirect('/manipulate_TM/')
     else:
         form = TransMemoryForm(initial={'t_lang':'th'})

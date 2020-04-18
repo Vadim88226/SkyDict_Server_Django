@@ -31,6 +31,7 @@ class TransMemoryForm(forms.ModelForm):
     s_lang = forms.ChoiceField(label='Source Language: ', choices=s_language)
     t_lang = forms.ChoiceField(label='Target Language: ', choices=s_language)
     file_url = forms.FileField(label="File: ")
+    # sdltm_url = forms.FileField(label="File: ")
     name = forms.CharField(label="Name: ", widget=forms.TextInput(attrs={'placeholder':'Enter Name','class':'form-control'}))
     subject = forms.CharField(label="Subject: ", widget=forms.TextInput(attrs={'placeholder':'Enter Subject'}))
     note = forms.CharField(label="Note: ", widget=forms.Textarea(attrs={'rows': 5,'class':'form-control'}))

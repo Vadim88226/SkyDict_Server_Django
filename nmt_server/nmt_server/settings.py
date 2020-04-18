@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'material.admin.default',
     'crispy_forms',
     'translator.apps.TranslatorConfig',
+    'django_cleanup.apps.CleanupConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

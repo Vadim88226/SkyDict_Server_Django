@@ -1,5 +1,6 @@
 import re
-import os
+import ast
+import os, subprocess
 from pptx import Presentation
 from pptx.enum.action import PP_ACTION
 from docx import Document
@@ -20,7 +21,7 @@ def removeStopwords(text):
 def compare_matchrate(element):
     return element['match_rate']
 # cocondance search
-# def cocondance_search(tm_objects, searchCon, matchRate, search_lang):
+# def concordance_search(tm_objects, searchCon, matchRate, search_lang):
 #     out_sequences_per_tm = []
 #     for tm_object in tm_objects:
 #         tm_url = os.path.join(settings.MEDIA_ROOT, getattr(tm_object, 'file_url').name)
@@ -50,7 +51,7 @@ def compare_matchrate(element):
 #     return out_sequences_per_tm
 
 # # levenshtein match
-def cocondance_search(tm_objects, searchCon, matchRate, search_lang):
+def concordance_search(tm_objects, searchCon, matchRate, search_lang):
     # normalized_levenshtein = NormalizedLevenshtein()
     out_sequences = []
     q_tokens = removeStopwords(searchCon).split()
@@ -83,7 +84,32 @@ def cocondance_search(tm_objects, searchCon, matchRate, search_lang):
     out_sequences.sort(key=compare_matchrate, reverse=True)
     return out_sequences
 
-
+# Concordance Search by SDL SDK
+def concordance_search_sdk(tm_objects, searchCon, matchRate, search_lang):
+    print(matchRate)
+    out_sequences = []
+    q_tokens = removeStopwords(searchCon).split()
+    for tm_object in tm_objects:
+        tm_url = os.path.join(settings.MEDIA_ROOT, getattr(tm_object, 'sdltm_url').name)
+        tm_s_lang = getattr(tm_object, 's_lang')
+        tm_t_lang = getattr(tm_object, 't_lang')
+        tm_name = getattr(tm_object, 'name')
+        if os.path.isfile( tm_url):
+            exe_path = r"C:\\Program Files (x86)\\SDL\\SDL Trados Studio\\Studio15\\concordance_search.exe"
+            cmd = [exe_path, tm_url, "False",searchCon, "1000", str(matchRate)]
+            param = []
+            p = subprocess.Popen(cmd,
+                        stdin=subprocess.PIPE,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                        universal_newlines=True,
+                        encoding='utf-8')
+            searchResults, err = p.communicate('\n'.join(map(str, param)))
+            searchResults = ast.literal_eval(searchResults)
+            for result in searchResults:
+                out_sequences.append({'source':result.get("sourceTU"), 'target': result.get('targetTU'), 'tm_name':tm_name, 'match_rate':result.get("Match")})
+    out_sequences.sort(key=compare_matchrate, reverse=True)
+    return out_sequences
 
 # get filename and extention
 def get_nameNextention(url):

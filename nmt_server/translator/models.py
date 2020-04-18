@@ -24,6 +24,7 @@ class DictWords(models.Model):
     is_approved = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
     
 
 class DictSentences(models.Model):
@@ -32,7 +33,7 @@ class DictSentences(models.Model):
     s_sentence = models.TextField(blank=True)
     t_sentence = models.TextField(blank=True)
 
-class TransMemories(models.Model):
+class TransMemories(models.Model):    
     file_url = models.FileField(upload_to='concordances/')
     name = models.CharField(max_length=50,default='none')
     s_lang = models.CharField(max_length=5,default='en')
@@ -42,6 +43,7 @@ class TransMemories(models.Model):
     user = models.CharField(max_length=70, default='unknown')
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True)
+    sdltm_url = models.FileField(upload_to='concordances/')
 
 class UserSetting(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
