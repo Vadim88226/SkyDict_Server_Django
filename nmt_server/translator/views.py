@@ -526,8 +526,7 @@ def upload_translationMemories(request):
                                     stdin=subprocess.PIPE,
                                     stdout=subprocess.PIPE,
                                     stderr=subprocess.PIPE,
-                                    universal_newlines=True,
-                                    encoding='utf-8')
+                                    universal_newlines=True)
             out, err = p.communicate('\n'.join(map(str, param)))
             tm.save()
         return redirect('/manipulate_TM/')
