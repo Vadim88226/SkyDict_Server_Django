@@ -1,0 +1,105 @@
+{% block templates %}
+<!-- ============== Popup Template ================= -->
+
+<template id="login_MainSection_logo">
+    <div class="menu__login__banner">SkyDict Login</div>                
+    <form class="menu__login__form" method='POST' onsubmit="event.preventDefault(); return false;" novalidate='novalidate'>
+        {% csrf_token %}
+        <div class="text_input menu__login__form__email">
+            <input name='username' type='email'
+                autocomplete="username email" tabindex="10"
+                spellcheck="false" id='login_email' placeholder=" " required>
+                <label>Username</label>
+        </div>
+        <div class="text_input menu__login__form__pass">
+            <input name='password' type='password' autocomplete="current-password" dl-attr='value: $0.data_password'
+                tabindex="10" id='login_password' placeholder=" " required>
+            <label>Password</label>
+            <button type="button" class="menu__login__form__pass__forgot_logo" tabindex="10" >Forgot your password?</button>
+        </div>
+        <button class="menu__login__form__submit sky_button" tabindex="10"
+            >Log in</button>
+        <!-- <div class="menu__login__form__rememberme">
+            <label for="login_rememberme">
+                <input type="checkbox" name="login_rememberme" id="login_rememberme" dl-attr='value: $0.data_keepLogin' tabindex="10">
+                <span class="sky_form__checkbox"></span>
+                <span class="menu__login__form__rememberme__title">
+                    Remember me                    </span>
+            </label>
+        </div> -->
+    </form>
+    <div class='menu__error' id="menu__error"></div>
+    <a class="menu__login__signup_link sky_link sky_link--small sky_link--more menu_signup_link_logo" href="#">Sign up for SkyDict</a>
+</template>
+<!-- =============================== -->
+<template id="sign_MainSection_logo">
+    <div class="menu__login__banner" style="width: 227px;float: left;" >SkyDict SignUp</div>
+    <a class="sky_header_menu__nav_link menu__login_logo" style="float: left !important;width: 150px;" href="#">Back into Login</a>
+    <form class="menu__sign__form" style="margin-top:10px" method='POST' onsubmit="event.preventDefault(); return false;" novalidate='novalidate'>
+        {% csrf_token %}
+        <div class="text_input menu__login__form__signname">
+            <input class="" name='sign_username' type='text' placeholder=" "
+                tabindex="10" spellcheck="false" id='sign_username' required>
+            <label>Username</label>
+        </div>
+        <div class="text_input menu__login__form__name">
+            <input class="" name='firstname' type='text'
+                tabindex="10" spellcheck="false" id='firstname' >
+            <label>First name</label>
+        </div>
+        <div class="text_input menu__login__form__name">
+            <input class="" name='lastname' type='text'
+                tabindex="10" spellcheck="false" id='lastname'>
+            <Label>Last name</Label>
+        </div>
+        <div class="text_input menu__sign__form__email">
+            <input class="" name='sign_email' type='email'
+                autocomplete="email" tabindex="10" spellcheck="false"
+                id='sign_email' required placeholder=" ">
+            <label>Email address</label>
+        </div>
+        <div class="text_input menu__login__form__pass">
+            <input name='sign_password' type='password' dl-attr='value: $0.data_password'
+            tabindex="10" id='sign_password' required placeholder=" ">
+            <label>Password</label>
+        </div>
+        <div class="text_input menu__login__form__pass">
+            <input name='sign_confirm' type='password' dl-attr='value: $0.data_password'
+                tabindex="10" id='sign_confirm' required placeholder=" ">
+            <label>Password confirm</label>
+        </div>
+        <button class="menu__sign__form__submit sky_button" tabindex="10">Sign Up</button>
+        <!-- <div class="menu__sign__form__rememberme">
+            <label for="login_rememberme">
+                <input type="checkbox" name="sign_rememberme" id="sign_rememberme" tabindex="10">
+                <span class="sky_form__checkbox"></span>
+                <span class="menu__sign__form__rememberme__title"> Remember me </span>
+            </label>
+        </div> -->
+    </form>
+    <div class='menu__error' id="menu__error"></div>
+</template>
+<!-- =============================== -->
+<template id='ForgotPasswordSection_logo'>
+    <div class="menu__main_section" >
+        <a class="sky_header_menu__nav_link menu__login_logo" href="#">Back into Login</a>
+        <div class="menu__login__banner" style="width: 250px;" >Password reset</div>
+        <form class="menu__reset__form" method='POST' onsubmit="event.preventDefault(); return false;" novalidate='novalidate'>
+            <div class="text_input menu__login__form__email">
+                <input name='reset_email' type='email' autocomplete="username email"
+                    tabindex="10" spellcheck="false"
+                    id='reset_email' placeholder=" " required>
+                <label>Email address</label>
+            </div>
+            <button class="menu__reset__form__submit sky_button">Reset password</button>
+        </form>
+        <div class='menu__error'  id="menu__error"></div>
+    </div>
+    <div class="menu__footer_section">
+        <div class="menu__login__signup_text">No account yet?</div>
+        <a class="menu__login__signup_link sky_link sky_link--small sky_link--more menu_signup_link_logo" href="#">Sign up for SkyDict</a>
+    </div>
+</template>
+<!-- =============================== -->
+<audio class="my_audio" preload="none"><source id="sound_src" type="audio/mpeg"></audio>
+{% endblock templates %}

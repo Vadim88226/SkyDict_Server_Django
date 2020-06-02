@@ -442,9 +442,7 @@ def lexitron_list(request):
     return JsonResponse({'content': _list})
 
 def view_ConcordanceSearch(request):
-    print('=================2')
     sort = request.GET.get('sort', 'name')
-    print('=================1')
     searchCon = request.GET.get('searchCondance', '')
     if UserSetting.objects.filter(user=request.user.id).exists() == False:
         row = UserSetting(user=request.user, s_lang='en', t_lang='th', matchRate='50', ignoreTags=0)
@@ -537,10 +535,8 @@ def upload_translationMemories(request):
         return HttpResponse(form)
 
 
-def views_pos_validator(request):
-    print('=================2')
+def views_POSValidator(request):
     sort = request.GET.get('sort', 'name')
-    print('=================1')
     searchCon = request.GET.get('searchCondance', '')
     if UserSetting.objects.filter(user=request.user.id).exists() == False:
         row = UserSetting(user=request.user, s_lang='en', t_lang='th', matchRate='50', ignoreTags=0)
@@ -570,7 +566,7 @@ def views_pos_validator(request):
         'search_Form' : search_Form,
     })
 
-def views_corpus_validator(request):
+def views_CorpusValidator(request):
     sort = request.GET.get('sort', 'name')
     searchTM = request.GET.get('searchTM', '')
     delID = request.POST.getlist('check')
