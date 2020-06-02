@@ -289,13 +289,13 @@ label {
     position: relative;
     margin-top: 24px;
 }
-.menu__login__form__pass__forgot:focus, .menu__login__form__pass__forgot:active {
+.menu__login__form__pass__forgot, .menu__login__form__pass__forgot_logo:focus, .menu__login__form__pass__forgot, .menu__login__form__pass__forgot_logo:active {
     outline: none;
 }
-.menu__login__form__pass__forgot:hover {
+.menu__login__form__pass__forgot, .menu__login__form__pass__forgot_logo:hover {
     color: #006494;
 }
-.menu__login__form__pass__forgot {
+.menu__login__form__pass__forgot, .menu__login__form__pass__forgot_logo {
     position: absolute;
     right: -4px;
     top: calc(100% - 4px);

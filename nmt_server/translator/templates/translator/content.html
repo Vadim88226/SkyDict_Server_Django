@@ -1,5 +1,9 @@
 {% extends 'translator/index.html' %}
+
 {% block content %}
+
+{% if request.user.is_authenticated %}
+
 <!-- ============================== Translator ============================== -->
 <div id='ET_translator' class='ET ET--empty_source sky_top_element--wide ET--web'>
     <div class='sides_container'>
@@ -122,5 +126,47 @@
         </div>
     </div>
 </div>
+{% else %}
+
+    <div id='index_logo' >
+        <div class="menu_overlay_logo"></div>
+        <center>
+            <div id="menu_logo" class="menu_logo" dl-test="menu-site">
+
+                {% comment %} login start div  {% endcomment %}
+                <div class="menu__login__banner">SkyDict Login</div>                
+                <form class="menu__login__form" style="margin-top: 10px;" method='POST' onsubmit="event.preventDefault(); return false;" novalidate='novalidate'>
+                    {% csrf_token %}
+                    <div class="text_input menu__login__form__email">
+                        <input name='username' type='email'
+                            autocomplete="username email" tabindex="10"
+                            spellcheck="false" id='login_email' placeholder=" " required>
+                            <label>Username</label>
+                    </div>
+                    <div class="text_input menu__login__form__pass">
+                        <input name='password' type='password' autocomplete="current-password" dl-attr='value: $0.data_password'
+                            tabindex="10" id='login_password' placeholder=" " required>
+                        <label>Password</label>
+                        <button type="button" class="menu__login__form__pass__forgot_logo" tabindex="10" >Forgot your password?</button>
+                    </div>
+                    <button class="menu__login__form__submit sky_button" tabindex="10">Log in</button>
+                    <!-- <div class="menu__login__form__rememberme">
+                        <label for="login_rememberme">
+                            <input type="checkbox" name="login_rememberme" id="login_rememberme" dl-attr='value: $0.data_keepLogin' tabindex="10">
+                            <span class="sky_form__checkbox"></span>
+                            <span class="menu__login__form__rememberme__title">
+                                Remember me                    </span>
+                        </label>
+                    </div> -->
+                </form>
+                <div class='menu__error' id="menu__error"></div>
+                <a class="menu__login__signup_link sky_link sky_link--small sky_link--more menu_signup_link_logo" href="#">Sign up for SkyDict</a>
+                {% comment %} login end div  {% endcomment %}
+                
+            </div>
+        </center>
+    </div>
+{% endif %}
+
 {% endblock content %}
 <!-- =============================== -->

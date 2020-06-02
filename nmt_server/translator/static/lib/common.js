@@ -152,9 +152,22 @@ $(function(){
         document.body.appendChild(clone);
         setTimeout(function(){ document.getElementById("login_email").focus();} , 0);
     });
+
+   
     $(document).on('click',".menu__login", function() { 
         $("#menu_login").click();
     });
+
+    $(document).on('click',".menu__login_logo", function() { 
+        // console.log('========1')
+        // $("#menu_login_logo").click();
+        console.log('========2')
+        var t = document.querySelector('#login_MainSection_logo');
+        var clone = document.importNode(t.content, true);
+        $('#menu_logo').html(clone);
+        setTimeout(function(){ document.getElementById("login_email").focus();} , 0);
+    });
+
     $(document).on('click',".menu_signup_link", function(){
         $(".PopupMenu").remove();
         var t = document.querySelector('#sign_MainSection');
@@ -162,6 +175,21 @@ $(function(){
         document.body.appendChild(clone);
         setTimeout(function(){ document.getElementById("sign_username").focus();} , 0);
     });
+
+
+   
+    $(document).on('click',".menu_signup_link_logo", function(){
+        // $(".PopupMenu").remove();
+        var t = document.querySelector('#sign_MainSection_logo');
+        var clone = document.importNode(t.content, true);
+        $('#menu_logo').html(clone);
+        setTimeout(function(){ document.getElementById("sign_username").focus();} , 0);
+    });
+    
+
+
+
+
     $(document).on('click',".menu__login__form__pass__forgot", function(){
         $(".PopupMenu").remove();
         var t = document.querySelector('#ForgotPasswordSection');
@@ -169,6 +197,17 @@ $(function(){
         document.body.appendChild(clone);
         setTimeout(function(){ document.getElementById("reset_email").focus();} , 0);
     });
+
+    $(document).on('click',".menu__login__form__pass__forgot_logo", function(){
+        console.log('=========3')
+        $(".PopupMenu").remove();
+        var t = document.querySelector('#ForgotPasswordSection_logo');
+        var clone = document.importNode(t.content, true);
+        // document.body.appendChild(clone);
+        $('#menu_logo').html(clone);
+        setTimeout(function(){ document.getElementById("reset_email").focus();} , 0);
+    });
+
     $(document).on('click',".menu__sign__form__submit", function(){
         var email = $("#sign_email").val();
         var uname = $("#sign_username").val();

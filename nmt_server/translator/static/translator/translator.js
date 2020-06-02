@@ -276,6 +276,7 @@ $(function(){
         var clone = document.importNode(t.content, true);
         document.body.appendChild(clone);
     });
+
     $(document).on('click',".menu__sign__form__submit", function(){
         var email = $("#sign_email").val();
         var uname = $("#sign_username").val();
@@ -389,6 +390,9 @@ $(function(){
         document.getElementById('wordDict_help_popup').style.display = "none";
     });
     $(document).on('click',"html", function(e){
-        document.getElementById('wordDict_help_popup').style.display = "none";
+        if(document.getElementById('wordDict_help_popup') != null){
+             document.getElementById('wordDict_help_popup').style.display = "none";
+        }
+       
     });
 });
