@@ -35,7 +35,7 @@ from .tables import tmTable, concordanceTable
 from .filters import tmFilter
 
 
-class IndexView(generic.TemplateView):
+class IndexView(generic.TemplateView): 
     template_name = 'translator/content.html'
 
 # display Dictionary Page
@@ -442,14 +442,16 @@ def lexitron_list(request):
     return JsonResponse({'content': _list})
 
 def view_ConcordanceSearch(request):
+    print('=================2')
     sort = request.GET.get('sort', 'name')
+    print('=================1')
     searchCon = request.GET.get('searchCondance', '')
     if UserSetting.objects.filter(user=request.user.id).exists() == False:
         row = UserSetting(user=request.user, s_lang='en', t_lang='th', matchRate='50', ignoreTags=0)
         row.save()
 
     own_settings=UserSetting.objects.get(user=request.user.id)
-
+    
     s_lang = own_settings.s_lang
     t_lang = own_settings.t_lang
     match_rate = own_settings.matchRate
@@ -465,8 +467,8 @@ def view_ConcordanceSearch(request):
     concordance_table = concordanceTable(search_result)
 
     search_Form = SearchForm(initial={'searchCondance':searchCon})
-    # concordance_table = concordanceTable(TransMemories.objects.filter(name__contains=searchCon).order_by(sort))
-
+    concordance_table = concordanceTable(TransMemories.objects.filter(name__contains=searchCon).order_by(sort))
+    
     return render(request, "concordance/content.html", {
         'concordance_table': concordance_table, 
         'search_Form' : search_Form,
@@ -533,3 +535,55 @@ def upload_translationMemories(request):
     else:
         form = TransMemoryForm(initial={'t_lang':'th'})
         return HttpResponse(form)
+
+
+def views_pos_validator(request):
+    print('=================2')
+    sort = request.GET.get('sort', 'name')
+    print('=================1')
+    searchCon = request.GET.get('searchCondance', '')
+    if UserSetting.objects.filter(user=request.user.id).exists() == False:
+        row = UserSetting(user=request.user, s_lang='en', t_lang='th', matchRate='50', ignoreTags=0)
+        row.save()
+
+    own_settings=UserSetting.objects.get(user=request.user.id)
+    
+    s_lang = own_settings.s_lang
+    t_lang = own_settings.t_lang
+    match_rate = own_settings.matchRate
+    tm_objects = None
+    if s_lang == 'all':
+        tm_objects = TransMemories.objects.all()
+    else:
+        tm_objects = TransMemories.objects.filter(s_lang = s_lang)
+    if searchCon:
+        search_result = concordance_search_sdk(tm_objects, searchCon, match_rate, search_lang= s_lang)
+    else:
+        search_result = {}
+    concordance_table = concordanceTable(search_result)
+
+    search_Form = SearchForm(initial={'searchCondance':searchCon})
+    concordance_table = concordanceTable(TransMemories.objects.filter(name__contains=searchCon).order_by(sort))
+    
+    return render(request, "validator/content.html", {
+        'concordance_table': concordance_table, 
+        'search_Form' : search_Form,
+    })
+
+def views_corpus_validator(request):
+    sort = request.GET.get('sort', 'name')
+    searchTM = request.GET.get('searchTM', '')
+    delID = request.POST.getlist('check')
+    for _id in delID:
+        try:
+            TransMemories.objects.get(id = _id).delete()
+        except:
+            print("An exception occurred")
+
+    table = tmTable(TransMemories.objects.filter(name__contains=searchTM).order_by(sort))
+    search_Form = SearchForm(initial={'searchTM':searchTM})
+
+    return render(request, "validator/transMemories.html", {
+        'table': table, 
+        'search_Form':search_Form
+        })
