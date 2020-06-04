@@ -51,3 +51,24 @@ class UserSetting(models.Model):
     t_lang = models.CharField(max_length=5,default='th')
     matchRate = models.IntegerField(default=50)
     ignoreTags = models.BooleanField(default=False)
+
+class BilingualCorpus(models.Model):
+    file_url = models.FileField(upload_to='corpus_files/')
+    name = models.CharField(max_length=50,default='none')
+    s_lang = models.CharField(max_length=5,default='en')
+    t_lang = models.CharField(max_length=5,default='th')
+    note = models.TextField(blank=True)
+    user = models.CharField(max_length=70, default='unknown')
+    created_at = models.DateTimeField(auto_now_add=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True)
+
+class POSTaggedCorpus(models.Model):
+    file_url = models.FileField(upload_to='corpus_files/')
+    tagged_file_url = models.FileField(upload_to='pos_tagged_files/')
+    name = models.CharField(max_length=50,default='none')
+    s_lang = models.CharField(max_length=5,default='en')
+    t_lang = models.CharField(max_length=5,default='th')
+    note = models.TextField(blank=True)
+    user = models.CharField(max_length=70, default='unknown')
+    created_at = models.DateTimeField(auto_now_add=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True)

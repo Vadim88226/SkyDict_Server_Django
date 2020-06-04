@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import TransMemories, UserSetting
+from .models import TransMemories, UserSetting, BilingualCorpus, POSTaggedCorpus
 
 class SignupForm(UserCreationForm):
     class Meta:
@@ -54,4 +54,34 @@ class UserSettingForm(forms.ModelForm):
     class Meta:
         model = UserSetting
         fields = ['user', 's_lang', 't_lang', 'ignoreTags', 'matchRate']
+
+     
+class BilingualCorpusForm(forms.ModelForm):
+    s_language = [('en', 'English'), ('th','Thai')]
+    s_lang = forms.ChoiceField(label='Source Language: ', choices=s_language)
+    t_lang = forms.ChoiceField(label='Target Language: ', choices=s_language)
+    file_url = forms.FileField(label="File: ")
+    # sdltm_url = forms.FileField(label="File: ")
+    name = forms.CharField(label="Name: ", widget=forms.TextInput(attrs={'placeholder':'Enter Name','class':'form-control'}))
+    # subject = forms.CharField(label="Subject: ", widget=forms.TextInput(attrs={'placeholder':'Enter Subject'}))
+    note = forms.CharField(label="Note: ", widget=forms.Textarea(attrs={'rows': 5,'class':'form-control'}))
+    user = forms.CharField(label='', widget=forms.HiddenInput())
+    class Meta:
+        model = BilingualCorpus
+        fields = ['name', 's_lang', 't_lang', 'file_url', 'user', 'note']
+
+class POSTaggedCorpusForm(forms.ModelForm):
+    s_language = [('en', 'English'), ('th','Thai')]
+    s_lang = forms.ChoiceField(label='Source Language: ', choices=s_language)
+    t_lang = forms.ChoiceField(label='Target Language: ', choices=s_language)
+    file_url = forms.FileField(label="File: ")
+    tagged_file_url = forms.FileField(label="File: ")
+    name = forms.CharField(label="Name: ", widget=forms.TextInput(attrs={'placeholder':'Enter Name','class':'form-control'}))
+    # subject = forms.CharField(label="Subject: ", widget=forms.TextInput(attrs={'placeholder':'Enter Subject'}))
+    note = forms.CharField(label="Note: ", widget=forms.Textarea(attrs={'rows': 5,'class':'form-control'}))
+    user = forms.CharField(label='', widget=forms.HiddenInput())
+    print(POSTaggedCorpus)
+    class Meta:
+        model = POSTaggedCorpus
+        fields = ['name',  's_lang', 't_lang', 'file_url', 'tagged_file_url', 'user', 'note']
 

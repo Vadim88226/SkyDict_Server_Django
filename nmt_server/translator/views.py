@@ -13,42 +13,59 @@ from django.utils import timezone
 from translator.translation_model.processing import evaluate
 from django.contrib.auth import views as auth_views
 from django.views.decorators.csrf import requires_csrf_token
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
+from django.core.exceptions import PermissionDenied
 from django.db.models import Count, Max
 from django.views.generic import ListView
+
+
 
 from django_tables2 import MultiTableMixin, RequestConfig, SingleTableMixin, SingleTableView, tables
 from django_tables2.export.views import ExportMixin
 from django_tables2.paginators import LazyPaginator
 
 from .apps import TranslatorConfig
-from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSettingForm, UserDictForm
+from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSettingForm, UserDictForm, BilingualCorpusForm, POSTaggedCorpusForm
 from .tokens import account_activation_token
-from .models import DictWords, DictSentences, TransMemories, UserSetting
+from .models import DictWords, DictSentences, TransMemories, UserSetting, BilingualCorpus, POSTaggedCorpus
 from .utils import translate_sentences, translate_file, concordance_search_sdk
-from .tables import tmTable, concordanceTable
+from .tables import tmTable, concordanceTable, CorpusFileTable, POSTaggedFileTable
 from .filters import tmFilter
 
 
 class IndexView(generic.TemplateView): 
     template_name = 'translator/content.html'
 
+
+
+def login_required(function):
+    """ this function is a decorator used to authorize if a user is admin """
+    def wrap(request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return function(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
+    return wrap    
+
 # display Dictionary Page
+@login_required
 def view_Dictionary(request):
     search_Form = SearchForm()
     return render(request, 'dictionary/content.html', {'search_Form': search_Form})
 
 # display User_Words Page
+@login_required
 def view_AddWords(request):
     search_Form = SearchForm()
     add_words_form = AddWordsForm(initial={'t_lang': 'th'})
     return render(request, 'user_words/content.html', {'search_Form': search_Form, 'add_words_form': add_words_form})
-
+@login_required
 def view_user_dictionary(request):
     search_Form = SearchForm()
     user_dict_form = UserDictForm(initial={'t_lang': 'th'})
@@ -134,7 +151,6 @@ def trans_sentences(request):
     sentences = request.GET.get('seltext', '')
     s_lang = request.GET.get('sl', '')
     t_lang = request.GET.get('tl', '')
-    # print(sentences)
     if s_lang == t_lang:
         selectedText = sentences.strip()
         data = {
@@ -441,10 +457,9 @@ def lexitron_list(request):
             return JsonResponse({'content': _list})
     return JsonResponse({'content': _list})
 
+@login_required
 def view_ConcordanceSearch(request):
-    print('=================2')
     sort = request.GET.get('sort', 'name')
-    print('=================1')
     searchCon = request.GET.get('searchCondance', '')
     if UserSetting.objects.filter(user=request.user.id).exists() == False:
         row = UserSetting(user=request.user, s_lang='en', t_lang='th', matchRate='50', ignoreTags=0)
@@ -487,7 +502,8 @@ def update_UserSetting(request):
         own_settings=UserSetting.objects.get(user=request.user.id)
         form = UserSettingForm(instance=own_settings)
         return HttpResponse(form)
-
+    
+@login_required
 def manipulate_TM(request):
     sort = request.GET.get('sort', 'name')
     searchTM = request.GET.get('searchTM', '')
@@ -537,53 +553,68 @@ def upload_translationMemories(request):
         return HttpResponse(form)
 
 
-def views_pos_validator(request):
-    print('=================2')
-    sort = request.GET.get('sort', 'name')
-    print('=================1')
-    searchCon = request.GET.get('searchCondance', '')
-    if UserSetting.objects.filter(user=request.user.id).exists() == False:
-        row = UserSetting(user=request.user, s_lang='en', t_lang='th', matchRate='50', ignoreTags=0)
-        row.save()
-
-    own_settings=UserSetting.objects.get(user=request.user.id)
     
-    s_lang = own_settings.s_lang
-    t_lang = own_settings.t_lang
-    match_rate = own_settings.matchRate
-    tm_objects = None
-    if s_lang == 'all':
-        tm_objects = TransMemories.objects.all()
-    else:
-        tm_objects = TransMemories.objects.filter(s_lang = s_lang)
-    if searchCon:
-        search_result = concordance_search_sdk(tm_objects, searchCon, match_rate, search_lang= s_lang)
-    else:
-        search_result = {}
-    concordance_table = concordanceTable(search_result)
-
-    search_Form = SearchForm(initial={'searchCondance':searchCon})
-    concordance_table = concordanceTable(TransMemories.objects.filter(name__contains=searchCon).order_by(sort))
-    
-    return render(request, "validator/content.html", {
-        'concordance_table': concordance_table, 
-        'search_Form' : search_Form,
-    })
-
-def views_corpus_validator(request):
+@login_required
+def views_CorpusValidator(request):
     sort = request.GET.get('sort', 'name')
-    searchTM = request.GET.get('searchTM', '')
+    search_word = request.GET.get('searchWord', '')
     delID = request.POST.getlist('check')
+        
     for _id in delID:
         try:
-            TransMemories.objects.get(id = _id).delete()
+            BilingualCorpus.objects.get(id = _id).delete()
         except:
             print("An exception occurred")
 
-    table = tmTable(TransMemories.objects.filter(name__contains=searchTM).order_by(sort))
-    search_Form = SearchForm(initial={'searchTM':searchTM})
-
-    return render(request, "validator/transMemories.html", {
+    table = CorpusFileTable(BilingualCorpus.objects.filter(name__contains=search_word).order_by(sort))
+    search_Form = SearchForm(initial={'searchWord':search_word})
+    
+    return render(request, "validator/corpusvalidator.html", {
         'table': table, 
         'search_Form':search_Form
         })
+    
+@login_required    
+def views_POSValidator(request):
+    sort = request.GET.get('sort', 'name')
+    search_word = request.GET.get('searchTM', '')
+    delID = request.POST.getlist('check')
+    for _id in delID:
+        try:
+            POSTaggedCorpus.objects.get(id = _id).delete()
+        except:
+            print("An exception occurred")
+
+    table = POSTaggedFileTable(POSTaggedCorpus.objects.filter(name__contains=search_word).order_by(sort))
+    search_Form = SearchForm(initial={'searchWord':search_word})    
+    
+
+
+    return render(request, "validator/posvalidator.html", {
+        'table': table, 
+        'search_Form': search_Form
+        })
+    
+
+    
+
+def upload_CorpusFile(request):
+    if request.method == 'POST':
+        form = BilingualCorpusForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+        return redirect('/corpus_validator/')
+    else:
+        form = BilingualCorpusForm(initial={'t_lang':'th'})
+        return HttpResponse(form)
+    
+def upload_POSTaggedFile(request):
+    if request.method == 'POST':
+        form = POSTaggedCorpusForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+        return redirect('/pos_validator/')
+    else:
+        form = POSTaggedCorpusForm(initial={'t_lang':'th'})
+        return HttpResponse(form)
+

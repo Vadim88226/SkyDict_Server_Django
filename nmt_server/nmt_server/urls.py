@@ -35,9 +35,10 @@ urlpatterns = [
     path('account_activation_sent/', views.account_activation_sent, name='account_activation_sent'),
     path('activate/<uidb64>/<token>/', views.activate, name='activate'),
     path('upload_translationMemories/', views.upload_translationMemories, name='upload_translationMemories'),
-    # new part
-    path('corpus_validator/', views.views_corpus_validator, name='upload_translationMemories'),
-    path('pos_validator/', views.views_pos_validator, name='upload_translationMemories'),
+    path('upload_POSTaggedFile/', views.upload_POSTaggedFile, name='upload_POSTaggedFile'),
+    path('upload_CorpusFile/', views.upload_CorpusFile, name='upload_CorpusFile'),
+    path('corpus_validator/', views.views_CorpusValidator, name='views_CorpusValidator'),
+    path('pos_validator/', views.views_POSValidator, name='views_CorpusValidator'),
 ]
 
 

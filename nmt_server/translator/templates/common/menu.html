@@ -1,45 +1,37 @@
-{% block menu %}
-{% if request.user.is_authenticated %}
+{% block menu %} {% if request.user.is_authenticated %}
 <nav class="navbar navbar-default">
     <div class="container-fluid container">
         <a class="navbar-brand" href="/translator">SkyDict</a>
         <span class="header_menu_separator"></span>
         <div class="navbar-nav navbar-item">
-            
-            <div class = "nav-left navbar-item"> 
-                {% if request.get_full_path == "/translator/" or request.get_full_path|length|get_digit:"-1" == 1 %}
-                <a href="/translator" style="color:black">Translator</a>
-                <a href="/dictionary">Dictionary</a> 
-                <a href="/corpus_validator" style="color:black">validator</a> 
-                {% else %}
-                <a href="/translator" >Translator</a>
-                <a href="/dictionary" style="color:black">Dictionary</a> 
-                <a href="/corpus_validator" style="color:black">validator</a> 
-                {% endif %}
+
+            <div class="nav-left navbar-item">
+                <a href="/translator" class="translator">Translator</a>
+                <a href="/dictionary" class="dictionary">Dictionary</a>
+                <a href="/corpus_validator" class="validator">Validator</a>
+
             </div>
 
             <div class="nav-right navbar-item">
                 {% comment %} {% if not request.user.is_authenticated %}
-                <a id="menu_login_nologo" href="#" ><span class="glyphicon glyphicon-user"></span> Login </a>
-                {% else %} {% endcomment %}
+                <a id="menu_login_nologo" href="#"><span class="glyphicon glyphicon-user"></span> Login </a> {% else %} {% endcomment %}
                 <ul class="nav navbar-left">
                     <li>
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <span class="glyphicon glyphicon-user"></span> {{request.user.username}}
-                                <input type="hidden" id="U_name" value="{{request.user.username}}"/>
-                                <input type="hidden" id="U_staff" value="{{request.user.is_staff}}"/>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class='main_menu'><a href="#" id='menu_logout'>Logout</a></li>
-                            </ul>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="glyphicon glyphicon-user"></span> {{request.user.username}}
+                            <input type="hidden" id="U_name" value="{{request.user.username}}" />
+                            <input type="hidden" id="U_staff" value="{{request.user.is_staff}}" />
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class='main_menu'><a href="#" id='menu_logout'>Logout</a></li>
+                        </ul>
                     </li>
                 </ul>
                 {% comment %} {% endif %} {% endcomment %}
-               
+
                 <a id="menu_any" href="#"><span class="glyphicon glyphicon-menu-hamburger"></a>
             </div>
         </div>
     </div>
-  </nav>
-{% endif %}
-{% endblock menu %}
+</nav>
+{% endif %} {% endblock menu %}
