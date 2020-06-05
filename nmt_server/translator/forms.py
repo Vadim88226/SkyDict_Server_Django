@@ -60,7 +60,7 @@ class BilingualCorpusForm(forms.ModelForm):
     s_language = [('en', 'English'), ('th','Thai')]
     s_lang = forms.ChoiceField(label='Source Language: ', choices=s_language)
     t_lang = forms.ChoiceField(label='Target Language: ', choices=s_language)
-    file_url = forms.FileField(label="File: ")
+    file_url = forms.FileField(label="File: ", widget=forms.FileInput(attrs={'type':'file','accept':".txt, .csv, .xlsx, .tmx"}), )
     # sdltm_url = forms.FileField(label="File: ")
     name = forms.CharField(label="Name: ", widget=forms.TextInput(attrs={'placeholder':'Enter Name','class':'form-control'}))
     # subject = forms.CharField(label="Subject: ", widget=forms.TextInput(attrs={'placeholder':'Enter Subject'}))
@@ -74,8 +74,8 @@ class POSTaggedCorpusForm(forms.ModelForm):
     s_language = [('en', 'English'), ('th','Thai')]
     s_lang = forms.ChoiceField(label='Source Language: ', choices=s_language)
     t_lang = forms.ChoiceField(label='Target Language: ', choices=s_language)
-    file_url = forms.FileField(label="File: ")
-    tagged_file_url = forms.FileField(label="File: ")
+    file_url = forms.FileField(label="File: ", widget=forms.TextInput(attrs={'type':'file', 'accept':".txt, .csv, .xlsx, .tmx"}))
+    tagged_file_url = forms.FileField(label="File: ", widget=forms.TextInput(attrs={'type':'file','accept':".txt, .csv, .xlsx, .tmx"}))
     name = forms.CharField(label="Name: ", widget=forms.TextInput(attrs={'placeholder':'Enter Name','class':'form-control'}))
     # subject = forms.CharField(label="Subject: ", widget=forms.TextInput(attrs={'placeholder':'Enter Subject'}))
     note = forms.CharField(label="Note: ", widget=forms.Textarea(attrs={'rows': 5,'class':'form-control'}))
@@ -85,3 +85,6 @@ class POSTaggedCorpusForm(forms.ModelForm):
         model = POSTaggedCorpus
         fields = ['name',  's_lang', 't_lang', 'file_url', 'tagged_file_url', 'user', 'note']
 
+
+class SearchFIleNameForm(forms.Form):
+    searchname = forms.CharField(label='',required=False, widget=forms.TextInput(attrs={'placeholder': 'Enter Name','autofocus':True, 'autocomplete': 'off'} ))

@@ -44,7 +44,8 @@ class concordanceTable(tables.Table):
         template_name = "django_tables2/bootstrap-responsive.html"
         attrs = {"class": "table table-hover paleblue"}
 
-class CorpusFileTable(tables.Table):
+    
+class BilingualCorpusTable(tables.Table):
     check = MaterializeCheckColumn(accessor='id', attrs={"td":{'class': 'match_rate'}})
     counter = tables.Column(verbose_name='#', empty_values=(), orderable=False)
     name = tables.Column(verbose_name='Name')
@@ -56,15 +57,16 @@ class CorpusFileTable(tables.Table):
         model = BilingualCorpus
         template_name = "django_tables2/bootstrap-responsive.html"
         fields = ('counter', 'name', 's_lang', 'file_url', 'user', 'check')
-        attrs = {"class": "table table-hover paleblue", 'id':'corpusfiletable'}
+        attrs = {"class": "table table-hover paleblue", "id": "corpusfilecontenttable"}
     def render_counter(self):
         self.row_counter = getattr(self, 'row_counter', itertools.count(1))
         return next(self.row_counter)
     def render_s_lang(self, value, record):
         return mark_safe('''%s > %s''' % (value.upper(), record.t_lang.upper()))
+
+   
     
-    
-class POSTaggedFileTable(tables.Table):
+class POSTaggedCorpusTable(tables.Table):
     check = MaterializeCheckColumn(accessor='id', attrs={"td":{'class': 'match_rate'}})
     counter = tables.Column(verbose_name='#', empty_values=(), orderable=False)
     name = tables.Column(verbose_name='Name')
@@ -83,6 +85,5 @@ class POSTaggedFileTable(tables.Table):
         return next(self.row_counter)
     def render_s_lang(self, value, record):
         return mark_safe('''%s > %s''' % (value.upper(), record.t_lang.upper()))
-    def render_tagged_file_url(self, value, record):
-        return mark_safe('<a href="%s/%s" > %s</a>' % (settings.MEDIA_ROOT ,value, value))
+
 
