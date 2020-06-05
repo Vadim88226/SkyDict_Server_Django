@@ -7,6 +7,8 @@ from docx import Document
 from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from lxml import etree
 from translator.translation_model.processing import evaluate, normalizeString, normalizeString_fix
+from .models import BilingualCorpus, POSTaggedCorpus, BilingualSentence, POSTaggedSentence
+
 from .apps import TranslatorConfig
 from django.conf import settings
 from translate.storage.tmx import tmxfile

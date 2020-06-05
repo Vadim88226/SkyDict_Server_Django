@@ -56,7 +56,7 @@ class CorpusFileTable(tables.Table):
         model = BilingualCorpus
         template_name = "django_tables2/bootstrap-responsive.html"
         fields = ('counter', 'name', 's_lang', 'file_url', 'user', 'check')
-        attrs = {"class": "table table-hover paleblue"}
+        attrs = {"class": "table table-hover paleblue", 'id':'corpusfiletable'}
     def render_counter(self):
         self.row_counter = getattr(self, 'row_counter', itertools.count(1))
         return next(self.row_counter)

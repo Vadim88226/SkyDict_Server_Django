@@ -33,7 +33,7 @@ from django_tables2.paginators import LazyPaginator
 from .apps import TranslatorConfig
 from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSettingForm, UserDictForm, BilingualCorpusForm, POSTaggedCorpusForm
 from .tokens import account_activation_token
-from .models import DictWords, DictSentences, TransMemories, UserSetting, BilingualCorpus, POSTaggedCorpus
+from .models import DictWords, DictSentences, TransMemories, UserSetting, CorpusStatus, BilingualCorpus, POSTaggedCorpus, BilingualSentence, POSTaggedSentence
 from .utils import translate_sentences, translate_file, concordance_search_sdk
 from .tables import tmTable, concordanceTable, CorpusFileTable, POSTaggedFileTable
 from .filters import tmFilter
@@ -553,8 +553,6 @@ def upload_translationMemories(request):
         form = TransMemoryForm(initial={'t_lang':'th'})
         return HttpResponse(form)
 
-
-    
 @login_required
 def views_CorpusValidator(request):
     sort = request.GET.get('sort', 'name')
@@ -574,8 +572,8 @@ def views_CorpusValidator(request):
         'table': table, 
         'search_Form':search_Form
         })
-    
-@login_required    
+
+@login_required
 def views_POSValidator(request):
     sort = request.GET.get('sort', 'name')
     search_word = request.GET.get('searchTM', '')
@@ -587,17 +585,13 @@ def views_POSValidator(request):
             print("An exception occurred")
 
     table = POSTaggedFileTable(POSTaggedCorpus.objects.filter(name__contains=search_word).order_by(sort))
-    search_Form = SearchForm(initial={'searchWord':search_word})    
-    
-
+    search_Form = SearchForm(initial={'searchWord':search_word})
 
     return render(request, "validator/posvalidator.html", {
         'table': table, 
         'search_Form': search_Form
         })
-    
 
-    
 
 def upload_CorpusFile(request):
     if request.method == 'POST':
@@ -605,9 +599,12 @@ def upload_CorpusFile(request):
         form = BilingualCorpusForm(request.POST, request.FILES)
         if form.is_valid():
             corpus = form.save(commit=False)
+            print(request.user)
             corpus.user = request.user
             copus.save()
             filename, file_extension = os.path.splitext(corpus.file_url.name)
+
+
 
         return redirect('/corpus_validator/')
     else:
