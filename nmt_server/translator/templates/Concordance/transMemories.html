@@ -57,7 +57,7 @@
         <div style='margin-top:18px'>New Translation Memory</div>
         <hr>
         {% csrf_token %}
-        <input type="hidden" id="user" name="user" value="{{request.user.username}}"/>
+        <input type="hidden" id="user" name="user" value="{{request.user}}"/>
         <table>
             <tr><td>File: </td><td class='file_url'></td></tr>
             <tr><td>Name: </td><td class='name'></td></tr>
