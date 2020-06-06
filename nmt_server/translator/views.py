@@ -35,7 +35,7 @@ from .apps import TranslatorConfig
 from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSettingForm, UserDictForm, BilingualCorpusForm, POSTaggedCorpusForm, SearchFIleNameForm
 from .tokens import account_activation_token
 from .models import DictWords, DictSentences, TransMemories, UserSetting, CorpusStatus, BilingualCorpus, POSTaggedCorpus, BilingualSentence, POSTaggedSentence
-from .utils import translate_sentences, translate_file, concordance_search_sdk
+from .utils import translate_sentences, translate_file, concordance_search_sdk, store_Corpus_Sentences
 from .tables import tmTable, concordanceTable, BilingualCorpusTable, POSTaggedCorpusTable
 from .filters import tmFilter
 
@@ -613,9 +613,10 @@ def upload_CorpusFile(request):
             corpus = form.save(commit=False)
             corpus.user = User.objects.get(pk = request.user.id)
             corpus.save()
-            filename, file_extension = os.path.splitext(corpus.file_url.name)
 
-
+            print(corpus)
+            
+            valid = store_Corpus_Sentences(corpus, corpus.file_url.name)
 
         return redirect('/corpus_validator/')
     else:

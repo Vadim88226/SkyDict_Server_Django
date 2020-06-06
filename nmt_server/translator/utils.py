@@ -1,5 +1,6 @@
 import re
 import ast
+import csv
 import os, subprocess
 from pptx import Presentation
 from pptx.enum.action import PP_ACTION
@@ -7,7 +8,7 @@ from docx import Document
 from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from lxml import etree
 from translator.translation_model.processing import evaluate, normalizeString, normalizeString_fix
-from .models import BilingualCorpus, POSTaggedCorpus, BilingualSentence, POSTaggedSentence
+from .models import BilingualCorpus, POSTaggedCorpus, BilingualSentence, POSTaggedSentence, CorpusStatus
 
 from .apps import TranslatorConfig
 from django.conf import settings
@@ -22,36 +23,6 @@ def removeStopwords(text):
     return ' '.join([word for word in text.split() if word not in cachedStopWords])
 def compare_matchrate(element):
     return element['match_rate']
-# cocondance search
-# def concordance_search(tm_objects, searchCon, matchRate, search_lang):
-#     out_sequences_per_tm = []
-#     for tm_object in tm_objects:
-#         tm_url = os.path.join(settings.MEDIA_ROOT, getattr(tm_object, 'file_url').name)
-#         print(os.path.join(settings.MEDIA_ROOT, tm_url))
-#         tm_s_lang = getattr(tm_object, 's_lang')
-#         tm_t_lang = getattr(tm_object, 't_lang')
-#         tm_name = getattr(tm_object, 'name')
-#         if os.path.isfile( tm_url):
-#             fin = open(tm_url, 'rb')
-#             tmx_file = tmxfile(fin, tm_s_lang, tm_t_lang)
-#             if search_lang == "all":
-#                 pass
-#             else:
-#                 source_sequences = []
-#                 target_sequences = []
-#                 for node in tmx_file.unit_iter():
-#                     source_sequences.append(node.getsource().lower())
-#                     target_sequences.append(node.gettarget().lower())
-#                 extracted = process.extract(searchCon.lower(), source_sequences, scorer=fuzz.partial_ratio, limit=len(source_sequences))
-#                 s_sequences = [sent for sent in extracted if sent[1] >= int(matchRate)]
-#                 for entry in s_sequences:
-#                     for i, sequence in enumerate(source_sequences):
-#                         if entry[0] == sequence:
-#                             out_sequences_per_tm.append({'source':entry[0], 'target': target_sequences[i], 'tm_name':tm_name, 'match_rate':entry[1]})
-#                             break
-#     out_sequences_per_tm.sort(key=compare_matchrate, reverse=True)
-#     return out_sequences_per_tm
-
 # # levenshtein match
 def concordance_search(tm_objects, searchCon, matchRate, search_lang):
     # normalized_levenshtein = NormalizedLevenshtein()
@@ -272,3 +243,63 @@ def translate_sdlxliff_file(s_url, t_url, s_lang, t_lang):
 
     tree.write(t_url, xml_declaration=True, encoding='UTF-8')
 
+# store CorpusSentences in DB
+def store_Corpus_Sentences(corpus_object, file_url):
+    file_url = os.path.join(settings.MEDIA_ROOT, file_url)
+    # get Unchecked object
+    status_object = CorpusStatus.objects.filter(status='Unchecked').first()
+    filename, file_extension = os.path.splitext(file_url)
+    # txt
+    source_sentences = []
+    target_sentences = []
+    if file_extension == '.txt':
+        with open(file_url, 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+            for line in lines:
+                sentences = line.split("|")
+                try:
+                    create_oneBilingualSentence(corpus_object, sentences[0], sentences[1], status_object)
+                except IndexError:
+                    return False
+            return True
+    elif file_extension == '.xlsx':
+        src_wb = openpyxl.load_workbook(file_url)
+        src_ws = src_wb.worksheets[0]
+        if src_ws.max_column < 2:
+            return False
+        en_col = 1
+        th_col = 2
+        for col in range(1,src_ws.max_column):
+            cell_value = src_ws.cell(1, col).value.lower()
+            if 'en' in cell_value:
+                en_col = col
+            if 'th' in cell_value:
+                th_col = col
+        for row in range(2, src_ws.max_row+1):
+            create_oneBilingualSentence(corpus_object, src_ws.cell(row, en_col).value, src_ws.cell(row, th_col).value, status_object)
+        return True
+    elif file_extension == '.csv':
+        with open(file_url, encoding='utf-8') as csvfile:
+            readCSV = csv.reader(csvfile, delimiter=',')
+            for row in readCSV:
+                try:
+                    create_oneBilingualSentence(corpus_object, row[0], row[1], status_object)
+                except IndexError:
+                    return False
+            return True
+    elif file_extension == '.tmx':
+        with open(file_url, 'rb') as fin:
+            tmx_file = tmxfile(fin, 'en', 'th')
+            for node in tmx_file.unit_iter():
+                create_oneBilingualSentence(corpus_object, node.getsource(), delimiter + node.gettarget(), status_object)
+            return True
+# create one BilingualSentence object
+def create_oneBilingualSentence(corpus_object, source, target, status):
+    kwargs = {
+        "corpus":corpus_object,
+        "source":source,
+        "target":target,
+        "status":status
+    }
+    sentence_object = BilingualSentence(**kwargs)
+    sentence_object.save()
