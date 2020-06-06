@@ -23,7 +23,8 @@ from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count, Max
 from django.views.generic import ListView
-
+from django.core import serializers
+import json
 
 
 from django_tables2 import MultiTableMixin, RequestConfig, SingleTableMixin, SingleTableView, tables
@@ -31,11 +32,11 @@ from django_tables2.export.views import ExportMixin
 from django_tables2.paginators import LazyPaginator
 
 from .apps import TranslatorConfig
-from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSettingForm, UserDictForm, BilingualCorpusForm, POSTaggedCorpusForm
+from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSettingForm, UserDictForm, BilingualCorpusForm, POSTaggedCorpusForm, SearchFIleNameForm
 from .tokens import account_activation_token
 from .models import DictWords, DictSentences, TransMemories, UserSetting, BilingualCorpus, POSTaggedCorpus
 from .utils import translate_sentences, translate_file, concordance_search_sdk
-from .tables import tmTable, concordanceTable, CorpusFileTable, POSTaggedFileTable
+from .tables import tmTable, concordanceTable, BilingualCorpusTable, POSTaggedCorpusTable
 from .filters import tmFilter
 
 
@@ -557,7 +558,7 @@ def upload_translationMemories(request):
 @login_required
 def views_CorpusValidator(request):
     sort = request.GET.get('sort', 'name')
-    search_word = request.GET.get('searchWord', '')
+    search_name = request.GET.get('searchname', '')
     delID = request.POST.getlist('check')
         
     for _id in delID:
@@ -565,10 +566,20 @@ def views_CorpusValidator(request):
             BilingualCorpus.objects.get(id = _id).delete()
         except:
             print("An exception occurred")
-
-    table = CorpusFileTable(BilingualCorpus.objects.filter(name__contains=search_word).order_by(sort))
-    search_Form = SearchForm(initial={'searchWord':search_word})
+  
+    table = BilingualCorpusTable(BilingualCorpus.objects.filter(name__contains=search_name).order_by(sort))
+    search_Form = SearchFIleNameForm(initial={'searchname':search_name})
+    # filecontent_ = serializers.serialize('json', BilingualCorpus.objects.filter(name__contains=search_name).order_by(sort))
+    # print(BilingualCorpus)
+    # response_data = {}
+    #     cashflow_set = BilingualCorpus.objects.all();
+    #     i = 0;
+    #     for e in BilingualCorpus_set.iterator():
+    #         c = BilingualCorpus(value=e.value, date=str(e.date));
+    #         response_data[i] = c;
     
+    
+    # real_contentfile = JsonResponse( BilingualCorpus.objects.filter(name__contains=search_name).order_by(sort) )
     return render(request, "validator/corpusvalidator.html", {
         'table': table, 
         'search_Form':search_Form
@@ -577,7 +588,7 @@ def views_CorpusValidator(request):
 @login_required    
 def views_POSValidator(request):
     sort = request.GET.get('sort', 'name')
-    search_word = request.GET.get('searchTM', '')
+    search_name = request.GET.get('searchname', '')
     delID = request.POST.getlist('check')
     for _id in delID:
         try:
@@ -585,10 +596,10 @@ def views_POSValidator(request):
         except:
             print("An exception occurred")
 
-    table = POSTaggedFileTable(POSTaggedCorpus.objects.filter(name__contains=search_word).order_by(sort))
-    search_Form = SearchForm(initial={'searchWord':search_word})    
+    table = POSTaggedCorpusTable(POSTaggedCorpus.objects.filter(name__contains=search_name).order_by(sort))
+    search_Form = SearchFIleNameForm(initial={'searchname':search_name})    
     
-
+    print(POSTaggedCorpus)
 
     return render(request, "validator/posvalidator.html", {
         'table': table, 
@@ -607,6 +618,7 @@ def upload_CorpusFile(request):
     else:
         form = BilingualCorpusForm(initial={'t_lang':'th'})
         return HttpResponse(form)
+    
     
 def upload_POSTaggedFile(request):
     if request.method == 'POST':

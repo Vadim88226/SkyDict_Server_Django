@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include "common/header.html" %}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'validator/corpus.css' %}">
+</head>
+
+<body>
+    {% include "common/menu.html" %}
+    <div class="container">
+        {% block content %}
+        <p>Placeholder text in base template. Replace with page content.</p>
+        {% endblock content %} {% include "common/popup_template.html" %}
+    </div>
+</body>
+
+</html>
+{% include "common/footer.html" %}
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+<script src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.min.js"></script>
+<!-- <script src="https://datatables.net/forums/plugins/editor/js/editor.js?v=1.8.1z"></script> -->
+<script>
+    $(document).ready(function() {
+        editor = $('#corpusfilecontenttable').DataTable();
+        console.log(window);
+        editor = new window.$.fn.dataTable.Editor({
+            ajax: "query_dict/",
+            table: "#corpusfilecontenttable",
+            fields: [{
+                label: "First name:",
+                name: "first_name"
+            }, {
+                label: "Last name:",
+                name: "last_name"
+            }, {
+                label: "Position:",
+                name: "position"
+            }, {
+                label: "Office:",
+                name: "office"
+            }, {
+                label: "Extension:",
+                name: "extn"
+            }, {
+                label: "Start date:",
+                name: "start_date",
+                type: "datetime"
+            }, {
+                label: "Salary:",
+                name: "salary"
+            }]
+        });
+
+        // Activate an inline edit on click of a table cell
+        $('#corpusfilecontenttable').on('click', 'tbody td:not(:first-child)', function(e) {
+            editor.inline(this);
+        });
+
+        $('#corpusfilecontenttable').DataTable({
+            dom: "Bfrtip",
+            ajax: "query_dict/",
+            order: [
+                [1, 'asc']
+            ],
+            columns: [{
+                data: null,
+                defaultContent: '',
+                className: 'select-checkbox',
+                orderable: false
+            }, {
+                data: "first_name"
+            }, {
+                data: "last_name"
+            }, {
+                data: "position"
+            }, {
+                data: "office"
+            }, {
+                data: "start_date"
+            }, {
+                data: "salary",
+                render: $.fn.dataTable.render.number(',', '.', 0, '$')
+            }],
+            select: {
+                style: 'os',
+                selector: 'td:first-child'
+            },
+            buttons: [{
+                extend: "create",
+                editor: editor
+            }, {
+                extend: "edit",
+                editor: editor
+            }, {
+                extend: "remove",
+                editor: editor
+            }]
+        });
+    });
+</script>
+<script src="{% static 'validator/corpus.js' %}"></script>

@@ -4,9 +4,11 @@
 
 <head>
     {% include "common/header.html" %}
+
     <link rel="stylesheet" type="text/css" href="{% static 'lib/django_tables2/bootstrap.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'lib/django_tables2/themes/paleblue/css/screen.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'validator/validator.css' %}">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'validator/pos.css' %}">
 </head>
 
 <body>
@@ -20,4 +22,7 @@
 
 </html>
 {% include "common/footer.html" %}
-<script src="{% static 'validator/validator.js' %}"></script>
+<script src="//code.jquery.com/jquery-1.12.4.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<script src="{% static 'validator/pos.js' %}"></script>
