@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import FileExtensionValidator
 from datetime import datetime
 
 # class TransModel(models.Model):
@@ -20,7 +21,7 @@ class DictWords(models.Model):
     related = models.TextField(blank=True)
     synonym = models.TextField(blank=True)
     antonym = models.TextField(blank=True)
-    user = models.CharField(max_length=70, default='unknown')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     is_approved = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -34,13 +35,13 @@ class DictSentences(models.Model):
     t_sentence = models.TextField(blank=True)
 
 class TransMemories(models.Model):    
-    file_url = models.FileField(upload_to='concordances/')
+    file_url = models.FileField(upload_to='concordances/', validators=[FileExtensionValidator(allowed_extensions=['tmx'])])
     name = models.CharField(max_length=50,default='none')
     s_lang = models.CharField(max_length=5,default='en')
     t_lang = models.CharField(max_length=5,default='th')
     subject = models.CharField(max_length=50,default='')
     note = models.TextField(blank=True)
-    user = models.CharField(max_length=70, default='unknown')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True)
     sdltm_url = models.FileField(upload_to='concordances/')
@@ -53,22 +54,25 @@ class UserSetting(models.Model):
     ignoreTags = models.BooleanField(default=False)
 
 class BilingualCorpus(models.Model):
-    file_url = models.FileField(upload_to='bilingul_corpus/')
+    file_url = models.FileField(upload_to='corpus_files/', validators=[FileExtensionValidator(allowed_extensions=['txt', 'csv', 'tmx', 'xlsx'])])
     name = models.CharField(max_length=50,default='none')
     s_lang = models.CharField(max_length=5,default='en')
     t_lang = models.CharField(max_length=5,default='th')
     note = models.TextField(blank=True)
-    user = models.CharField(max_length=70, default='unknown')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True)
 
 class POSTaggedCorpus(models.Model):
-    file_url = models.FileField(upload_to='bilingul_corpus/')
+    file_url = models.FileField(upload_to='pos_tagged_files/', validators=[FileExtensionValidator(allowed_extensions=['txt', 'csv', 'tmx', 'xlsx'])])
     tagged_file_url = models.FileField(upload_to='pos_tagged_files/')
     name = models.CharField(max_length=50,default='none')
     s_lang = models.CharField(max_length=5,default='en')
     t_lang = models.CharField(max_length=5,default='th')
     note = models.TextField(blank=True)
-    user = models.CharField(max_length=70, default='unknown')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True)
+
+# class BilingualSentence(models.Model):
+    

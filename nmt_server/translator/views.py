@@ -527,7 +527,8 @@ def upload_translationMemories(request):
     if request.method == 'POST':
         form = TransMemoryForm(request.POST, request.FILES)
         if form.is_valid():
-            tm = form.save()
+            tm = form.save(commit=False)
+            tm.user = request.user
             filename, file_extension = os.path.splitext(tm.file_url.name)
             tm.sdltm_url.name = filename + ".sdltm"
             tmx_url = os.path.join(settings.MEDIA_ROOT, tm.file_url.name)
@@ -560,7 +561,7 @@ def views_CorpusValidator(request):
     sort = request.GET.get('sort', 'name')
     search_name = request.GET.get('searchname', '')
     delID = request.POST.getlist('check')
-        
+    
     for _id in delID:
         try:
             BilingualCorpus.objects.get(id = _id).delete()
@@ -611,9 +612,14 @@ def views_POSValidator(request):
 
 def upload_CorpusFile(request):
     if request.method == 'POST':
+
         form = BilingualCorpusForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            corpus = form.save(commit=False)
+            corpus.user = request.user
+            copus.save()
+            filename, file_extension = os.path.splitext(corpus.file_url.name)
+
         return redirect('/corpus_validator/')
     else:
         form = BilingualCorpusForm(initial={'t_lang':'th'})
@@ -624,7 +630,9 @@ def upload_POSTaggedFile(request):
     if request.method == 'POST':
         form = POSTaggedCorpusForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            taggedfile = form.save(commit=False)
+            taggedfile.user = request.user
+            taggedfile.save()
         return redirect('/pos_validator/')
     else:
         form = POSTaggedCorpusForm(initial={'t_lang':'th'})
