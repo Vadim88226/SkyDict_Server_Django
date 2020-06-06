@@ -1,7 +1,7 @@
 from django.utils.safestring import mark_safe
 from django_tables2.utils import Accessor, AttributeDict
 import django_tables2 as tables
-from .models import TransMemories, BilingualCorpus, POSTaggedCorpus
+from .models import TransMemories, BilingualCorpus, POSTaggedCorpus, BilingualSentence
 import itertools
 from django.conf import settings
 
@@ -74,11 +74,10 @@ class POSTaggedCorpusTable(tables.Table):
     s_lang = tables.Column(verbose_name="Languages")
     # user = tables.Column(verbose_name='Owner')
     file_url = tables.Column(verbose_name='Bilingual Corpus File')
-    tagged_file_url = tables.Column(verbose_name='POS Tagged File')
     class Meta:
         model = POSTaggedCorpus
         template_name = "django_tables2/bootstrap-responsive.html"
-        fields = ('counter', 'name', 's_lang', 'file_url', 'tagged_file_url', 'check')
+        fields = ('counter', 'name', 's_lang', 'file_url', 'check')
         attrs = {"class": "table table-hover paleblue"}
     def render_counter(self):
         self.row_counter = getattr(self, 'row_counter', itertools.count(1))
@@ -87,24 +86,17 @@ class POSTaggedCorpusTable(tables.Table):
         return mark_safe('''%s > %s''' % (value.upper(), record.t_lang.upper()))
 
 
-    
-class BilingualCorpusfilecontentTable(tables.Table):
-    check = MaterializeCheckColumn(accessor='id', attrs={"td":{'class': 'match_rate'}})
+
+class BilingualCorpusSentenceTable(tables.Table):
     counter = tables.Column(verbose_name='#', empty_values=(), orderable=False)
-    name = tables.Column(verbose_name='Name')
-    # updated_at = tables.DateTimeColumn(verbose_name='Last Modified', format='d/m/Y')
-    s_lang = tables.Column(verbose_name="Languages")
-    user = tables.Column(verbose_name='Owner')
-    file_url = tables.Column(verbose_name='Bilingual Corpus File')
+    source = tables.Column(verbose_name='Source')
+    target = tables.Column(verbose_name='Target')
+    status = tables.Column(verbose_name='Status', accessor='status.status')
     class Meta:
-        model = BilingualCorpus
+        model = BilingualSentence
         template_name = "django_tables2/bootstrap-responsive.html"
-        fields = ('counter', 'name', 's_lang', 'file_url', 'user', 'check')
+        fields = ('counter', 'source', 'target', 'status')
         attrs = {"class": "table table-hover paleblue", "id": "corpusfilecontenttable"}
     def render_counter(self):
         self.row_counter = getattr(self, 'row_counter', itertools.count(1))
         return next(self.row_counter)
-    def render_s_lang(self, value, record):
-        return mark_safe('''%s > %s''' % (value.upper(), record.t_lang.upper()))
-
-   

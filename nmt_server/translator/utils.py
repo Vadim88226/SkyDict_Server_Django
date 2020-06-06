@@ -244,8 +244,8 @@ def translate_sdlxliff_file(s_url, t_url, s_lang, t_lang):
     tree.write(t_url, xml_declaration=True, encoding='UTF-8')
 
 # store CorpusSentences in DB
-def store_Corpus_Sentences(corpus_object, file_url):
-    file_url = os.path.join(settings.MEDIA_ROOT, file_url)
+def store_Corpus_Sentences(corpus_object):
+    file_url = os.path.join(settings.MEDIA_ROOT, corpus_object.file_url.name)
     # get Unchecked object
     status_object = CorpusStatus.objects.filter(status='Unchecked').first()
     filename, file_extension = os.path.splitext(file_url)
@@ -255,12 +255,18 @@ def store_Corpus_Sentences(corpus_object, file_url):
     if file_extension == '.txt':
         with open(file_url, 'r', encoding='utf-8') as file:
             lines = file.readlines()
+            objects = []
             for line in lines:
                 sentences = line.split("|")
                 try:
-                    create_oneBilingualSentence(corpus_object, sentences[0], sentences[1], status_object)
+                    objects.append(
+                        BilingualSentence(
+                            corpus=corpus_object, source = sentences[0], target = sentences[1], status = status_object
+                        )
+                    )
                 except IndexError:
                     return False
+            BilingualSentence.objects.bulk_create(objects)
             return True
     elif file_extension == '.xlsx':
         src_wb = openpyxl.load_workbook(file_url)
@@ -275,31 +281,116 @@ def store_Corpus_Sentences(corpus_object, file_url):
                 en_col = col
             if 'th' in cell_value:
                 th_col = col
+        objects = []
         for row in range(2, src_ws.max_row+1):
-            create_oneBilingualSentence(corpus_object, src_ws.cell(row, en_col).value, src_ws.cell(row, th_col).value, status_object)
+            objects.append(
+                BilingualSentence(
+                    corpus=corpus_object, source = src_ws.cell(row, en_col).value, target = src_ws.cell(row, th_col).value, status = status_object
+                )
+            )
+        BilingualSentence.objects.bulk_create(objects)
         return True
     elif file_extension == '.csv':
         with open(file_url, encoding='utf-8') as csvfile:
             readCSV = csv.reader(csvfile, delimiter=',')
             for row in readCSV:
                 try:
-                    create_oneBilingualSentence(corpus_object, row[0], row[1], status_object)
+                    objects.append(
+                        BilingualSentence(
+                            corpus=corpus_object, source = row[0], target = row[1], status = status_object
+                        )
+                    )
                 except IndexError:
                     return False
+            BilingualSentence.objects.bulk_create(objects)
             return True
     elif file_extension == '.tmx':
         with open(file_url, 'rb') as fin:
             tmx_file = tmxfile(fin, 'en', 'th')
             for node in tmx_file.unit_iter():
-                create_oneBilingualSentence(corpus_object, node.getsource(), delimiter + node.gettarget(), status_object)
+                objects.append(
+                    BilingualSentence(
+                        corpus=corpus_object, source = node.getsource(), target = node.gettarget(), status = status_object
+                    )
+                )
+            BilingualSentence.objects.bulk_create(objects)
             return True
-# create one BilingualSentence object
-def create_oneBilingualSentence(corpus_object, source, target, status):
-    kwargs = {
-        "corpus":corpus_object,
-        "source":source,
-        "target":target,
-        "status":status
-    }
-    sentence_object = BilingualSentence(**kwargs)
-    sentence_object.save()
+    else:
+        return False
+
+# store CorpusSentences in DB
+def store_POSTTagged_Sentences(corpus_object):
+    file_url = os.path.join(settings.MEDIA_ROOT, corpus_object.file_url.name)
+    # get Unchecked object
+    status_object = CorpusStatus.objects.filter(status='Unchecked').first()
+    filename, file_extension = os.path.splitext(file_url)
+    # txt
+    source_sentences = []
+    target_sentences = []
+    if file_extension == '.txt':
+        with open(file_url, 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+            objects = []
+            for line in lines:
+                sentences = line.split("|")
+                try:
+                    objects.append(
+                        POSTaggedSentence(
+                            corpus=corpus_object, source = sentences[0], target = sentences[1], status = status_object
+                        )
+                    )
+                except IndexError:
+                    return False
+            POSTaggedSentence.objects.bulk_create(objects)
+            return True
+    elif file_extension == '.xlsx':
+        src_wb = openpyxl.load_workbook(file_url)
+        src_ws = src_wb.worksheets[0]
+        if src_ws.max_column < 2:
+            return False
+        en_col = 1
+        th_col = 2
+        for col in range(1,src_ws.max_column):
+            cell_value = src_ws.cell(1, col).value.lower()
+            if 'en' in cell_value:
+                en_col = col
+            if 'th' in cell_value:
+                th_col = col
+        objects = []
+        for row in range(2, src_ws.max_row+1):
+            objects.append(
+                POSTaggedSentence(
+                    corpus=corpus_object, source = src_ws.cell(row, en_col).value, target = src_ws.cell(row, th_col).value, status = status_object
+                )
+            )
+        POSTaggedSentence.objects.bulk_create(objects)
+        return True
+    elif file_extension == '.csv':
+        with open(file_url, encoding='utf-8') as csvfile:
+            readCSV = csv.reader(csvfile, delimiter=',')
+            objects = []
+            for row in readCSV:
+                try:
+                    objects.append(
+                        POSTaggedSentence(
+                            corpus=corpus_object, source = row[0], target = row[1], status = status_object
+                        )
+                    )
+                except IndexError:
+                    return False
+            POSTaggedSentence.objects.bulk_create(objects)
+            return True
+    elif file_extension == '.tmx':
+        with open(file_url, 'rb') as fin:
+            tmx_file = tmxfile(fin, 'en', 'th')
+            objects = []
+            for node in tmx_file.unit_iter():
+                objects.append(
+                    POSTaggedSentence(
+                        corpus=corpus_object, source = node.getsource(), target = node.gettarget(), status = status_object
+                    )
+                )
+            POSTaggedSentence.objects.bulk_create(objects)
+            return True
+    else:
+        return False
