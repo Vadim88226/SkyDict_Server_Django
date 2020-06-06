@@ -35,10 +35,10 @@ class TransMemoryForm(forms.ModelForm):
     name = forms.CharField(label="Name: ", widget=forms.TextInput(attrs={'placeholder':'Enter Name','class':'form-control'}))
     subject = forms.CharField(label="Subject: ", widget=forms.TextInput(attrs={'placeholder':'Enter Subject'}))
     note = forms.CharField(label="Note: ", widget=forms.Textarea(attrs={'rows': 5,'class':'form-control'}))
-    user = forms.CharField(label='', widget=forms.HiddenInput())
     class Meta:
         model = TransMemories
-        fields = ['name', 'subject', 's_lang', 't_lang', 'file_url', 'user', 'note']
+        fields = ['name', 'subject', 's_lang', 't_lang', 'file_url', 'note']
+        exclude = ['user']
 
 class SearchForm(forms.Form):
     searchTM = forms.CharField(label='Search TM', required=False, widget=forms.TextInput(attrs={'placeholder':'Search TM'}))
@@ -53,7 +53,8 @@ class UserSettingForm(forms.ModelForm):
     ignoreTags = forms.BooleanField(label='Ignore inline tags', required=False)
     class Meta:
         model = UserSetting
-        fields = ['user', 's_lang', 't_lang', 'ignoreTags', 'matchRate']
+        fields = ['s_lang', 't_lang', 'ignoreTags', 'matchRate']
+        exclude = ['user']
 
      
 class BilingualCorpusForm(forms.ModelForm):
@@ -61,29 +62,26 @@ class BilingualCorpusForm(forms.ModelForm):
     s_lang = forms.ChoiceField(label='Source Language: ', choices=s_language)
     t_lang = forms.ChoiceField(label='Target Language: ', choices=s_language)
     file_url = forms.FileField(label="File: ", widget=forms.FileInput(attrs={'type':'file','accept':".txt, .csv, .xlsx, .tmx"}), )
-    # sdltm_url = forms.FileField(label="File: ")
     name = forms.CharField(label="Name: ", widget=forms.TextInput(attrs={'placeholder':'Enter Name','class':'form-control'}))
-    # subject = forms.CharField(label="Subject: ", widget=forms.TextInput(attrs={'placeholder':'Enter Subject'}))
     note = forms.CharField(label="Note: ", widget=forms.Textarea(attrs={'rows': 5,'class':'form-control'}))
-    user = forms.CharField(label='', widget=forms.HiddenInput())
+    
     class Meta:
         model = BilingualCorpus
-        fields = ['name', 's_lang', 't_lang', 'file_url', 'user', 'note']
+        fields = ['name', 's_lang', 't_lang', 'file_url', 'note']
+        exclude = ['user']
 
 class POSTaggedCorpusForm(forms.ModelForm):
     s_language = [('en', 'English'), ('th','Thai')]
     s_lang = forms.ChoiceField(label='Source Language: ', choices=s_language)
     t_lang = forms.ChoiceField(label='Target Language: ', choices=s_language)
-    file_url = forms.FileField(label="File: ", widget=forms.TextInput(attrs={'type':'file', 'accept':".txt, .csv, .xlsx, .tmx"}))
-    tagged_file_url = forms.FileField(label="File: ", widget=forms.TextInput(attrs={'type':'file','accept':".txt, .csv, .xlsx, .tmx"}))
+    file_url = forms.FileField(label="File: ", widget=forms.FileInput(attrs={'type':'file','accept':".txt, .csv, .xlsx, .tmx"}), )
     name = forms.CharField(label="Name: ", widget=forms.TextInput(attrs={'placeholder':'Enter Name','class':'form-control'}))
-    # subject = forms.CharField(label="Subject: ", widget=forms.TextInput(attrs={'placeholder':'Enter Subject'}))
     note = forms.CharField(label="Note: ", widget=forms.Textarea(attrs={'rows': 5,'class':'form-control'}))
-    user = forms.CharField(label='', widget=forms.HiddenInput())
-    print(POSTaggedCorpus)
+    
     class Meta:
         model = POSTaggedCorpus
-        fields = ['name',  's_lang', 't_lang', 'file_url', 'tagged_file_url', 'user', 'note']
+        fields = ['name',  's_lang', 't_lang', 'file_url', 'note']
+        exclude = ['user']
 
 
 class SearchFIleNameForm(forms.Form):

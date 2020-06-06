@@ -67,12 +67,6 @@ function view_template(_templateID) {
 view_template("div_" + suburl + "_form");
 
 $(function() {
-    // $('#id_searchWord').on('keyup', function(e) {
-    //     var keycode = (e.keyCode ? e.keyCode : e.which);
-    //     if (keycode != 13 && keycode != 32) {} else {
-    //         $(".btn_search").click();
-    //     }
-    // });
     $(document).on('click', ".btn_new", function(e) {
 
         $.ajax({
@@ -84,11 +78,9 @@ $(function() {
                 var _form = document.createElement('form');
                 _form.innerHTML = response;
                 $("#posfile_upload_form .file_url").html(_form.file_url);
-                $("#posfile_upload_form .tagged_file_url").html(_form.id_tagged_file_url);
                 $("#posfile_upload_form .name").html(_form.name);
                 $("#posfile_upload_form .s_lang").html(_form.s_lang);
                 $("#posfile_upload_form .t_lang").html(_form.t_lang);
-                $("#posfile_upload_form .subject").html(_form.subject);
                 $("#posfile_upload_form .note").html(_form.note);
             }
         })

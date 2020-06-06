@@ -528,7 +528,7 @@ def upload_translationMemories(request):
         form = TransMemoryForm(request.POST, request.FILES)
         if form.is_valid():
             tm = form.save(commit=False)
-            tm.user = request.user
+            tm.user = User.objects.get(pk = request.user.id)
             filename, file_extension = os.path.splitext(tm.file_url.name)
             tm.sdltm_url.name = filename + ".sdltm"
             tmx_url = os.path.join(settings.MEDIA_ROOT, tm.file_url.name)
@@ -596,9 +596,7 @@ def views_POSValidator(request):
             print("An exception occurred")
 
     table = POSTaggedCorpusTable(POSTaggedCorpus.objects.filter(name__contains=search_name).order_by(sort))
-    search_Form = SearchFIleNameForm(initial={'searchname':search_name})    
-    
-    print(POSTaggedCorpus)
+    search_Form = SearchFIleNameForm(initial={'searchname':search_name})       
 
     return render(request, "validator/posvalidator.html", {
         'table': table, 
@@ -608,13 +606,13 @@ def views_POSValidator(request):
 
 def upload_CorpusFile(request):
     if request.method == 'POST':
+        
 
         form = BilingualCorpusForm(request.POST, request.FILES)
         if form.is_valid():
             corpus = form.save(commit=False)
-            print(request.user)
-            corpus.user = request.user
-            copus.save()
+            corpus.user = User.objects.get(pk = request.user.id)
+            corpus.save()
             filename, file_extension = os.path.splitext(corpus.file_url.name)
 
 
@@ -626,11 +624,12 @@ def upload_CorpusFile(request):
     
     
 def upload_POSTaggedFile(request):
-    if request.method == 'POST':
+    if request.method == 'POST': 
         form = POSTaggedCorpusForm(request.POST, request.FILES)
+        print(form.errors)
         if form.is_valid():
             taggedfile = form.save(commit=False)
-            taggedfile.user = request.user
+            taggedfile.user = User.objects.get(pk = request.user.id)
             taggedfile.save()
         return redirect('/pos_validator/')
     else:
