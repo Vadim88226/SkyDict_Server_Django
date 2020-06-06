@@ -74,5 +74,19 @@ class POSTaggedCorpus(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True)
 
-# class BilingualSentence(models.Model):
-    
+class CorpusStatus(models.Model):
+    status = models.CharField(max_length=50, default='Unchecked')
+
+class BilingualSentence(models.Model):
+    corpus = models.ForeignKey(BilingualCorpus, on_delete=models.CASCADE)
+    source = models.TextField(blank=True)
+    target = models.TextField(blank=True)
+    status = models.ForeignKey(CorpusStatus, blank=True, null=True, on_delete=models.SET_NULL)
+
+class POSTaggedSentence(models.Model):
+    corpus = models.ForeignKey(POSTaggedCorpus, on_delete=models.CASCADE)
+    source = models.TextField(blank=True)
+    target = models.TextField(blank=True)
+    tagged_source = models.TextField(blank=True)
+    tagged_target = models.TextField(blank=True)
+    status = models.ForeignKey(CorpusStatus, blank=True, null=True, on_delete=models.SET_NULL)

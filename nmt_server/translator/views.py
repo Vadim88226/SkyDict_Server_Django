@@ -34,7 +34,7 @@ from django_tables2.paginators import LazyPaginator
 from .apps import TranslatorConfig
 from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSettingForm, UserDictForm, BilingualCorpusForm, POSTaggedCorpusForm, SearchFIleNameForm
 from .tokens import account_activation_token
-from .models import DictWords, DictSentences, TransMemories, UserSetting, BilingualCorpus, POSTaggedCorpus
+from .models import DictWords, DictSentences, TransMemories, UserSetting, CorpusStatus, BilingualCorpus, POSTaggedCorpus, BilingualSentence, POSTaggedSentence
 from .utils import translate_sentences, translate_file, concordance_search_sdk
 from .tables import tmTable, concordanceTable, BilingualCorpusTable, POSTaggedCorpusTable
 from .filters import tmFilter
@@ -554,8 +554,6 @@ def upload_translationMemories(request):
         form = TransMemoryForm(initial={'t_lang':'th'})
         return HttpResponse(form)
 
-
-    
 @login_required
 def views_CorpusValidator(request):
     sort = request.GET.get('sort', 'name')
@@ -585,8 +583,8 @@ def views_CorpusValidator(request):
         'table': table, 
         'search_Form':search_Form
         })
-    
-@login_required    
+
+@login_required
 def views_POSValidator(request):
     sort = request.GET.get('sort', 'name')
     search_name = request.GET.get('searchname', '')
@@ -606,9 +604,7 @@ def views_POSValidator(request):
         'table': table, 
         'search_Form': search_Form
         })
-    
 
-    
 
 def upload_CorpusFile(request):
     if request.method == 'POST':
@@ -616,9 +612,12 @@ def upload_CorpusFile(request):
         form = BilingualCorpusForm(request.POST, request.FILES)
         if form.is_valid():
             corpus = form.save(commit=False)
+            print(request.user)
             corpus.user = request.user
             copus.save()
             filename, file_extension = os.path.splitext(corpus.file_url.name)
+
+
 
         return redirect('/corpus_validator/')
     else:
