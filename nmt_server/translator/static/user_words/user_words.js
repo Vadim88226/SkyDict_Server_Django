@@ -316,7 +316,6 @@ $(function(){
 
                 var target = document.getElementById('db_vocabulary');
                 target.innerHTML = "";
-                $("#id_chk_agree").prop('checked', false);
 
                 if(Object.keys(data).length == 0) return;
                 for (_d in data) {
@@ -468,13 +467,9 @@ $(function(){
     $('#id_s_lang').on('change', function(e) {
         $(".btn_search").click();
     });
-    
-    $("#id_chk_agree").on('change', function(e){
-        $(".btn_save").attr('disabled', $(this).is(":not(:checked)"));
-    })
+
     $(".btn_new").on('click', function(){
         $("#db_vocabulary").html("");
-        $("#id_chk_agree").prop('checked', false);
         $("#user_vocabulary").text($("#U_name").val());
         $("#id_Vocabulary").val("");
     })

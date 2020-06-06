@@ -19,8 +19,6 @@ class AddWordsForm(forms.Form):
     part1 = forms.MultipleChoiceField(label='', widget=forms.CheckboxSelectMultiple, choices=chklabels[0:6])
     part2 = forms.MultipleChoiceField(label='', widget=forms.CheckboxSelectMultiple, choices=chklabels[6:12])
     part3 = forms.MultipleChoiceField(label='', widget=forms.CheckboxSelectMultiple, choices=chklabels[12:])
-    chk_agree = forms.ChoiceField(label='', widget=forms.CheckboxInput)
-
 class UserDictForm(forms.Form):
     s_language = [('en', 'English'), ('th','Thai')]
     s_lang = forms.ChoiceField(label='Translate from ', choices=s_language)

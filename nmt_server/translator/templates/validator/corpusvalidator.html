@@ -1,6 +1,8 @@
 {% extends 'validator/corpus_index.html' %}
 <!-- ============================== Dictionary ============================== -->
+
 {% load django_tables2 %} {% block content %} {% csrf_token %}
+
 
 <script type="text/javascript">
     var suburl = "corpusfile";
@@ -33,23 +35,6 @@
 
     <div id="div_content" class="tab-content">
         <div id="div_Corpus_file" class="tab-pane fade in active">
-            <div style="display: flex;">
-                <button type='button' class='btn_newss sky_button' data-toggle="tab">
-                        <span class='glyphicon glyphicon-plus' ></span> New</button>
-                <input type="file" style="display: none;" name='TransFiles' id="TransFiles" />
-
-                <div style="width: 100%; text-align: right;">
-                    <form method="GET" style="display: contents;">
-                        <!-- {% csrf_token %} -->
-                        {{ search_Form.searchTM }}
-                        <button type="submit" style="display: none;">Search</button>
-                    </form>
-                    <button type='button' class='btn_delete sky_button'>Delete</button>
-                </div>
-            </div>
-            <form method="POST" id="corpus_file_table" action="#">
-                {% csrf_token %} {% render_table table %}
-            </form>
 
         </div>
         <div class="corposvalidator tab-pane fade" id="div_Corpus_Validator">
@@ -57,7 +42,7 @@
             {% csrf_token %}
             <div id="content_user_vocabulary">
                 <div class="list_side">
-                    <div style="display: flex;position: relative;    width: 150px;">
+                    <div style="display: flex;position: relative;    width: 150px;width: 100%;">
                         <div class="div_corpusfilelist">
                             <input type="radio" id="Unapproved" name="allowed" value=0 checked>
                             <label for="Unapproved">Corpus Files</label>
@@ -65,29 +50,65 @@
                     </div>
                     <div id="list_vocabulary"></div>
                 </div>
-                <div class='container'>
-                    <table id="corpusfilecontenttable" class="display" width="100%">
-                        <thead>
+                <input type="text" id="tokenid" hidden='true' data-token="{{ csrf_token }}"/>
+                <div class='container response'>
+                    {% csrf_token %} {% render_table editabletable %}
+                   
 
-                            <tr>
-                                <th>NO</th>
-                                <th>Source</th>
-                                <th>Target</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for ctr in filecontent %}
-                            <tr>
-                                <td>{{ctr.pk}}</td>
-                                <td>{{ctr.fields}}</td>
-                                <td>{{ctr.fields.file_url}}</td>
-                                <td>{{ctr.fields.note}}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                    <!-- pos tagged part start  -->
+                        <div id="postag">
+                          <div class="row">
+                            <div class="col-md-8">
+                             
+                              <div id="form">
+                                <div class="form-group">
+                                  <label for="text" class="hidden-xs hidden-sm">Source :</label>
+                                  <textarea class="form-control show-edit" rows="2" id="text">John likes the blue house at the end of the street.</textarea>
+                                  <div id="textTagged" class="show-view" style="display: none;"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="text" class="hidden-xs hidden-sm">Target :</label>
+                                    <textarea class="form-control show-edit" rows="2" id="text">John likes the blue house at the end of the street.</textarea>
+                                    <div id="textTagged" class="show-view" style="display: none;"></div>
+                                </div>
+                               
+                                <div class="btn-toolbar" role="toolbar">
+                                    <button type="button" class="btn btn-default show-edit" id="submit"><span class="glyphicon glyphicon-ok"></span> POS-tag!</button>
+                                    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                                    <button type="button" class="btn btn-default show-view" id="edit"><span class="glyphicon glyphicon-edit"></span> Edit text</button>
+                                    <!-- <button type="button" class="btn btn-default show-view toggle-tools" data-toggle="button"><span class="glyphicon glyphicon-wrench"></span></button> -->
+                                    <!-- <select id="language" class="form-control language">
+                                                              <option value="en" selected>English</option>
+                                                              <option value="de">German</option>
+                                                              <option value="fr">French</option>
+                                                              <option value="es">Spanish</option>
+                                                          </select> -->
+                                </div>
+
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div id="colors">
+                                                    <div class="tagAdjective">Adjective</div>
+                                                    <div class="tagAdverb">Adverb</div>
+                                                    <div class="tagConjunction">Conjunction</div>
+                                                    <div class="tagDeterminer">Determiner</div>
+                                                    <div class="tagInterjection">Interjection</div>
+                                                    <div class="tagNoun">Noun</div>
+                                                    <div class="tagNumber">Number</div>
+                                                    <div class="tagPreposition">Preposition</div>
+                                                    <div class="tagPronoun">Pronoun</div>
+                                                    <div class="tagVerb">Verb</div>
+                                              </div>
+                            </div>
+                          </div><!-- /row -->
+                          <div class="row">
+                            <div class="col-md-4 col-md-push-8">
+                          <div id="stupidNiceStuff">
+
+              
+                   
+
             </div>
         </div>
     </div>

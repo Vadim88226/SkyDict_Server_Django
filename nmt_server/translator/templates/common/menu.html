@@ -13,11 +13,11 @@
             </div>
 
             <div class="nav-right navbar-item">
-                {% comment %} {% if not request.user.is_authenticated %}
-                <a id="menu_login_nologo" href="#"><span class="glyphicon glyphicon-user"></span> Login </a> {% else %} {% endcomment %}
+                {% if not request.user.is_authenticated %}
+                <a id="menu_login_nologo" href="#"><span class="glyphicon glyphicon-user"></span> Login </a> {% else %} 
                 <ul class="nav navbar-left">
                     <li>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="/">
                             <span class="glyphicon glyphicon-user"></span> {{request.user.username}}
                             <input type="hidden" id="U_name" value="{{request.user.username}}" />
                             <input type="hidden" id="U_staff" value="{{request.user.is_staff}}" />
@@ -27,9 +27,9 @@
                         </ul>
                     </li>
                 </ul>
-                {% comment %} {% endif %} {% endcomment %}
+                {% endif %}
 
-                <a id="menu_any" href="#"><span class="glyphicon glyphicon-menu-hamburger"></a>
+                <a id="menu_any"><span class="glyphicon glyphicon-menu-hamburger"></a>
             </div>
         </div>
     </div>

@@ -133,7 +133,6 @@
         <center>
             <div id="menu_logo" class="menu_logo" dl-test="menu-site">
 
-                {% comment %} login start div  {% endcomment %}
                 <div class="menu__login__banner">SkyDict Login</div>                
                 <form class="menu__login__form" style="margin-top: 10px;" method='POST' onsubmit="event.preventDefault(); return false;" novalidate='novalidate'>
                     {% csrf_token %}
@@ -161,7 +160,7 @@
                 </form>
                 <div class='menu__error' id="menu__error"></div>
                 <a class="menu__login__signup_link sky_link sky_link--small sky_link--more menu_signup_link_logo" href="#">Sign up for SkyDict</a>
-                {% comment %} login end div  {% endcomment %}
+        
                 
             </div>
         </center>

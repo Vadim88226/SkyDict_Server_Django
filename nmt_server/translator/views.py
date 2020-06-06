@@ -36,7 +36,7 @@ from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSe
 from .tokens import account_activation_token
 from .models import DictWords, DictSentences, TransMemories, UserSetting, CorpusStatus, BilingualCorpus, POSTaggedCorpus, BilingualSentence, POSTaggedSentence
 from .utils import translate_sentences, translate_file, concordance_search_sdk
-from .tables import tmTable, concordanceTable, BilingualCorpusTable, POSTaggedCorpusTable
+from .tables import tmTable, concordanceTable, BilingualCorpusTable, POSTaggedCorpusTable,  BilingualCorpusfilecontentTable
 from .filters import tmFilter
 
 
@@ -568,20 +568,12 @@ def views_CorpusValidator(request):
   
     table = BilingualCorpusTable(BilingualCorpus.objects.filter(name__contains=search_name).order_by(sort))
     search_Form = SearchFIleNameForm(initial={'searchname':search_name})
-    # filecontent_ = serializers.serialize('json', BilingualCorpus.objects.filter(name__contains=search_name).order_by(sort))
-    # print(BilingualCorpus)
-    # response_data = {}
-    #     cashflow_set = BilingualCorpus.objects.all();
-    #     i = 0;
-    #     for e in BilingualCorpus_set.iterator():
-    #         c = BilingualCorpus(value=e.value, date=str(e.date));
-    #         response_data[i] = c;
-    
-    
-    # real_contentfile = JsonResponse( BilingualCorpus.objects.filter(name__contains=search_name).order_by(sort) )
+    editable_table = BilingualCorpusfilecontentTable(BilingualCorpus.objects.filter(name__contains=search_name).order_by(sort))
+
     return render(request, "validator/corpusvalidator.html", {
         'table': table, 
-        'search_Form':search_Form
+        'search_Form':search_Form,
+        'editabletable':editable_table
         })
 
 @login_required
@@ -636,3 +628,15 @@ def upload_POSTaggedFile(request):
         form = POSTaggedCorpusForm(initial={'t_lang':'th'})
         return HttpResponse(form)
 
+def update_corpusfilecontent(request):
+    print(request)
+    if request.is_ajax and request.method == 'POST': 
+        column_name = request.POST.get('columnname' )
+        column_id = request.POST.get('columnid' )
+        old_value = request.POST.get('oldvalue' )
+        new_value = request.POST.get('newvalue' )
+        get_data = ['cn-', column_name,'ci-', column_id,'od-', old_value, 'nd-', new_value]
+        print('cn-', column_name,'ci-', column_id,'od-', old_value, 'nd-', new_value)
+        return JsonResponse({"valid":False, 'getdata':get_data}, status = 200)
+
+    return JsonResponse({}, status = 400)

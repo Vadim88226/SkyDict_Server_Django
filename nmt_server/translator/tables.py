@@ -57,7 +57,7 @@ class BilingualCorpusTable(tables.Table):
         model = BilingualCorpus
         template_name = "django_tables2/bootstrap-responsive.html"
         fields = ('counter', 'name', 's_lang', 'file_url', 'user', 'check')
-        attrs = {"class": "table table-hover paleblue", "id": "corpusfilecontenttable"}
+        attrs = {"class": "table table-hover paleblue"}
     def render_counter(self):
         self.row_counter = getattr(self, 'row_counter', itertools.count(1))
         return next(self.row_counter)
@@ -87,3 +87,24 @@ class POSTaggedCorpusTable(tables.Table):
         return mark_safe('''%s > %s''' % (value.upper(), record.t_lang.upper()))
 
 
+    
+class BilingualCorpusfilecontentTable(tables.Table):
+    check = MaterializeCheckColumn(accessor='id', attrs={"td":{'class': 'match_rate'}})
+    counter = tables.Column(verbose_name='#', empty_values=(), orderable=False)
+    name = tables.Column(verbose_name='Name')
+    # updated_at = tables.DateTimeColumn(verbose_name='Last Modified', format='d/m/Y')
+    s_lang = tables.Column(verbose_name="Languages")
+    user = tables.Column(verbose_name='Owner')
+    file_url = tables.Column(verbose_name='Bilingual Corpus File')
+    class Meta:
+        model = BilingualCorpus
+        template_name = "django_tables2/bootstrap-responsive.html"
+        fields = ('counter', 'name', 's_lang', 'file_url', 'user', 'check')
+        attrs = {"class": "table table-hover paleblue", "id": "corpusfilecontenttable"}
+    def render_counter(self):
+        self.row_counter = getattr(self, 'row_counter', itertools.count(1))
+        return next(self.row_counter)
+    def render_s_lang(self, value, record):
+        return mark_safe('''%s > %s''' % (value.upper(), record.t_lang.upper()))
+
+   

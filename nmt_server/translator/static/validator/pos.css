@@ -23,7 +23,9 @@
     padding: 0 10px;
     cursor: pointer;
 }
-
+.POS_tab > a{
+    color: gray;
+}
 .dict_area .sky_button {
     margin: 10px 0 10px 0;
     width: 160px;
@@ -381,4 +383,8 @@ select {
     .form_vocabulary {
         display: block;
     }
+}
+
+#menu > div.menu__main_section{
+    overflow-y: initial;
 }

@@ -66,6 +66,7 @@ function view_template(_templateID) {
     var clone = document.importNode(t.content, true);
     document.getElementById("div_Corpus_file").appendChild(clone);
 };
+
 view_template("div_" + suburl + "_form");
 
 $(function() {
@@ -159,3 +160,66 @@ $(function() {
         view_template("div_" + suburl + "_form");
     })
 });
+
+
+
+    $(document).ready(function() {
+
+        var columnslist = ['#','name', 'source','target','status' ];
+        
+        var myTable = $('#corpusfilecontenttable').DataTable();
+    
+
+        $('#corpusfilecontenttable').on('click','tr',function(e){
+            e.stopPropagation()
+        })
+
+
+        myTable.MakeCellsEditable({
+            "onUpdate": myCallbackFunction
+        });
+        // ascending
+
+        // $('#corpus_file_table > div > table > tbody > tr input[type="checkbox"]')
+        // console.log(document.querySelector("#corpusfilecontenttable > input[type=checkbox]"));
+         // Handle click on "Select all" control
+         $("th > input[type=checkbox]").on('click', function(){
+            // alert('-----')
+            var rows = myTable.rows({ 'search': 'applied' }).nodes();
+            // Check/uncheck checkboxes for all rows in the table
+            $('input[type="checkbox"]', rows).prop('checked', this.checked);
+        });
+
+        function myCallbackFunction(updatedCell, updatedRow, oldValue, columnIndex) {
+            console.log(columnIndex);
+            console.log(columnslist[columnIndex]);
+            console.log("The new value for the cell is: " + updatedCell.data());
+            console.log("The old value for that cell was: " + oldValue);
+            console.log("The values for each cell in that row are: " + updatedRow.data());
+           
+            var tk = $('#tokenid').attr("data-token");
+            var senddata = {
+                    'columnname': columnslist[columnIndex],
+                    'columnid': columnIndex,
+                    'oldvalue': oldValue,
+                    'newvalue': updatedCell.data(),
+                    'csrfmiddlewaretoken': tk
+                }
+            console.log(senddata);
+            $.ajax({
+                url: "/update_corpusfilecontent/",
+                type: "POST",
+                data: {
+                    'columnname': columnslist[columnIndex],
+                    'columnid': columnIndex,
+                    'oldvalue': oldValue,
+                    'newvalue': updatedCell.data(),
+                    'csrfmiddlewaretoken': tk
+                },
+                success: function(response) {
+                    console.log(response);
+                }
+            })
+        
+        }
+    });
