@@ -24,9 +24,6 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Count, Max
 from django.views.generic import ListView
 from django.core import serializers
-import json
-
-
 from django_tables2 import MultiTableMixin, RequestConfig, SingleTableMixin, SingleTableView, tables
 from django_tables2.export.views import ExportMixin
 from django_tables2.paginators import LazyPaginator
@@ -35,8 +32,8 @@ from .apps import TranslatorConfig
 from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSettingForm, UserDictForm, BilingualCorpusForm, POSTaggedCorpusForm, SearchFIleNameForm
 from .tokens import account_activation_token
 from .models import DictWords, DictSentences, TransMemories, UserSetting, CorpusStatus, BilingualCorpus, POSTaggedCorpus, BilingualSentence, POSTaggedSentence
-from .utils import translate_sentences, translate_file, concordance_search_sdk, store_Corpus_Sentences
-from .tables import tmTable, concordanceTable, BilingualCorpusTable, POSTaggedCorpusTable,  BilingualCorpusfilecontentTable
+from .utils import translate_sentences, translate_file, concordance_search_sdk, store_Corpus_Sentences, store_POSTTagged_Sentences
+from .tables import tmTable, concordanceTable, BilingualCorpusTable, POSTaggedCorpusTable,  BilingualCorpusSentenceTable
 from .filters import tmFilter
 
 
@@ -323,7 +320,7 @@ def upload_file(request):
     return JsonResponse({'content': ""})
 
 def add_words(request):
-    _user = request.GET.get('user')
+    _user = request.user
     _s_lang = request.GET.get('sl')
     _t_lang = request.GET.get('tl')
     _vocabulary = request.GET.get('vocabulary', None)
@@ -359,17 +356,17 @@ def query_UserDictionaryList(request):
     _is_approved = request.GET.get('is_approved', 0)
 
     if _is_approved == '2':
-        query = "SELECT max(id) as mid, id, word, user from translator_dictwords WHERE id>{0} AND word LIKE '{1}%%' AND s_lang='{2}' GROUP BY word, user ORDER BY word, user limit 50;".format(_end_id, _word,_s_lang)
+        query = "SELECT max(id) as mid, id, word from translator_dictwords WHERE id>{0} AND word LIKE '{1}%%' AND s_lang='{2}' GROUP BY word ORDER BY word limit 50;".format(_end_id, _word,_s_lang)
     else:
-        query = "SELECT max(id) as mid, id, word, user from translator_dictwords WHERE id>{0} AND word LIKE '{1}%%' AND is_approved='{2}' AND s_lang='{3}' GROUP BY word, user ORDER BY word, user limit 50;".format(_end_id, _word, _is_approved,_s_lang)
+        query = "SELECT max(id) as mid, id, word from translator_dictwords WHERE id>{0} AND word LIKE '{1}%%' AND is_approved='{2}' AND s_lang='{3}' GROUP BY word ORDER BY word limit 50;".format(_end_id, _word, _is_approved,_s_lang)
 
     results = DictWords.objects.raw(query)
-    response = [{'mid':result.mid, 'id':result.id, 'word':result.word, 'user':result.user} for result in results]
+    response = [{'mid':result.mid, 'id':result.id, 'word':result.word} for result in results]
     return JsonResponse({'content':response})
 
 def query_WordContents(request):
     _word = request.GET.get('seltext')
-    _user = request.GET.get('user')
+    _user = request.user
     _is_approved = int(request.GET.get('is_approved', 0))
     if _is_approved == 2:
         user_dict_records = DictWords.objects.filter(word=_word, user=_user)
@@ -569,7 +566,7 @@ def views_CorpusValidator(request):
   
     table = BilingualCorpusTable(BilingualCorpus.objects.filter(name__contains=search_name).order_by(sort))
     search_Form = SearchFIleNameForm(initial={'searchname':search_name})
-    editable_table = BilingualCorpusfilecontentTable(BilingualCorpus.objects.filter(name__contains=search_name).order_by(sort))
+    editable_table = BilingualCorpusSentenceTable(BilingualSentence.objects.all()[:10])
 
     return render(request, "validator/corpusvalidator.html", {
         'table': table, 
@@ -607,10 +604,8 @@ def upload_CorpusFile(request):
             corpus = form.save(commit=False)
             corpus.user = User.objects.get(pk = request.user.id)
             corpus.save()
-
-            print(corpus)
             
-            valid = store_Corpus_Sentences(corpus, corpus.file_url.name)
+            valid = store_Corpus_Sentences(corpus)
 
         return redirect('/corpus_validator/')
     else:
@@ -626,6 +621,7 @@ def upload_POSTaggedFile(request):
             taggedfile = form.save(commit=False)
             taggedfile.user = User.objects.get(pk = request.user.id)
             taggedfile.save()
+            valid = store_POSTTagged_Sentences(taggedfile)
         return redirect('/pos_validator/')
     else:
         form = POSTaggedCorpusForm(initial={'t_lang':'th'})

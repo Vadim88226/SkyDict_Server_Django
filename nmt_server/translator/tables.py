@@ -74,11 +74,10 @@ class POSTaggedCorpusTable(tables.Table):
     s_lang = tables.Column(verbose_name="Languages")
     # user = tables.Column(verbose_name='Owner')
     file_url = tables.Column(verbose_name='Bilingual Corpus File')
-    tagged_file_url = tables.Column(verbose_name='POS Tagged File')
     class Meta:
         model = POSTaggedCorpus
         template_name = "django_tables2/bootstrap-responsive.html"
-        fields = ('counter', 'name', 's_lang', 'file_url', 'tagged_file_url', 'check')
+        fields = ('counter', 'name', 's_lang', 'file_url', 'check')
         attrs = {"class": "table table-hover paleblue"}
     def render_counter(self):
         self.row_counter = getattr(self, 'row_counter', itertools.count(1))
@@ -87,21 +86,17 @@ class POSTaggedCorpusTable(tables.Table):
         return mark_safe('''%s > %s''' % (value.upper(), record.t_lang.upper()))
 
 
-    
-class BilingualCorpusfilecontentTable(tables.Table):
-    corpus = MaterializeCheckColumn(accessor='id', attrs={"td":{'class': '' }})
+
+class BilingualCorpusSentenceTable(tables.Table):
     counter = tables.Column(verbose_name='#', empty_values=(), orderable=False)
     source = tables.Column(verbose_name='Source')
-    # updated_at = tables.DateTimeColumn(verbose_name='Last Modified', format='d/m/Y')
-    target = tables.Column(verbose_name="Target")
-    status = tables.Column(verbose_name='Status')
+    target = tables.Column(verbose_name='Target')
+    status = tables.Column(verbose_name='Status', accessor='status.status')
     class Meta:
         model = BilingualSentence
         template_name = "django_tables2/bootstrap-responsive.html"
-        fields = ('counter', 'source', 'target', 'status', 'corpus')
+        fields = ('counter', 'source', 'target', 'status')
         attrs = {"class": "table table-hover paleblue", "id": "corpusfilecontenttable"}
     def render_counter(self):
         self.row_counter = getattr(self, 'row_counter', itertools.count(1))
         return next(self.row_counter)
-
-   
