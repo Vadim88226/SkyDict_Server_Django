@@ -48,7 +48,16 @@
                             <label for="Unapproved">Corpus Files</label>
                         </div>
                     </div>
-                    <div id="list_vocabulary"></div>
+                    <div id="list_vocabulary">
+                        <ul class="playlist" >
+
+                            {% for cf in corpusfilelist %}
+                                <li file_url="{{ cf.file_url }}" file_key_id="{{ cf.id }}" value='{{cf.id}}' for='filelistli' biligual="{{cf.s_lang}}" owner_id="{{cf.user_id}}">
+                                    <label>{{cf.name}}</label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
                 <input type="text" id="tokenid" hidden='true' data-token="{{ csrf_token }}"/>
                 <div class='container response'>

@@ -40,6 +40,7 @@ from .tables import tmTable, concordanceTable, BilingualCorpusTable, POSTaggedCo
 from .filters import tmFilter
 
 
+
 class IndexView(generic.TemplateView): 
     template_name = 'translator/content.html'
 
@@ -573,6 +574,7 @@ def views_CorpusValidator(request):
     return render(request, "validator/corpusvalidator.html", {
         'table': table, 
         'search_Form':search_Form,
+        'corpusfilelist': BilingualCorpus.objects.all(),
         'editabletable':editable_table
         })
 
@@ -639,5 +641,17 @@ def update_corpusfilecontent(request):
         get_data = ['cn-', column_name,'ci-', column_id,'od-', old_value, 'nd-', new_value]
         print('cn-', column_name,'ci-', column_id,'od-', old_value, 'nd-', new_value)
         return JsonResponse({"valid":False, 'getdata':get_data}, status = 200)
+
+    return JsonResponse({}, status = 400)
+def get_corpusfilecontent(request):
+    if request.is_ajax and request.method == 'GET': 
+
+        file_key_id = request.GET.get('fkid' )
+        print(file_key_id)
+        # file_content = json.dumps( BilingualCorpusfilecontentTable( BilingualSentence.objects.get(pk = file_key_id)))
+        file_content = BilingualSentence.objects.get(pk = file_key_id) 
+        print(file_content)
+        # JsonResponse({"valid":False, 'data': file_content}, status = 200)
+        return HttpResponse(JsonResponse({"valid":False, 'data': file_content}, status = 200))
 
     return JsonResponse({}, status = 400)

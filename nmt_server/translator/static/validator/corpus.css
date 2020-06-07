@@ -277,25 +277,11 @@ textarea {
     display: none;
 }
 
-#list_vocabulary {
-    padding: 0;
-    padding-top: 10px;
-    border: 1px solid #0F2B46;
-    height: 97%;
-    overflow: auto;
-    margin: -1px 0;
-}
 
-#list_vocabulary ul {
-    padding-top: 6px;
-    border: 1px solid lightgray;
-    border-style: none none solid;
-    margin: 0px;
-}
 
-#list_vocabulary ul:hover {
+/* #list_vocabulary ul:hover {
     background-color: #eee;
-}
+} */
 
 .div_corpusfilelist {
     width: 100%;
@@ -384,7 +370,7 @@ select {
     }
     #list_vocabulary,
     #list_lexitron {
-        max-height: 100px;
+        max-height: 200px;
     }
     #content_user_vocabulary .content {
         max-height: 100%;
@@ -729,3 +715,46 @@ thead>tr>th{
 #corpusfilecontenttable_length{
     display: none;
 }
+
+
+#list_vocabulary {
+    padding: 0;
+    padding-top: 10px;
+    border: 1px solid #0F2B46;
+    height: 97%;
+    overflow: auto;
+    margin: -1px 0;
+}
+
+#list_vocabulary ul {
+    padding-top: 6px;
+    border: 1px solid lightgray;
+    border-style: none none solid;
+    margin: 0px;
+    list-style-type: circle;
+}
+#list_vocabulary label{
+    cursor: pointer;
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 5px;
+}
+#list_vocabulary > ul > li:hover{
+    border-bottom-style: ridge;
+    text-shadow: 0px 4px 7px darkblue;
+}
+#list_vocabulary > ul > li{
+    width: 110px;
+    border-bottom-width: 5px;
+    height: 25px;
+}
+
+#list_vocabulary > ul > li:active,  #list_vocabulary > ul > li.selected{
+    border-bottom-style: ridge;
+    border-color: #3c29ad;
+    color: blue;
+    text-shadow: 1px 0px 6px #7d3f37;
+    width: 110px;
+}
+
+

@@ -161,65 +161,150 @@ $(function() {
     })
 });
 
-
-
+var preli = '';
+var oldkeyid = '';
     $(document).ready(function() {
 
-        var columnslist = ['#','name', 'source','target','status' ];
-        
-        var myTable = $('#corpusfilecontenttable').DataTable();
-    
-
-        $('#corpusfilecontenttable').on('click','tr',function(e){
-            e.stopPropagation()
-        })
-
-
-        myTable.MakeCellsEditable({
-            "onUpdate": myCallbackFunction
-        });
-        // ascending
-
-        // $('#corpus_file_table > div > table > tbody > tr input[type="checkbox"]')
-        // console.log(document.querySelector("#corpusfilecontenttable > input[type=checkbox]"));
-         // Handle click on "Select all" control
-         $("th > input[type=checkbox]").on('click', function(){
-            // alert('-----')
-            var rows = myTable.rows({ 'search': 'applied' }).nodes();
-            // Check/uncheck checkboxes for all rows in the table
-            $('input[type="checkbox"]', rows).prop('checked', this.checked);
-        });
-
-        function myCallbackFunction(updatedCell, updatedRow, oldValue, columnIndex) {
-            console.log(columnIndex);
-            console.log(columnslist[columnIndex]);
-            console.log("The new value for the cell is: " + updatedCell.data());
-            console.log("The old value for that cell was: " + oldValue);
-            console.log("The values for each cell in that row are: " + updatedRow.data());
+        $("#list_vocabulary > ul > li > label, #list_vocabulary > ul > li ").on('click', function(e){
            
-            var tk = $('#tokenid').attr("data-token");
-            var senddata = {
-                    'columnname': columnslist[columnIndex],
-                    'columnid': columnIndex,
-                    'oldvalue': oldValue,
-                    'newvalue': updatedCell.data(),
-                    'csrfmiddlewaretoken': tk
-                }
-            console.log(senddata);
+        //    console.log(preli , '--------',  $($(this)[0].parentElement))
+
+            var newkeyid = '-1';
+            var tagName = $(this)[0].tagName;
+            if(preli != ''){
+                $(preli)[0].className = '';
+            }
+            if( tagName == 'LI'){
+                $(this)[0].className = 'selected';
+                newkeyid = $(this)[0].value;
+                preli = this;
+            }
+            
+            if( tagName == 'LABEL'){
+                $(this)[0].parentElement.className = 'selected';
+                newkeyid = $(this)[0].parentElement.value;
+                preli = $(this)[0].parentElement;
+            }
+
+            if(newkeyid != '-1' && newkeyid != oldkeyid && newkeyid != undefined ){
+               get_corpusfilecontent($(preli)[0].value);
+               oldkeyid = newkeyid;
+               console.log('Sender posted');
+            }
+           
+        });
+
+        var get_corpusfilecontent = function( key_id ){
             $.ajax({
-                url: "/update_corpusfilecontent/",
-                type: "POST",
+                url: '/get_corpusfilecontent/',
+                headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
                 data: {
-                    'columnname': columnslist[columnIndex],
-                    'columnid': columnIndex,
-                    'oldvalue': oldValue,
-                    'newvalue': updatedCell.data(),
-                    'csrfmiddlewaretoken': tk
+                    'fkid': key_id
                 },
-                success: function(response) {
+                dataType: 'text',
+                type: "get",
+                success: function (response) {
                     console.log(response);
+                    // $.confirm({
+                    //     icon: 'fa fa-smile-o',
+                    //     theme: 'modern', content: data.content,
+                    //     animation: 'scale', type: 'blue',
+                    //     autoClose: 'okay|2000', escapeKey: 'okay',
+                    //     buttons: {
+                    //         okay: {  }
+                    //     }
+                    // });
+                },
+                error: function(response) {
+                    console.error(response)
+                    $.alert({
+                        title: 'Alert', content: 'SERVER ERROR',
+                        icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                        buttons: {
+                            okay: {  }
+                        }
+                    });
+                },
+                timeout: 2000
+            });
+        }
+        
+        // var columnslist = ['#','name', 'source','target','status' ];
+        
+        // var myTable = $('#corpusfilecontenttable').DataTable();
+        // $('#corpusfilecontenttable').on('click','tr',function(e){
+        //     e.stopPropagation()
+        // })
+        // myTable.MakeCellsEditable({
+        //     "onUpdate": myCallbackFunction
+        // });
+       
+        //  // Handle click on "Select all" control
+        //  $("th > input[type=checkbox]").on('click', function(){
+          
+        //     var rows = myTable.rows({ 'search': 'applied' }).nodes();
+        //     // Check/uncheck checkboxes for all rows in the table
+        //     $('input[type="checkbox"]', rows).prop('checked', this.checked);
+        // });
+        // function myCallbackFunction(updatedCell, updatedRow, oldValue, columnIndex) {
+        //     console.log(columnIndex);
+        //     console.log(columnslist[columnIndex]);
+        //     console.log("The new value for the cell is: " + updatedCell.data());
+        //     console.log("The old value for that cell was: " + oldValue);
+        //     console.log("The values for each cell in that row are: " + updatedRow.data());
+           
+        //     var tk = $('#tokenid').attr("data-token");
+        //     var senddata = {
+        //             'columnname': columnslist[columnIndex],
+        //             'columnid': columnIndex,
+        //             'oldvalue': oldValue,
+        //             'newvalue': updatedCell.data(),
+        //             'csrfmiddlewaretoken': tk
+        //         }
+        //     console.log(senddata);
+        //     $.ajax({
+        //         url: "/update_corpusfilecontent/",
+        //         type: "POST",
+        //         data: {
+        //             'columnname': columnslist[columnIndex],
+        //             'columnid': columnIndex,
+        //             'oldvalue': oldValue,
+        //             'newvalue': updatedCell.data(),
+        //             'csrfmiddlewaretoken': tk
+        //         },
+        //         success: function(response) {
+        //             console.log(response);
+        //         }
+        //     })
+        
+        // }
+
+
+        // new editable exmple code
+        const createdCell = function(cell) {
+            let original
+          
+            cell.setAttribute('contenteditable', true)
+            cell.setAttribute('spellcheck', false)
+            
+            cell.addEventListener('focus', function(e) {
+            
+                original = e.target.textContent;
+            })
+      
+            cell.addEventListener('blur', function(e) {
+                if (original !== e.target.textContent) {
+                    const row = mytable.row(e.target.parentElement)
+                    row.invalidate()
+                    console.log('Row changed: ', row.data())
                 }
             })
-        
-        }
+          }
+          
+          var mytable = $('#corpusfilecontenttable').DataTable({
+            columnDefs: [{ 
+              targets: '_all',
+              createdCell: createdCell
+            }]
+          }) 
     });

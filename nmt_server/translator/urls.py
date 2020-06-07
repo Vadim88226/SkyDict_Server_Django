@@ -23,5 +23,7 @@ urlpatterns = [
     path('update_vocabulary', views.update_vocabulary, name='index'),
     path('approve_vocabulary', views.approve_vocabulary, name='index'),
     path('delete_vocabulary', views.delete_vocabulary, name='index'),
+    path('get_corpusfilecontent/', views.get_corpusfilecontent, name='get_corpusfilecontent'),
+    
    
 ]
