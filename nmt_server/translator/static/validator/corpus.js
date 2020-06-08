@@ -365,8 +365,8 @@ $(document).ready(function() {
             url: "/update_corpussentence/",
             type: "POST",
             data: {
-                'field': id,
-                'id': field,
+                'id': id,
+                'field': field,
                 'value': value,
                 'csrfmiddlewaretoken': tk
             },

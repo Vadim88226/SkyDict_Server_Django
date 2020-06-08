@@ -382,7 +382,7 @@ def query_WordContents(request):
         user_dict_data[i]['related']= getattr(data, 'related')
         user_dict_data[i]['synonym']= getattr(data, 'synonym')
         user_dict_data[i]['antonym']= getattr(data, 'antonym')
-        user_dict_data[i]['user']= getattr(data, 'user')
+        user_dict_data[i]['user']= request.user.username
         user_sentences_records = DictSentences.objects.filter(dictwords_id = getattr(data, 'id'))
         user_dict_data[i]['sentences'] = {}
         for j, sentence in enumerate(user_sentences_records):
@@ -417,14 +417,14 @@ def update_vocabulary(request):
 
 def approve_vocabulary(request):
     _word = request.GET.get('word')
-    _user = request.GET.get('user')
+    _user = request.user
     DictWords.objects.filter(word=_word, user=_user).update(is_approved=1)
     return JsonResponse({'content': "You successfully approved this vocabulary."})
 
 def delete_vocabulary(request):
     _id = int(request.GET.get('id', 0))
     _word = request.GET.get('word')
-    _user = request.GET.get('user')
+    _user = request.user
     if _id:
         DictWords.objects.filter(id=_id).delete()
     else:
@@ -628,15 +628,14 @@ def upload_POSTaggedFile(request):
         return HttpResponse(form)
 
 def update_CorpusSentence(request):
-    print(request)
     if request.is_ajax and request.method == 'POST': 
         id = request.POST.get('id')
         field = request.POST.get('field')
         value = request.POST.get('value')
-        
-        get_data = ['id-', id,'field-', field,'value-', value]
-        print('id-', id,'field-', field,'value-', value)
-        return JsonResponse({"valid":False, 'getdata':get_data}, status = 200)
+        if field == 'status':
+            value = CorpusStatus.objects.filter(status=value).first()
+        BilingulSentence.objects.filter(id=id).update(field=value)
+        return JsonResponse({"valid":True}, status = 200)
 
     return JsonResponse({}, status = 400)
 
@@ -657,10 +656,13 @@ def get_CorpusSentence(request):
         data = []
         for i, sentence in enumerate(sentences):
             data.append({"id":sentence.id, "count":i+1, "source":sentence.source, "target":sentence.target, "status":sentence.status.status})
-
+        
+        statuses = list(CorpusStatus.objects.all().values_list('status', flat=True).distinct())
+        print(statuses)
         content = {
                     'total_pages':total_pages,
-                    "data": data
+                    "data": data,
+                    "status": statuses
                 }
 
 
