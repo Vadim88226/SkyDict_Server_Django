@@ -20,12 +20,12 @@
     <div class="nav nav-tabs submenu">
         <div class='corpus_tab active'>
             <a data-toggle="tab" href="#div_Corpus_file">
-                Coupus file 
+                Corpus Files 
             </a>
         </div>
         <div class='corpus_tab'>
             <a data-toggle="tab" href="#div_Corpus_Validator">
-                Coupus Validator
+                Corpus Validator
             </a>
         </div>
     </div>
@@ -44,7 +44,7 @@
                 <div class="list_side">
                     <div>
                         <fieldset id='corpusfiles' >
-                            <legend>CORPUS FILES</legend>
+                            <legend>Corpus Files</legend>
                                 {% comment %} <div id='listdiv' > {% endcomment %}
                                     {% for f in corpusfiles %}
 
@@ -63,7 +63,7 @@
                        
                     </table>
                     
-                    <div class="row" s>
+                    <div class="row" style="text-align: center;">
                        
                         <div class="col-sm-12">
                             <div class="dataTables_paginate paging_simple" id="sentencetablee_paginate">
@@ -72,7 +72,12 @@
                                         <a aria-controls="sentencetable" class="page-link">Previous</a>
                                     </li>
                                     <li class="page-item pages"  id="sentencetable_pageinfo">
-                                        <a aria-controls="sentencetable" id='pageinfo' style="border: none;margin: auto;">NO Data</a>
+                                        <a aria-controls="sentencetable" id='pageinfo' style="border: none;margin: auto;">
+                                            showing
+                                            <input type="number" name="pageno" id="pageno"  min = 0;/>
+                                            pages of 
+                                            <e id="allpagenumber" ></e>
+                                        </a>
                                     </li>
                                     <li class="paginate_button page-item next" id="sentencetable_next">
                                         <a  aria-controls="sentencetable" class="page-link">Next</a>
@@ -98,7 +103,7 @@
     <div style="display: flex;">
         <div>
             <button type='button' class='btn_new sky_button'><span class='glyphicon glyphicon-plus'></span> New</button>
-            <input type="file" style="display: none;" name='TransFiles' id="TransFiles"/>
+            <input type="file" style="display: none;" name='corpusfile_' id="corpusfile_"/>
         </div>
         <div style="width: 100%; text-align: right;">
             <form method="GET" style="display: contents;"> 
@@ -117,7 +122,7 @@
 <!-- new corpus file templete start -->
 <template id="corpusfile_new">
     <form method="POST" action="/upload_CorpusFile/" enctype="multipart/form-data" id="cf_upload_form" name = "cf_upload_form">
-        <div style='margin-top:18px'>New Translation Memory</div>
+        <div style='margin-top:18px'>New Bilingual Corpusfile</div>
         <hr>
         {% csrf_token %}
         <input type="hidden" id="user" name="user" value="{{request.user}}"/>

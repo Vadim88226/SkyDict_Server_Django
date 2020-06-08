@@ -1,63 +1,3 @@
-var editor; // use a global for the submit and return data rendering in the examples
-
-function ShowSelection(selectedText) {
-    // selectedText = selectedText.trim();
-    var sel = selectedText.split(' ');
-    if (sel.length > 1 || selectedText.length == 0) { $(".dict_area").css('display', 'none'); return; }
-    sel = sel[0].split(',');
-    if (sel.length > 1) { $(".dict_area").css('display', 'none'); return; }
-    selectedText = sel[0];
-
-    $.ajax({
-        // type: "POST",
-        url: query_dict,
-        data: {
-            'seltext': selectedText,
-            'sl': source_language.toLowerCase().substr(0, 2),
-            'tl': target_language.toLowerCase().substr(0, 2)
-        },
-        dataType: 'json',
-        success: function(data) {
-            if ($('#id_searchWord').val() != selectedText) return;
-            if (data != "") {
-                $(".dict_area").css('display', 'flex');
-                var dText = "";
-                for (_dict in data.dictionary) {
-                    if (data.dictionary[_dict]) {
-                        dText += "<div><dictionary>" + _dict + "</dictionary><div class='content'>";
-                        dText += data.dictionary[_dict] + "</div></div>";
-                    }
-                }
-                dText = dText.replace(/\n/g, "<br>");
-                dText = dText.replace(/  /g, "&nbsp; ");
-                document.getElementById('translator_dict').innerHTML = dText;
-                $(".dictionary_dict_area").css('display', 'block');
-
-                dText = "";
-                for (_s in data.sentences) {
-                    if (data.sentences[_s]) {
-                        dText += "<div><copus>" + _s + "</copus><div class='content'>";
-                        dText += data.sentences[_s] + "</div></div>";
-                    }
-                }
-                if (dText) {
-                    document.getElementById('translator_sentences').innerHTML = dText;
-                    $(".sentence_area").css('display', 'block');
-                } else {
-                    document.getElementById('translator_sentences').innerHTML = "";
-                }
-            } else {
-                $(".dict_area").css('display', 'none');
-                document.getElementById('translator_dict').innerHTML = "";
-                document.getElementById('translator_sentences').innerHTML = "";
-            }
-        },
-        error: function() {
-            $(".dict_area").css('display', 'none');
-        },
-        timeout: 2000
-    });
-}
 
 function view_template(_templateID) {
     document.getElementById("div_Corpus_file").innerHTML = "";
@@ -81,7 +21,6 @@ $(function() {
             success: function(response) {
                 view_template("corpusfile_new");
                 var _form = document.createElement('form');
-                console.log(response);
                 _form.innerHTML = response;
                 $("#cf_upload_form .file_url").html(_form.file_url);
                 $("#cf_upload_form .name").html(_form.name);
@@ -91,10 +30,6 @@ $(function() {
             }
         })
     });
-    $('.btn_search_form').on('click', function(e) {
-        window.location = "/concordance/";
-    });
-
     $("#corpus_file_table input[type='checkbox']").on('click', function(e) {
         if (this.value == 'on') {
             $("#corpus_file_table input[type='checkbox']").prop('checked', this.checked);
@@ -110,7 +45,7 @@ $(function() {
         if ($("#corpus_file_table input[type='checkbox']").is(":checked")) {
             $.confirm({
                 title: 'Delete Translation Memories',
-                content: 'Are you sure you want to delete these translation memories?.',
+                content: 'Are you sure you want to delete these Bilingual Corpus Files?.',
                 icon: 'fa fa-question-circle',
                 animation: 'scale',
                 closeAnimation: 'scale',
@@ -161,25 +96,14 @@ $(function() {
     })
 });
 
-var precorpusfileUL = '';
-var oldcorpusfileid = '';
-var SentenceTable =  '';
-var allpage = 0;
-var currentpageno = 0;
-
-var actions= [
-	"Unchecked", 
-	"Acceptable", 
-	"Unacceptable", 
-	"Amendable"
-];
-
-
-
 $(document).ready(function() {
 
-
-    mytable = $('#corpusfilecontenttable').DataTable({
+    var currentpageno = 0;
+    var SentenceTable =  '';
+    var precorpusfileUL = '';
+    var oldcorpusfileid = '';
+    var status = Array();
+    SentenceTable = $('#corpusfilecontenttable').DataTable({
         data : [],
         columns : [
             { "data" : "id",  }, 
@@ -189,10 +113,10 @@ $(document).ready(function() {
             { "data" : "status", "title" : "Status", 
                 "render": function(d,t,r){
                     var $select = $("<select></select>", {
-                        "id": r[0]+"start",
+                        "id": r['id']+"_select",
                         "value": d
                     });
-                    $.each(actions, function(k,v){
+                    $.each(status, function(k,v){
                         var $option = $("<option></option>", {
                             "text": v,
                             "value": v
@@ -214,10 +138,10 @@ $(document).ready(function() {
                 "targets": [ 0 ],
                 "visible": false
             },
-            { "width": "3%", "targets": 1 },
-            { "width": "44%", "targets": 2 },
-            { "width": "44%", "targets": 3 },
-            { "width": "9%", "targets": 4 }
+            { "width": "3%", "targets": 1, "className": "text-center", },
+            { "width": "44%", "targets": 2 , "className": "text-left",},
+            { "width": "44%", "targets": 3 , "className": "text-left",},
+            { "width": "9%", "targets": 4 , "className": "text-center",}
         ],
         select: {
             style:    'os',
@@ -231,7 +155,7 @@ $(document).ready(function() {
         "sPaginationType": "custom",
         "bLengthChange": false,
         "bInfo": false,
-        // fixedColumns: true
+        fixedColumns: true
     });
 
     $('body').on('dblclick', '#corpusfilecontenttable > tbody > tr >  td:not(:has(button))', function(){
@@ -244,31 +168,45 @@ $(document).ready(function() {
         el.focus();
         $(this).blur(endEdition);
     });
+    $('body').on('change', '#pageno', function(){
+        var newpageno = $(this).val();
+        currentpageno = newpageno;
+        if(!oldcorpusfileid)return;
+        get_CorpusfileSentence(oldcorpusfileid, newpageno)
+    });
 
     function endEdition()
     {
         // get the cell 
         var el = $(this);
-        const row = mytable.row(el)
+        const row = SentenceTable.row(el)
         var id = row.data().id;
-        var oldvalue = mytable.cell(el).data();
+        var oldvalue = SentenceTable.cell(el).data();
         var newvalue =  el.text();
         
-        mytable.cell(el).data(newvalue).draw();
+        SentenceTable.cell(el).data(newvalue).draw();
         // When the user finished to edit a cell and click out of the cell, the cell can't be editable, unless the user double click on this cell another time
         el.attr('contenteditable', 'false');
         el.off('blur', endEdition); // To prevent another bind to this function;
         //get the initialization options
-        var columns = mytable.settings().init().columns;
+        var columns = SentenceTable.settings().init().columns;
         //get the index of the clicked cell
-        var colIndex = mytable.cell(el).index().column;
+        var colIndex = SentenceTable.cell(el).index().column;
         if(oldvalue != newvalue){
-            send_changedsentence(id, columns[colIndex].data, newvalue, mytable.cell(el), oldvalue);
+            send_changedsentence(id, columns[colIndex].data, newvalue, SentenceTable.cell(el), oldvalue);
         }
         
     }
-        
-        
+
+    $('body').on('change', 'td > select', function(){
+        var el = $(this).parent();
+        var row = SentenceTable.row(el);
+        var id = row.data().id;
+        var oldvalue = SentenceTable.cell(el).data();
+        var newvalue = $(this).val();
+        send_changedsentence(id, 'status', newvalue, SentenceTable.cell(el), oldvalue);
+    })
+ 
     $("#corpusfiles > ul ").on('click', function(e){
         
         var tagName = $(this)[0].tagName;
@@ -281,12 +219,10 @@ $(document).ready(function() {
             newcorpusfileid = $(this)[0].id;
             precorpusfileUL = this;
         }
-        console.log(newcorpusfileid, oldcorpusfileid)
         if( newcorpusfileid != oldcorpusfileid && newcorpusfileid != undefined ){
             currentpageno = 1;
             get_CorpusfileSentence(newcorpusfileid, 1);
             oldcorpusfileid = newcorpusfileid;
-            console.log('Sender posted');
         }
     });
   
@@ -302,14 +238,14 @@ $(document).ready(function() {
             dataType: 'json',
             type: "POST",
             success: function (response) {
-                console.log(response);
-                console.log(response.data.data );
-                allpage = response.data.total;
-                mytable.clear().rows.add(response.data.data).draw();
-                console.log($("#corpusfilecontenttable_info"));
-                $("#pageinfo").text( 'Showing ' + currentpageno + " page of  "  + allpage);
+                allpage = response.data.total_pages;
+                // console.log()
+                status = response.data.status;
+                SentenceTable.clear().rows.add(response.data.data).draw();
+                $('#pageno').val(currentpageno);
+                $('#allpagenumber').text(allpage) 
                 if(currentpageno == 1){
-                    mytable.columns.adjust().draw();
+                    SentenceTable.columns.adjust().draw();
                 }
                 
             },
@@ -327,7 +263,7 @@ $(document).ready(function() {
         });
         
     }
-  
+
     $("#sentencetable_previous > a").on('click', function(){
         if(oldcorpusfileid == undefined){
             $.alert({
