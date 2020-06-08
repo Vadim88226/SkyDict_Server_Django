@@ -33,7 +33,7 @@ from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSe
 from .tokens import account_activation_token
 from .models import DictWords, DictSentences, TransMemories, UserSetting, CorpusStatus, BilingualCorpus, POSTaggedCorpus, BilingualSentence, POSTaggedSentence
 from .utils import translate_sentences, translate_file, concordance_search_sdk, store_Corpus_Sentences, store_POSTTagged_Sentences
-from .tables import tmTable, concordanceTable, BilingualCorpusTable, POSTaggedCorpusTable,  BilingualCorpusSentenceTable
+from .tables import tmTable, concordanceTable, BilingualCorpusTable, POSTaggedCorpusTable,  BilingualSentenceTable
 from .filters import tmFilter
 
 
@@ -49,7 +49,7 @@ def login_required(function):
         if request.user.is_authenticated:
             return function(request, *args, **kwargs)
         else:
-            raise PermissionDenied
+            return render(request, 'translator/content.html')
     return wrap    
 
 # display Dictionary Page
@@ -566,12 +566,12 @@ def views_CorpusValidator(request):
   
     table = BilingualCorpusTable(BilingualCorpus.objects.filter(name__contains=search_name).order_by(sort))
     search_Form = SearchFIleNameForm(initial={'searchname':search_name})
-    editable_table = BilingualCorpusSentenceTable(BilingualSentence.objects.all()[:10])
+    editable_table = BilingualSentenceTable(BilingualSentence.objects.all()[:10])
 
     return render(request, "validator/corpusvalidator.html", {
         'table': table, 
         'search_Form':search_Form,
-        'corpusfilelist': BilingualCorpus.objects.all(),
+        'corpusfiles': BilingualCorpus.objects.all(),
         'editabletable':editable_table
         })
 
@@ -627,7 +627,7 @@ def upload_POSTaggedFile(request):
         form = POSTaggedCorpusForm(initial={'t_lang':'th'})
         return HttpResponse(form)
 
-def update_corpusfilecontent(request):
+def update_CorpusSentence(request):
     print(request)
     if request.is_ajax and request.method == 'POST': 
         column_name = request.POST.get('columnname' )
@@ -639,15 +639,66 @@ def update_corpusfilecontent(request):
         return JsonResponse({"valid":False, 'getdata':get_data}, status = 200)
 
     return JsonResponse({}, status = 400)
-def get_corpusfilecontent(request):
-    if request.is_ajax and request.method == 'GET': 
+def get_CorpusSentence(request):
+    if request.is_ajax and request.method == 'POST': 
 
-        file_key_id = request.GET.get('fkid' )
-        print(file_key_id)
+        file_id = request.GET.get('id' )
+        print(file_id)
         # file_content = json.dumps( BilingualCorpusfilecontentTable( BilingualSentence.objects.get(pk = file_key_id)))
-        file_content = BilingualSentence.objects.get(pk = file_key_id) 
-        print(file_content)
-        # JsonResponse({"valid":False, 'data': file_content}, status = 200)
-        return HttpResponse(JsonResponse({"valid":False, 'data': file_content}, status = 200))
+        # file_content = BilingualSentence.objects.get(pk = file_key_id) 
+        file_sentence = {
+                            "columns": [
+                                { "data" : "id",  }, # this column is id of database, will hidden in frontend.
+                                { "data" : "no", "title" : "#"  },
+                                { "data" : "DT_RowId", "title" : "Id", "className": "editable" ,   },
+                                { "data" : "supplier", "title" : "supplier" , "className": "editable"   },
+                                { "data" : "color", "title" : "color", "className": "editable"    }
+                            ],
+                            "data": [
+                                { "id":1, "no":1, "DT_RowId" : "row_3", "supplier" : "small", "color" : "red" },
+                                { "id":2, "no":2, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
+                                { "id":3,  "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
+                                { "id":4, "no":4, "DT_RowId" : "row_11", "supplier" : "large", "color" : "blue" },
+                                { "id":5, "no":1, "DT_RowId" : "row_3", "supplier" : "small", "color" : "red" },
+                                { "id":6, "no":2, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
+                                { "id":7, "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
+                                { "id":8, "no":4, "DT_RowId" : "row_11", "supplier" : "large", "color" : "blue" },
+                                { "id":9, "no":1, "DT_RowId" : "row_3", "supplier" : "small", "color" : "red" },
+                                { "id":10, "no":2, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
+                                { "id":11, "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
+                                { "id":12, "no":4, "DT_RowId" : "row_11", "supplier" : "large", "color" : "blue" },
+                                { "id":13, "no":1, "DT_RowId" : "row_3", "supplier" : "small", "color" : "red" },
+                                { "id":14, "no":2, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
+                                { "id":15, "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
+                                { "id":16, "no":4, "DT_RowId" : "row_11", "supplier" : "large", "color" : "blue" },
+                                { "id":17, "no":1, "DT_RowId" : "row_3", "supplier" : "small", "color" : "red" },
+                                { "id":18, "no":2, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
+                                { "id":19, "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
+                                { "id":20, "no":4, "DT_RowId" : "row_11", "supplier" : "large", "color" : "blue" },
+                                { "id":21, "no":1, "DT_RowId" : "row_3", "supplier" : "small", "color" : "red" },
+                                { "id":22, "no":2, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
+                                { "id":23, "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
+                                { "id":24, "no":4, "DT_RowId" : "row_11", "supplier" : "large", "color" : "blue" },
+                                { "id":25, "no":1, "DT_RowId" : "row_3", "supplier" : "small", "color" : "red" },
+                                { "id":26, "no":2, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
+                                { "id":27, "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
+                                { "id":28, "no":4, "DT_RowId" : "row_11", "supplier" : "large", "color" : "blue" },
+                                { "id":29, "no":1, "DT_RowId" : "row_3", "supplier" : "small", "color" : "red" },
+                                { "id":30, "no":2, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
+                                { "id":31, "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
+                                { "id":32, "no":4, "DT_RowId" : "row_11", "supplier" : "large", "color" : "blue" },
+                                { "id":33, "no":1, "DT_RowId" : "row_3", "supplier" : "small", "color" : "red" },
+                                { "id":34, "no":2, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
+                                { "id":35, "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
+                                { "id":36, "no":4, "DT_RowId" : "row_11", "supplier" : "large", "color" : "blue" },
+                                { "id":37, "no":1, "DT_RowId" : "row_3", "supplier" : "small", "color" : "red" },
+                                { "id":38, "no":2, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
+                                { "id":39, "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
+                                { "id":40, "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" }
+                            ]
+                        }
+
+
+        return JsonResponse({"valid":True, 'data': file_sentence}, status = 200)
 
     return JsonResponse({}, status = 400)

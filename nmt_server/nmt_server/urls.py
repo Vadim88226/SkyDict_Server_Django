@@ -39,7 +39,6 @@ urlpatterns = [
     path('upload_CorpusFile/', views.upload_CorpusFile, name='upload_CorpusFile'),
     path('corpus_validator/', views.views_CorpusValidator, name='views_CorpusValidator'),
     path('pos_validator/', views.views_POSValidator, name='views_CorpusValidator'),
-    path('update_corpusfilecontent/', views.update_corpusfilecontent, name='changefilecontent')
 ]
 
 

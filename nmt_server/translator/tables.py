@@ -87,7 +87,7 @@ class POSTaggedCorpusTable(tables.Table):
 
 
 
-class BilingualCorpusSentenceTable(tables.Table):
+class BilingualSentenceTable(tables.Table):
     counter = tables.Column(verbose_name='#', empty_values=(), orderable=False)
     source = tables.Column(verbose_name='Source')
     target = tables.Column(verbose_name='Target')
