@@ -382,7 +382,7 @@ def query_WordContents(request):
         user_dict_data[i]['related']= getattr(data, 'related')
         user_dict_data[i]['synonym']= getattr(data, 'synonym')
         user_dict_data[i]['antonym']= getattr(data, 'antonym')
-        user_dict_data[i]['user']= getattr(data, 'user')
+        user_dict_data[i]['user']= request.user.username
         user_sentences_records = DictSentences.objects.filter(dictwords_id = getattr(data, 'id'))
         user_dict_data[i]['sentences'] = {}
         for j, sentence in enumerate(user_sentences_records):
@@ -417,14 +417,14 @@ def update_vocabulary(request):
 
 def approve_vocabulary(request):
     _word = request.GET.get('word')
-    _user = request.GET.get('user')
+    _user = request.user
     DictWords.objects.filter(word=_word, user=_user).update(is_approved=1)
     return JsonResponse({'content': "You successfully approved this vocabulary."})
 
 def delete_vocabulary(request):
     _id = int(request.GET.get('id', 0))
     _word = request.GET.get('word')
-    _user = request.GET.get('user')
+    _user = request.user
     if _id:
         DictWords.objects.filter(id=_id).delete()
     else:

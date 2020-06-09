@@ -305,14 +305,14 @@ $(document).ready(function() {
             url: "/update_corpussentence/",
             type: "POST",
             data: {
-                'field': field,
                 'id': id,
+                'field': field,
                 'value': value,
                 'csrfmiddlewaretoken': tk
             },
             success: function(response) {
                 
-                // console.log(response);
+                console.log(response);
             },
             error: function(response) {
                 console.error(response)

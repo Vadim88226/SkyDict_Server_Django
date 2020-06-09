@@ -331,40 +331,7 @@ $(function(){
         });
         
     });
-    $(document).on('change', "#db_vocabulary textarea", function(e) {
-        // update vocabulary
-        $.ajax({
-            url: update_vocabulary,
-            headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
-            data: {
-                'word_id': e.target.parentElement.getAttribute("word_id"),
-                'key_id': this.id.split('_')[0],
-                'content': this.value
-            },
-            dataType: 'json',
-            success: function (data) {
-                $.confirm({
-                    icon: 'fa fa-smile-o',
-                    theme: 'modern', content: data.content,
-                    animation: 'scale', type: 'blue',
-                    autoClose: 'okay|2000', escapeKey: 'okay',
-                    buttons: {
-                        okay: {  }
-                    }
-                });
-            },
-            error: function() {
-                $.alert({
-                    title: 'Alert', content: 'SERVER ERROR',
-                    icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
-                    buttons: {
-                        okay: {  }
-                    }
-                });
-            },
-            timeout: 2000
-        });
-    });
+
     $(".btn_approve").on('click', function(){  
         var _obj = document.getElementById("view_word");
         if(_obj.textContent == "") return;
