@@ -98,7 +98,7 @@ $(function() {
 
 $(document).ready(function() {
 
-    var currentpageno = 0;
+    var currentpageno = 1;
     var SentenceTable =  '';
     var precorpusfileUL = '';
     var oldcorpusfileid = '';
@@ -168,10 +168,11 @@ $(document).ready(function() {
         el.focus();
         $(this).blur(endEdition);
     });
+    // page no input box
     $('body').on('change', '#pageno', function(){
         var newpageno = $(this).val();
         currentpageno = newpageno;
-        if(!oldcorpusfileid)return;
+        if(!oldcorpusfileid) return;
         get_CorpusfileSentence(oldcorpusfileid, newpageno)
     });
 
@@ -197,7 +198,7 @@ $(document).ready(function() {
         }
         
     }
-
+    // change status event
     $('body').on('change', 'td > select', function(){
         var el = $(this).parent();
         var row = SentenceTable.row(el);
@@ -206,7 +207,7 @@ $(document).ready(function() {
         var newvalue = $(this).val();
         send_changedsentence(id, 'status', newvalue, SentenceTable.cell(el), oldvalue);
     })
- 
+    // when corpusfile list click, event
     $("#corpusfiles > ul ").on('click', function(e){
         
         var tagName = $(this)[0].tagName;
@@ -220,7 +221,7 @@ $(document).ready(function() {
             precorpusfileUL = this;
         }
         if( newcorpusfileid != oldcorpusfileid && newcorpusfileid != undefined ){
-            currentpageno = 1;
+            currentpageno = 1; // set default 1 
             get_CorpusfileSentence(newcorpusfileid, 1);
             oldcorpusfileid = newcorpusfileid;
         }
@@ -228,6 +229,7 @@ $(document).ready(function() {
   
 
     var get_CorpusfileSentence = function( id , pageno){
+      
         $.ajax({
             url: '/get_corpussentence/',
             headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
@@ -242,9 +244,9 @@ $(document).ready(function() {
                 // console.log()
                 status = response.data.status;
                 SentenceTable.clear().rows.add(response.data.data).draw();
-                $('#pageno').val(currentpageno);
+                $('#pageno').val(pageno);
                 $('#allpagenumber').text(allpage) 
-                if(currentpageno == 1){
+                if(pageno == 1){
                     SentenceTable.columns.adjust().draw();
                 }
                 
@@ -273,9 +275,10 @@ $(document).ready(function() {
                     okay: {  }
                 }
             });
+            return;
         }
-        if(currentpageno-1 > 0){
-            get_CorpusfileSentence(oldcorpusfileid, currentpageno -- );
+        if(currentpageno > 1){
+            get_CorpusfileSentence(oldcorpusfileid, --currentpageno);
         }
          
     })
@@ -288,14 +291,15 @@ $(document).ready(function() {
                     okay: {  }
                 }
             });
+            return;
         }
-        if(currentpageno+1 < allpage){
-            get_CorpusfileSentence(oldcorpusfileid, currentpageno ++ );
+        if(currentpageno < allpage){
+            get_CorpusfileSentence(oldcorpusfileid, ++currentpageno);
         }
         
     })
     
-    function send_changedsentence(id, field, value, td, oldvalue ){
+    function send_changedsentence(id, field, value, td, oldvalue){
         var tk = $('#tokenid').attr("data-token");
         $.ajax({
             url: "/update_corpussentence/",

@@ -628,15 +628,20 @@ def upload_POSTaggedFile(request):
         return HttpResponse(form)
 
 def update_CorpusSentence(request):
-    print(request)
     if request.is_ajax and request.method == 'POST': 
         id = request.POST.get('id')
         field = request.POST.get('field')
         value = request.POST.get('value')
-        
-        get_data = ['id-', id,'field-', field,'value-', value]
-        print('id-', id,'field-', field,'value-', value)
-        return JsonResponse({"valid":False, 'getdata':get_data}, status = 200)
+        if field == 'status':
+            value = CorpusStatus.objects.filter(status=value).first()
+            BilingualSentence.objects.filter(id=id).update(status=value)
+        elif field == 'source':
+            BilingualSentence.objects.filter(id=id).update(source=value)
+        elif field == 'target':
+            BilingualSentence.objects.filter(id=id).update(target=value)
+        else:
+            pass
+        return JsonResponse({"valid":True}, status = 200)
 
     return JsonResponse({}, status = 400)
 
@@ -644,28 +649,24 @@ def get_CorpusSentence(request):
     if request.is_ajax and request.method == 'POST': 
 
         page_cnt = 20
-
         file_id = request.POST.get('file_id')
 
         page_id = int(request.POST.get('page_id', 0)) - 1
+
         objects_cnt = BilingualSentence.objects.filter(corpus=file_id).count()
         total_pages = objects_cnt // page_cnt
         if objects_cnt % page_cnt != 0:
             total_pages += 1
-
-        sentences = BilingualSentence.objects.filter(corpus = file_id)[page_id * page_cnt:(page_id + 1) * page_cnt]
+        start_count = page_id * page_cnt
+        sentences = BilingualSentence.objects.filter(corpus = file_id)[start_count:start_count + page_cnt]
         data = []
         for i, sentence in enumerate(sentences):
-            data.append({"id":sentence.id, "count":i+1, "source":sentence.source, "target":sentence.target, "status":sentence.status.status})
-        status = [
-                "Unchecked", 
-                "Acceptable", 
-                "Unacceptable", 
-                "Amendable"]
+            data.append({"id":sentence.id, "count":start_count + i + 1, "source":sentence.source, "target":sentence.target, "status":sentence.status.status})
+        statuses = list(CorpusStatus.objects.all().values_list('status', flat=True).distinct())
         content = {
                     'total_pages':total_pages,
                     "data": data,
-                    'status' : status
+                    'status' : statuses
                 }
 
 

@@ -441,3 +441,10 @@ fieldset>ul.selected{
 #pageno{
     width: 80px;
 }
+
+.pagination>li>a, .pagination>li>span{
+    color: gray;
+}
+#pageinfo{
+    padding: 4px 6px;
+}
