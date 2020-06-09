@@ -2,6 +2,7 @@ import re
 import ast
 import csv
 import os, subprocess
+import openpyxl
 from pptx import Presentation
 from pptx.enum.action import PP_ACTION
 from docx import Document
@@ -293,6 +294,7 @@ def store_Corpus_Sentences(corpus_object):
     elif file_extension == '.csv':
         with open(file_url, encoding='utf-8') as csvfile:
             readCSV = csv.reader(csvfile, delimiter=',')
+            objects = []
             for row in readCSV:
                 try:
                     objects.append(
@@ -336,7 +338,7 @@ def store_POSTTagged_Sentences(corpus_object):
                 try:
                     objects.append(
                         POSTaggedSentence(
-                            corpus=corpus_object, source = sentences[0], target = sentences[1], status = status_object
+                            corpus=corpus_object, source = sentences[0].rstrip(), target = sentences[1].rstrip(), status = status_object
                         )
                     )
                 except IndexError:

@@ -161,122 +161,157 @@ $(function() {
     })
 });
 
-var preli = '';
-var oldid = '';
-var mytable =  '';
+var precorpusfileUL = '';
+var oldcorpusfileid = '';
+var SentenceTable =  '';
+var allpage = 0;
+var currentpageno = 0;
+
+var actions= [
+	"Unchecked", 
+	"Acceptable", 
+	"Unacceptable", 
+	"Amendable"
+];
+
+
+
 $(document).ready(function() {
 
-    document.querySelector("#row_11 > td:nth-child(2)")
+
+    mytable = $('#corpusfilecontenttable').DataTable({
+        data : [],
+        columns : [
+            { "data" : "id",  }, 
+            { "data" : "count", "title" : "#"  },
+            { "data" : "source", "title" : "Source", "className": "editable" ,   },
+            { "data" : "target", "title" : "Target" , "className": "editable"   },
+            { "data" : "status", "title" : "Status", 
+                "render": function(d,t,r){
+                    var $select = $("<select></select>", {
+                        "id": r[0]+"start",
+                        "value": d
+                    });
+                    $.each(actions, function(k,v){
+                        var $option = $("<option></option>", {
+                            "text": v,
+                            "value": v
+                        });
+                        if(d === v){
+                            $option.attr("selected", "selected")
+                        }
+                        $select.append($option);
+                    });
+                    return $select.prop("outerHTML");
+                }
+            }
+        ],
+        columnDefs: [{ 
+            targets: '_all',
+            "orderable": false 
+            },
+            {
+                "targets": [ 0 ],
+                "visible": false
+            },
+            { "width": "3%", "targets": 1 },
+            { "width": "44%", "targets": 2 },
+            { "width": "44%", "targets": 3 },
+            { "width": "9%", "targets": 4 }
+        ],
+        select: {
+            style:    'os',
+            selector: 'td:first-child'
+        },    
+        "pageLength": 20,
+        "aaSorting": [],
+        "searching": false,
+        // "pagingType": "simple",
+        "bPaginate": false,
+        "sPaginationType": "custom",
+        "bLengthChange": false,
+        "bInfo": false,
+        // fixedColumns: true
+    });
 
     $('body').on('dblclick', '#corpusfilecontenttable > tbody > tr >  td:not(:has(button))', function(){
         // The cell that has been clicked will be editable
-        console.log($(this)); 
         if($(this)[0].className != " editable")
             return;
         $(this).attr('contenteditable', 'true');
-            var el = $(this);
-            // We put the cursor at the beginning 
-            var range = document.createRange();
-            var sel = window.getSelection();
-            if(el[0].childNodes.length > 0)
-            {
-                range.setStart(el[0].childNodes[0],0);
-                range.collapse(true);
-                sel.removeAllRanges();
-                sel.addRange(range);
-            }
-            // The cell have now the focus
-            el.focus();
+        var el = $(this);
+        // The cell have now the focus
+        el.focus();
+        $(this).blur(endEdition);
+    });
+
+    function endEdition()
+    {
+        // get the cell 
+        var el = $(this);
+        const row = mytable.row(el)
+        var id = row.data().id;
+        var oldvalue = mytable.cell(el).data();
+        var newvalue =  el.text();
         
-            $(this).blur(endEdition);
-        });
-    
-        function endEdition()
-        {
-            
-            // We get the cell 
-            var el = $(this);
-            // mytable.row()
-            // We tell to datatable to refresh the cache with the DOM, like that the filter will find the new data added in the table.
-            // BUT IF WE EDIT A ROW ADDED DYNAMICALLY, THIS INSTRUCTION IS A PROBLEM
-            // mytable.cell( el ).invalidate().draw(); 
-        
-            // mytable.cell( el ).invalidate();
-            const row = mytable.row(el)
-            // row.invalidate()
-            console.log('Row changed: ', row.data())
-            console.log(el.text());
-            console.log( mytable.cell(el).data())
-            var newvalue =  el.text();
-            console.log(mytable.cell(el));
-            var columnname = mytable.column(el).data();
-            console.log(columnname);
-            console.log(el.index())
-            console.log(mytable.column(el.index()).name())
-            // mytable.cell(el).data(newvalue). draw();
-            // When the user finished to edit a cell and click out of the cell, the cell can't be editable, unless the user double click on this cell another time
-            el.attr('contenteditable', 'false');
-            el.off('blur', endEdition); // To prevent another bind to this function;
-           
+        mytable.cell(el).data(newvalue).draw();
+        // When the user finished to edit a cell and click out of the cell, the cell can't be editable, unless the user double click on this cell another time
+        el.attr('contenteditable', 'false');
+        el.off('blur', endEdition); // To prevent another bind to this function;
+        //get the initialization options
+        var columns = mytable.settings().init().columns;
+        //get the index of the clicked cell
+        var colIndex = mytable.cell(el).index().column;
+        if(oldvalue != newvalue){
+            send_changedsentence(id, columns[colIndex].data, newvalue, mytable.cell(el), oldvalue);
         }
+        
+    }
         
         
     $("#corpusfiles > ul ").on('click', function(e){
         
         var tagName = $(this)[0].tagName;
-        if(preli != ''){
-            $(preli)[0].className = '';
+        if(precorpusfileUL != ''){
+            $(precorpusfileUL)[0].className = '';
         }
         
         if( tagName == 'UL'){
             $(this)[0].className = 'selected';
-            newid = $(this)[0].id;
-            preli = this;
+            newcorpusfileid = $(this)[0].id;
+            precorpusfileUL = this;
         }
-        console.log(newid, oldid)
-        if( newid != oldid && newid != undefined ){
-            $('#corpusfilecontenttable_wrapper').remove();
-            $('#sentencetable').html("<table id='corpusfilecontenttable' class='display' cellspacing='0' width='100%'></table>")
-            get_corpusfilecontent(newid);
-            oldid = newid;
+        console.log(newcorpusfileid, oldcorpusfileid)
+        if( newcorpusfileid != oldcorpusfileid && newcorpusfileid != undefined ){
+            currentpageno = 1;
+            get_CorpusfileSentence(newcorpusfileid, 1);
+            oldcorpusfileid = newcorpusfileid;
             console.log('Sender posted');
         }
-        
     });
+  
 
-    var get_corpusfilecontent = function( id ){
+    var get_CorpusfileSentence = function( id , pageno){
         $.ajax({
             url: '/get_corpussentence/',
             headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
             data: {
-                'id': id
+                'file_id': id,
+                'page_id': pageno
             },
             dataType: 'json',
             type: "POST",
             success: function (response) {
                 console.log(response);
-                console.log(response.data.data,response.data.columns )
-                mytable =  $('#corpusfilecontenttable').DataTable({
-                    data : response.data.data,
-                    columns : response.data.columns,
-                    columnDefs: [{ 
-                        targets: '_all',
-                        "orderable": false 
-                        },
-                        {
-                            "targets": [ 0 ],
-                            "visible": false
-                        }
-                    ],
-                    select: {
-                        style:    'os',
-                        selector: 'td:first-child'
-                    },    
-                    pagingType : "simple",
-                    "pageLength": 20,
-                    "aaSorting": []
-
-                });
+                console.log(response.data.data );
+                allpage = response.data.total;
+                mytable.clear().rows.add(response.data.data).draw();
+                console.log($("#corpusfilecontenttable_info"));
+                $("#pageinfo").text( 'Showing ' + currentpageno + " page of  "  + allpage);
+                if(currentpageno == 1){
+                    mytable.columns.adjust().draw();
+                }
+                
             },
             error: function(response) {
                 console.error(response)
@@ -290,6 +325,71 @@ $(document).ready(function() {
             },
             timeout: 2000
         });
+        
     }
+  
+    $("#sentencetable_previous > a").on('click', function(){
+        if(oldcorpusfileid == undefined){
+            $.alert({
+                title: 'Alert', content: 'Select Corpus File',
+                icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                buttons: {
+                    okay: {  }
+                }
+            });
+        }
+        if(currentpageno-1 > 0){
+            get_CorpusfileSentence(oldcorpusfileid, currentpageno -- );
+        }
+         
+    })
+    $("#sentencetable_next > a").on('click', function(){
+        if(oldcorpusfileid == undefined){
+            return $.alert({
+                title: 'Alert', content: 'Select Corpus File',
+                icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                buttons: {
+                    okay: {  }
+                }
+            });
+        }
+        if(currentpageno+1 < allpage){
+            get_CorpusfileSentence(oldcorpusfileid, currentpageno ++ );
+        }
+        
+    })
+    
+    function send_changedsentence(id, field, value, td, oldvalue ){
+        var tk = $('#tokenid').attr("data-token");
+        $.ajax({
+            url: "/update_corpussentence/",
+            type: "POST",
+            data: {
+                'field': id,
+                'id': field,
+                'value': value,
+                'csrfmiddlewaretoken': tk
+            },
+            success: function(response) {
+                
+                console.log(response);
+            },
+            error: function(response) {
+                console.error(response)
+                $.alert({
+                    title: 'Alert', content: 'SERVER ERROR',
+                    icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                    buttons: {
+                        okay: {  }
+                    }
+                });
+                td.data(oldvalue).draw();
+            },
+            timeout: 2000
+
+        })
+    }
+        
     
 });
+

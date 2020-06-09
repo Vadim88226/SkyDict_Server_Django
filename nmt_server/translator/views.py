@@ -630,75 +630,40 @@ def upload_POSTaggedFile(request):
 def update_CorpusSentence(request):
     print(request)
     if request.is_ajax and request.method == 'POST': 
-        column_name = request.POST.get('columnname' )
-        column_id = request.POST.get('columnid' )
-        old_value = request.POST.get('oldvalue' )
-        new_value = request.POST.get('newvalue' )
-        get_data = ['cn-', column_name,'ci-', column_id,'od-', old_value, 'nd-', new_value]
-        print('cn-', column_name,'ci-', column_id,'od-', old_value, 'nd-', new_value)
+        id = request.POST.get('id')
+        field = request.POST.get('field')
+        value = request.POST.get('value')
+        
+        get_data = ['id-', id,'field-', field,'value-', value]
+        print('id-', id,'field-', field,'value-', value)
         return JsonResponse({"valid":False, 'getdata':get_data}, status = 200)
 
     return JsonResponse({}, status = 400)
+
 def get_CorpusSentence(request):
     if request.is_ajax and request.method == 'POST': 
 
-        file_id = request.GET.get('id' )
-        print(file_id)
-        # file_content = json.dumps( BilingualCorpusfilecontentTable( BilingualSentence.objects.get(pk = file_key_id)))
-        # file_content = BilingualSentence.objects.get(pk = file_key_id) 
-        file_sentence = {
-                            "columns": [
-                                { "data" : "id",  }, # this column is id of database, will hidden in frontend.
-                                { "data" : "no", "title" : "#"  },
-                                { "data" : "DT_RowId", "title" : "Id", "className": "editable" ,   },
-                                { "data" : "supplier", "title" : "supplier" , "className": "editable"   },
-                                { "data" : "color", "title" : "color", "className": "editable"    }
-                            ],
-                            "data": [
-                                { "id":1, "no":1, "DT_RowId" : "row_3", "supplier" : "small", "color" : "red" },
-                                { "id":2, "no":2, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
-                                { "id":3,  "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
-                                { "id":4, "no":4, "DT_RowId" : "row_11", "supplier" : "large", "color" : "blue" },
-                                { "id":5, "no":1, "DT_RowId" : "row_3", "supplier" : "small", "color" : "red" },
-                                { "id":6, "no":2, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
-                                { "id":7, "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
-                                { "id":8, "no":4, "DT_RowId" : "row_11", "supplier" : "large", "color" : "blue" },
-                                { "id":9, "no":1, "DT_RowId" : "row_3", "supplier" : "small", "color" : "red" },
-                                { "id":10, "no":2, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
-                                { "id":11, "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
-                                { "id":12, "no":4, "DT_RowId" : "row_11", "supplier" : "large", "color" : "blue" },
-                                { "id":13, "no":1, "DT_RowId" : "row_3", "supplier" : "small", "color" : "red" },
-                                { "id":14, "no":2, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
-                                { "id":15, "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
-                                { "id":16, "no":4, "DT_RowId" : "row_11", "supplier" : "large", "color" : "blue" },
-                                { "id":17, "no":1, "DT_RowId" : "row_3", "supplier" : "small", "color" : "red" },
-                                { "id":18, "no":2, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
-                                { "id":19, "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
-                                { "id":20, "no":4, "DT_RowId" : "row_11", "supplier" : "large", "color" : "blue" },
-                                { "id":21, "no":1, "DT_RowId" : "row_3", "supplier" : "small", "color" : "red" },
-                                { "id":22, "no":2, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
-                                { "id":23, "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
-                                { "id":24, "no":4, "DT_RowId" : "row_11", "supplier" : "large", "color" : "blue" },
-                                { "id":25, "no":1, "DT_RowId" : "row_3", "supplier" : "small", "color" : "red" },
-                                { "id":26, "no":2, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
-                                { "id":27, "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
-                                { "id":28, "no":4, "DT_RowId" : "row_11", "supplier" : "large", "color" : "blue" },
-                                { "id":29, "no":1, "DT_RowId" : "row_3", "supplier" : "small", "color" : "red" },
-                                { "id":30, "no":2, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
-                                { "id":31, "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
-                                { "id":32, "no":4, "DT_RowId" : "row_11", "supplier" : "large", "color" : "blue" },
-                                { "id":33, "no":1, "DT_RowId" : "row_3", "supplier" : "small", "color" : "red" },
-                                { "id":34, "no":2, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
-                                { "id":35, "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
-                                { "id":36, "no":4, "DT_RowId" : "row_11", "supplier" : "large", "color" : "blue" },
-                                { "id":37, "no":1, "DT_RowId" : "row_3", "supplier" : "small", "color" : "red" },
-                                { "id":38, "no":2, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
-                                { "id":39, "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" },
-                                { "id":40, "no":3, "DT_RowId" : "row_3", "supplier" : "medium", "color" : "blue" }
-                            ]
-                        }
+        page_cnt = 20
+
+        file_id = request.POST.get('file_id')
+
+        page_id = int(request.POST.get('page_id', 0)) - 1
+        objects_cnt = BilingualSentence.objects.filter(corpus=file_id).count()
+        total_pages = objects_cnt // page_cnt
+        if objects_cnt % page_cnt != 0:
+            total_pages += 1
+
+        sentences = BilingualSentence.objects.filter(corpus = file_id)[page_id * page_cnt:(page_id + 1) * page_cnt]
+        data = []
+        for i, sentence in enumerate(sentences):
+            data.append({"id":sentence.id, "count":i+1, "source":sentence.source, "target":sentence.target, "status":sentence.status.status})
+
+        content = {
+                    'total_pages':total_pages,
+                    "data": data
+                }
 
 
-        return JsonResponse({"valid":True, 'data': file_sentence}, status = 200)
+        return JsonResponse({'valid': False, 'data' : content}, status = 200)
 
     return JsonResponse({}, status = 400)

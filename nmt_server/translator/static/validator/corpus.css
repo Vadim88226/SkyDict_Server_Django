@@ -63,6 +63,7 @@
     border: 1px solid;
     border-style: solid none none;
     margin-top: -1px;
+    height: calc(100vh - 155px);
 }
 
 div.table-container {
@@ -232,8 +233,7 @@ textarea {
 
 .list_side {
     max-width: 260px;
-    height: calc(100vh - 155px);
-   
+    height: calc(100vh - 190px);
     position: relative;
     display: flow-root;
     overflow: auto;
@@ -305,10 +305,6 @@ textarea {
     min-width: 100px;
 } */
 
-select {
-    width: 100px;
-    margin: 0 20px;
-}
 
 .form_vocabulary {
     display: flex;
@@ -317,13 +313,21 @@ select {
 .form_vocabulary div {
     width: 96%;
 }
-
+/* #corpusfile_content > div.container.response{
+    margin-top: -40px;
+} */
 @media (max-width: 767px) {
     #corpusfile_content {
         display: block;
     }
-    #corpusfile_content > div.container.response{
-        margin-top: 0px;
+    #corpusfile_content > div.container.response {
+        margin-top: 10px;
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+    .col-sm-12{
+        padding-right: 0px;
+        padding-left: 0px;
     }
     .list_side {
         max-height: 200px;
@@ -364,9 +368,7 @@ th {
 .row{
     width: 100%;
 }
-#corpusfile_content > div.container.response{
-    margin-top: -40px;
-}
+
 @media (max-width: 995px){
     .container {
         width: 99%;
@@ -397,7 +399,9 @@ th {
     height: auto;
 }
 
-
+#sentencetable{
+    margin-top: 10px;
+}
 
 thead>tr>th{
     background-color: #fff;
@@ -457,7 +461,13 @@ thead>tr>th{
 .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
     border: 1px solid #ddd !important;
 }
-
+table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.dataTable.display tbody th, table.dataTable.display tbody td {
+    border: 1px solid #ddd !important;
+    padding: 8px !important;
+}
+table.dataTable {
+    border-collapse: collapse !important;
+}
 fieldset{
     border: 1px solid #100f0f;
     margin: 0 2px;
@@ -468,6 +478,7 @@ legend{
     border-bottom: none;
     text-align: center;
     width: 80%;
+    font-size: inherit;
 }
 
 fieldset>ul{
@@ -478,14 +489,10 @@ fieldset>ul{
     padding-left: 10px;
 }
 fieldset>ul:hover{
-    background-color: #eee;
-    box-shadow: 2px 1px 4px 1px #504949;
-    text-shadow: 1px 1px 4px #2b3535;
+    background-color: #f5f5f5;
 }
 fieldset>ul.selected{
-    background-color: #f7f7f6;
-    box-shadow: 2px 1px 4px 1px #504949;
-    text-shadow: 1px 1px 4px #2b3535;
+    background-color: lightgray;
     transform-origin: left;
     transition-timing-function: cubic-bezier(0, 0, 0.79, 0.01);
 }
@@ -495,7 +502,7 @@ fieldset>ul.selected{
 }
 
 #div_Corpus_Validator{
-    margin-top: 40px;
+    margin-top: 20px;
 }
 /* 
 #corpusfile{
