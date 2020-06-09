@@ -90,8 +90,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'skydict_db',
-        'USER': 'root',
-        'PASSWORD': 'vadim',
+        'USER': 'scote',
+        'PASSWORD': '111111111111',
         'HOST': 'localhost',
         'PORT': '3306',
     }

@@ -657,10 +657,15 @@ def get_CorpusSentence(request):
         data = []
         for i, sentence in enumerate(sentences):
             data.append({"id":sentence.id, "count":i+1, "source":sentence.source, "target":sentence.target, "status":sentence.status.status})
-
+        status = [
+                "Unchecked", 
+                "Acceptable", 
+                "Unacceptable", 
+                "Amendable"]
         content = {
                     'total_pages':total_pages,
-                    "data": data
+                    "data": data,
+                    'status' : status
                 }
 
 
