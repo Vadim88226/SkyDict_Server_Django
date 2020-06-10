@@ -30,7 +30,7 @@ $(function() {
             }
         })
     });
-    $("#corpus_file_table input[type='checkbox']").on('click', function(e) {
+    $(document).on('click', "#corpus_file_table input[type='checkbox']", function(e) {
         if (this.value == 'on') {
             $("#corpus_file_table input[type='checkbox']").prop('checked', this.checked);
             if (this.checked) {
@@ -41,7 +41,6 @@ $(function() {
         }
     })
     $(document).on('click', ".btn_delete", function(e) {
-        var form_data = new FormData(corpus_file_table);
         if ($("#corpus_file_table input[type='checkbox']").is(":checked")) {
             $.confirm({
                 title: 'Delete Translation Memories',
@@ -80,25 +79,121 @@ $(function() {
             $('.spinner input').val(parseInt($('.spinner input').val() * 1, 10) - 1);
         }
     });
-    $('#corpus_file_table > div > table > tbody > tr input[type="checkbox"]').on('click', function(e) {
+    $(document).on('click', '#corpus_file_table > div > table > tbody > tr input[type="checkbox"]', function(e) {
         this.checked = 1 - this.checked;
     });
-    $('#corpus_file_table > div > table > tbody > tr').on('click', function(e) {
-        e.currentTarget.cells[5].childNodes[0].checked = 1 - (e.currentTarget.cells[5].childNodes[0].checked);
-        if (e.currentTarget.cells[5].childNodes[0].checked)
-            $(this).css('background-color', 'lightgrey');
-        else
-            $(this).css('background-color', '');
+
+    
+    $(document).on('click','#corpus_file_table > div > table > tbody > tr', function(e) {
+        if(e.target.className != 'export_btn'){
+            e.currentTarget.cells[5].childNodes[0].checked = 1 - (e.currentTarget.cells[5].childNodes[0].checked);
+            if (e.currentTarget.cells[5].childNodes[0].checked)
+                $(this).css('background-color', 'lightgrey');
+            else
+                $(this).css('background-color', '');
+        }
+        
     });
     $(document).on('click', ".btn_uploadTm_back", function(e) {
         // $('.btn_memories_form').click();
         view_template("div_" + suburl + "_form");
     })
+
+    // corpusfile export 
+    $(document).on('click', ".export_btn", function(e) {
+        e.preventDefault();
+        var row = $(this).parent().parent()[0].children;
+        var f_name = $(row[1]).text();
+        var f_url = $(row[3]).text();
+        var f_id = $(row[5].firstChild).val();
+        $("#ex_name").html(f_name);
+        $("#ex_url").html(f_url);
+        $("#ex_id").val(f_id);
+        $("#export_modal").modal();
+        setTimeout(() => {
+            $("#new_name").focus();
+        }, 1000);
+       
+    })
+    
+    var export_corpusfn = function(datas){
+        $.ajax({
+            url: "/export_corpus/",
+            headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
+            type: "POST",
+            data: {
+                'id': datas['ex_id'],
+                'name': datas['new_name'],
+                'type': datas['ex_type'],
+                'statuses': datas['status'],
+
+            },
+            dataType: 'json',
+            success: function(response) {
+                $("#export_modal").modal('hide');
+                $.alert({
+                    title: 'Alert', content: 'SUCCESSFUL',
+                    icon: 'fa fa-smile-o', theme: 'modern', animation: 'scale', closeAnimation: 'scale',
+                    type: 'blue',
+                    autoClose: 'okay|2000',
+                    buttons: {
+                        okay: {  }
+                    }
+                });
+                $('#export_setting_form').not(':button, :submit, :reset, :hidden').val('').removeAttr('checked').removeAttr('selected');
+            },
+            error: function(response) {
+           
+                $.alert({
+                    title: 'Alert', content: 'SERVER ERROR',
+                    icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                    buttons: {
+                        okay: {  }
+                    }
+                });
+            },
+            timeout: 2000
+
+        })
+    }
+
+    $(document).on('click', '.btn.btn-default.btn-setting-export', function(){
+        params   = $('#export_setting_form').serializeArray();
+        if(params[3].value == ''){
+            $("#new_name").focus()
+            return false;
+        }
+
+        
+        var parramsarray = Array();
+        var statusary = Array();
+        for (const key in params) {
+            if (key > 4 && params.hasOwnProperty(key)) {
+                const element = params[key];
+                statusary.push(element.value);
+            }else{
+                const element = params[key];
+                parramsarray[element.name]=element.value;
+            }
+        }
+        if(statusary.length){
+            parramsarray['status']=statusary.join(',');
+            export_corpusfn(parramsarray);
+        }
+      
+    });
+
+
+
 });
 
+
+
+// edittable 
 $(document).ready(function() {
 
     var currentpageno = 1;
+    var allpage = 0;
     var SentenceTable =  '';
     var precorpusfileUL = '';
     var oldcorpusfileid = '';
@@ -171,8 +266,19 @@ $(document).ready(function() {
     // page no input box
     $('body').on('change', '#pageno', function(){
         var newpageno = $(this).val();
+        if(!oldcorpusfileid){
+            $(this).val('');
+            return;
+        } 
+        if(newpageno > allpage){
+            newpageno = allpage;
+            $(this).val(allpage);
+        }
+        if(newpageno < 1){
+            newpageno = 1;
+            $(this).val(1);
+        }
         currentpageno = newpageno;
-        if(!oldcorpusfileid) return;
         get_CorpusfileSentence(oldcorpusfileid, newpageno)
     });
 
@@ -198,8 +304,9 @@ $(document).ready(function() {
         }
         
     }
+
     // change status event
-    $('body').on('change', 'td > select', function(){
+    $('body').on('change', '#corpusfilecontenttable > tbody > tr > td > select', function(){
         var el = $(this).parent();
         var row = SentenceTable.row(el);
         var id = row.data().id;
@@ -241,7 +348,6 @@ $(document).ready(function() {
             type: "POST",
             success: function (response) {
                 allpage = response.data.total_pages;
-                // console.log()
                 status = response.data.status;
                 SentenceTable.clear().rows.add(response.data.data).draw();
                 $('#pageno').val(pageno);
@@ -252,7 +358,7 @@ $(document).ready(function() {
                 
             },
             error: function(response) {
-                console.error(response)
+           
                 $.alert({
                     title: 'Alert', content: 'SERVER ERROR',
                     icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
@@ -267,7 +373,8 @@ $(document).ready(function() {
     }
 
     $("#sentencetable_previous > a").on('click', function(){
-        if(oldcorpusfileid == undefined){
+
+        if(oldcorpusfileid == undefined || oldcorpusfileid == ''){
             $.alert({
                 title: 'Alert', content: 'Select Corpus File',
                 icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
@@ -283,7 +390,7 @@ $(document).ready(function() {
          
     })
     $("#sentencetable_next > a").on('click', function(){
-        if(oldcorpusfileid == undefined){
+        if(oldcorpusfileid == undefined || oldcorpusfileid == ''){
             return $.alert({
                 title: 'Alert', content: 'Select Corpus File',
                 icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
@@ -311,11 +418,9 @@ $(document).ready(function() {
                 'csrfmiddlewaretoken': tk
             },
             success: function(response) {
-                
-                console.log(response);
             },
             error: function(response) {
-                console.error(response)
+          
                 $.alert({
                     title: 'Alert', content: 'SERVER ERROR',
                     icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
@@ -330,6 +435,7 @@ $(document).ready(function() {
         })
     }
         
+
     
 });
 

@@ -555,6 +555,8 @@ def upload_translationMemories(request):
 @login_required
 def views_CorpusValidator(request):
     sort = request.GET.get('sort', 'name')
+    if sort == 'export':
+        sort = 'name'
     search_name = request.GET.get('searchname', '')
     delID = request.POST.getlist('check')
     
@@ -571,8 +573,7 @@ def views_CorpusValidator(request):
     return render(request, "validator/corpusvalidator.html", {
         'table': table, 
         'search_Form':search_Form,
-        'corpusfiles': BilingualCorpus.objects.all(),
-        'editabletable':editable_table
+        'corpusfiles': BilingualCorpus.objects.all()
         })
 
 @login_required
@@ -601,10 +602,8 @@ def upload_CorpusFile(request):
         if form.is_valid():
             corpus = form.save(commit=False)
             corpus.user = User.objects.get(pk = request.user.id)
-            corpus.save()
-            
+            corpus.save()            
             valid = store_Corpus_Sentences(corpus)
-
         return redirect('/corpus_validator/')
     else:
         form = BilingualCorpusForm(initial={'t_lang':'th'})
@@ -625,7 +624,7 @@ def upload_POSTaggedFile(request):
         return HttpResponse(form)
 
 def update_CorpusSentence(request):
-    if request.is_ajax and request.method == 'POST': 
+    if request.method == 'POST': 
         id = request.POST.get('id')
         field = request.POST.get('field')
         value = request.POST.get('value')
@@ -643,13 +642,10 @@ def update_CorpusSentence(request):
     return JsonResponse({}, status = 400)
 
 def get_CorpusSentence(request):
-    if request.is_ajax and request.method == 'POST': 
-
+    if request.method == 'POST': 
         page_cnt = 20
         file_id = request.POST.get('file_id')
-
         page_id = int(request.POST.get('page_id', 0)) - 1
-
         objects_cnt = BilingualSentence.objects.filter(corpus=file_id).count()
         total_pages = objects_cnt // page_cnt
         if objects_cnt % page_cnt != 0:
@@ -665,8 +661,19 @@ def get_CorpusSentence(request):
                     "data": data,
                     'status' : statuses
                 }
-
-
         return JsonResponse({'valid': False, 'data' : content}, status = 200)
+    return JsonResponse({}, status = 400)
+
+
+
+def export_Corpus(request):
+    if request.method == 'POST': 
+        e_id = request.POST.get('id')
+        e_name = request.POST.get('name')
+        e_type = request.POST.get('type')
+        e_status = request.POST.get('statuses')
+        data = [0, e_id, 1, e_name, 2, e_type, 3, e_status]
+        print(0, e_id, 1, e_name, 2, e_type, 3, e_status )
+        return JsonResponse({'valid': False, 'data' : data}, status = 200)
 
     return JsonResponse({}, status = 400)

@@ -15,7 +15,7 @@ function ShowSentence() {
             'tl': target_language.toLowerCase().substr(0, 2)
         },
         dataType: 'json',
-        success: function(data) { //console.log(data);
+        success: function(data) {
             $("#ta_target").val(data.content);
         },
         error: function() {
@@ -93,12 +93,12 @@ function similar_words() {
             }
         },
         error: function() {
-            document.getElementById('wordDict_help_popup').style.display = "none"; //console.log("error");
+            document.getElementById('wordDict_help_popup').style.display = "none";
             _ajax_communication = false;
         },
         timeout: 1000,
     }).always(function(e) {
-        // console.log(_ajax_communication);
+     
         _ajax_communication = false;
     });
 }
@@ -142,7 +142,7 @@ $(function() {
     //     ShowSelection(selectedText);
     // });
     $('.source_textarea').on('keyup', function(e) {
-        var keycode = (e.keyCode ? e.keyCode : e.which); //console.log(keycode);
+        var keycode = (e.keyCode ? e.keyCode : e.which); 
         suggest_navigation_keys_check(e);
         if (keycode == 13 || keycode == 32) {
             document.getElementById('wordDict_help_popup').style.display = "none";
@@ -182,7 +182,7 @@ $(function() {
                 enctype: "multipart/form-data",
                 success: function(data) {
                     if (data.content) {
-                        // console.log(data.content);
+                    
                         fileUrl = "../static/media/" + data.content;
                         var file = new File(["aa"], fileUrl);
                         var link = document.createElement("a");

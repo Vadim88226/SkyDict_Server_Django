@@ -24,7 +24,7 @@ urlpatterns = [
     path('approve_vocabulary', views.approve_vocabulary, name='index'),
     path('delete_vocabulary', views.delete_vocabulary, name='index'),
     path('update_corpussentence/', views.update_CorpusSentence, name='update_CorpusSentence'),
-    path('get_corpussentence/', views.get_CorpusSentence, name='get_CorpusSentence')
+    path('get_corpussentence/', views.get_CorpusSentence, name='get_CorpusSentence'),
+    path('export_corpus/', views.export_Corpus, name='export_Corpus')
     
-   
 ]

@@ -226,11 +226,12 @@ textarea {
 }
 
 .list_side {
-    max-width: 260px;
+    max-width: 250px;
     height: calc(100vh - 190px);
     position: relative;
     display: flow-root;
     overflow: auto;
+    margin-right: 10px;
 }
 
 #view_content {
@@ -335,6 +336,7 @@ th {
     }
     #corpusfilecontenttable_wrapper > div:nth-child(1) > div:nth-child(2){
         width: 50%;
+      
     }
 }
 
@@ -358,11 +360,9 @@ th {
 
 #sentencetable{
     margin-top: 10px;
-}
-
-thead>tr>th{
-    background-color: #fff;
-    text-align: center !important;
+    padding-right: 0px; 
+    padding-left: 0px;
+  
 }
 
 
@@ -384,14 +384,27 @@ thead>tr>th{
     margin: -1px 0;
 }
 
-
-
+/* a{
+    color: black;
+} */
+/* 
 .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
     border: 1px solid #ddd !important;
+    background-color: #fff;
+  
+} */
+
+table.dataTable thead th, table.dataTable thead td {
+    padding: 8px;
+    border-bottom: 1px solid #111;
+    font-size: 14px;
+    text-align: center;
+    background-color: #fff;
 }
 table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.dataTable.display tbody th, table.dataTable.display tbody td {
     border: 1px solid #ddd !important;
-    padding: 8px !important;
+    padding: 2px !important;
+    font-size: 14px;
 }
 table.dataTable {
     border-collapse: collapse !important;
@@ -439,12 +452,24 @@ fieldset>ul.selected{
 }
 
 #pageno{
-    width: 80px;
+    width: 60px;
+    padding: initial;
 }
 
-.pagination>li>a, .pagination>li>span{
-    color: gray;
+.pagination>li>a:focus, .pagination>li>a:hover, .pagination>li>span:focus, .pagination>li>span:hover {
+    z-index: 0;
+    color: #000000;
+    background-color: #fff;
+    border-color: #ddd;
+    position: flex;
+    color: black;
 }
-#pageinfo{
-    padding: 4px 6px;
+
+
+.pagination>li>a, .pagination>li>span {
+    color: black;
+}
+
+#sentencetable_previous > a:hover, #sentencetable_previous > :focus, #sentencetable_next > a:hover, #sentencetable_next > :focus{
+    background-color: gainsboro;;
 }

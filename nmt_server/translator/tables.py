@@ -16,7 +16,7 @@ class MaterializeCheckColumn(tables.CheckBoxColumn):
         attrs = tables.utils.AttributeDict(default, **(specific or general or {}))
         # return mark_safe("<p><label><input %s/><span></span></label></p>" % attrs.as_html())
         return mark_safe("<input %s/>" % attrs.as_html())
-        
+
 class tmTable(tables.Table):
     check = MaterializeCheckColumn(accessor='id', attrs={"td":{'class': 'match_rate'}})
     counter = tables.Column(verbose_name='#', empty_values=(), orderable=False)
@@ -53,17 +53,19 @@ class BilingualCorpusTable(tables.Table):
     s_lang = tables.Column(verbose_name="Languages")
     user = tables.Column(verbose_name='Owner')
     file_url = tables.Column(verbose_name='Bilingual Corpus File')
+    export = tables.TemplateColumn("<input type='button' style='width:100%' class='export_btn' value='export'/>")
+
     class Meta:
         model = BilingualCorpus
         template_name = "django_tables2/bootstrap-responsive.html"
-        fields = ('counter', 'name', 's_lang', 'file_url', 'user', 'check')
+        fields = ('counter', 'name', 's_lang', 'file_url', 'user', 'check', 'export')
         attrs = {"class": "table table-hover paleblue"}
     def render_counter(self):
         self.row_counter = getattr(self, 'row_counter', itertools.count(1))
         return next(self.row_counter)
     def render_s_lang(self, value, record):
         return mark_safe('''%s > %s''' % (value.upper(), record.t_lang.upper()))
-
+    
    
     
 class POSTaggedCorpusTable(tables.Table):
