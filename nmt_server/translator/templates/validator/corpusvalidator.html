@@ -72,10 +72,10 @@
                                         <a aria-controls="sentencetable" class="page-link">Previous</a>
                                     </li>
                                     <li class="page-item pages"  id="sentencetable_pageinfo">
-                                        <a aria-controls="sentencetable" id='pageinfo' style="border: none;margin: auto;">
-                                            showing
+                                        <a aria-controls="sentencetable" id='pageinfo' style="border: none;margin: auto;height: 36px;">
+                                            Go to page 
                                             <input type="number" name="pageno" id="pageno"  min = 0;/>
-                                            pages of 
+                                            of 
                                             <e id="allpagenumber" ></e>
                                         </a>
                                     </li>
@@ -139,6 +139,78 @@
         </table>
     </form>
 </template>
+
+
+
+<div id="export_modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id="modal-title">Export Setting...</h4>
+        </div>
+            <form id="export_setting_form" > 
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <input type="hidden" id="ex_id" name="ex_id"/>
+                    <input type="hidden" id="user_name" name="user_name" value="{{request.user}}"/>
+                    <table>
+                        <tr><td>Corpus Name : </td><td  id='ex_name' name='ex_name'></td></tr>
+                        <tr><td>Bilingual Corpus File :</td><td id='ex_url' name='ex_url'></td></tr>
+                        <tr><td>File Name :</td>
+                            <td><input type='text' class="form-control" id='new_name' name='new_name' required /></td>
+                           </td></tr>
+                        <tr><td>Save As Type :</td>
+                            <td>
+                                <select class="form-control" name="ex_type" class="custom-select mb-3">
+                                    <option selected value='txt'>.txt</option>
+                                    <option value="cav">.csv</option>
+                                    <option value="xlsx">.xlsx</option>
+                                    <option value="tmx">.tmx</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;" >
+                                <label class="form-check-label" for="status1">
+                                    <input type="checkbox" class="form-check-input" id="status1" name="status1" value="1" style="margin-right: 15px;margin-left: 15px;">Unchecked
+                                </label>
+                            </td>
+                            <td style="text-align: center;" >
+                                <label class="form-check-label" for="status2">
+                                    <input type="checkbox" class="form-check-input" id="status2" name="status2" value="2"   style="margin-right: 15px;" checked >Acceptable
+                                  </label>
+                            </td>
+                            
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;" >
+                                <label class="form-check-label"  for="status3">
+                                    <input type="checkbox" class="form-check-input" id="status3" name="status3" value="3"  style="margin-right: 15px;margin-left: 15px;">Unacceptable
+                                </label>
+                            </td>
+                            <td style="text-align: center;" >
+                                <label class="form-check-label"  for="status4">
+                                    <input type="checkbox" class="form-check-input" id="status4" name="status4" value="4"  style="margin-right: 15px;">Amendable
+                                </label>
+                             
+                            </td>
+                        </tr>
+                    </table> 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-setting-export">OK</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+      </div>
+    </div>
+</div>
 <!-- new corpus file templete end -->
 {% endblock content %}
 <!-- =============================== -->
+
+
+
+

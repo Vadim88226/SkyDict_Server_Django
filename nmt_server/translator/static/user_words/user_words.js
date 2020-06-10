@@ -260,7 +260,7 @@ $(function(){
                                 },
                                 dataType: 'json',
                                 success: function (data) {
-                                    // console.log(data);
+                             
                                     _frm.removeChild(_exam);
                                 },
                                 error: function() {

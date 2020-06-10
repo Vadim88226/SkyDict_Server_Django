@@ -39,7 +39,7 @@ function ShowSentence() {
             'tl': target_language.toLowerCase().substr(0, 2)
         },
         dataType: 'json',
-        success: function(data) { //console.log(data);
+        success: function(data) {
             $("#ta_target").val(data.content);
         },
         error: function() {
@@ -92,7 +92,7 @@ var _suggest_wordposition = -1;
 function suggest_navigation_keys_check(e) {
     var keycode = (e.keyCode ? e.keyCode : e.which);
     var nodes = document.getElementById('wordDict_help_popup');
-    //console.log(e.currentTarget.value);
+  
     if (document.getElementById('wordDict_help_popup').style.display != "none") {
         switch (keycode) {
             case 40: //down arrow
@@ -161,8 +161,7 @@ $(function() {
     });
 
     $(document).on('click', ".menu__login_logo", function() {
-        // console.log('========1')
-        // $("#menu_login_logo").click();
+        
         var t = document.querySelector('#login_MainSection_logo');
         var clone = document.importNode(t.content, true);
         $('#menu_logo').html(clone);

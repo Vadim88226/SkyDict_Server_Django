@@ -29,7 +29,7 @@ from django_tables2.export.views import ExportMixin
 from django_tables2.paginators import LazyPaginator
 
 from .apps import TranslatorConfig
-from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSettingForm, UserDictForm, BilingualCorpusForm, POSTaggedCorpusForm, SearchFIleNameForm
+from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSettingForm, UserDictForm, BilingualCorpusForm, POSTaggedCorpusForm, SearchFileNameForm
 from .tokens import account_activation_token
 from .models import DictWords, DictSentences, TransMemories, UserSetting, CorpusStatus, BilingualCorpus, POSTaggedCorpus, BilingualSentence, POSTaggedSentence
 from .utils import translate_sentences, translate_file, concordance_search_sdk, store_Corpus_Sentences, store_POSTTagged_Sentences
@@ -361,7 +361,7 @@ def query_UserDictionaryList(request):
         query = "SELECT max(id) as mid, id, word from translator_dictwords WHERE id>{0} AND word LIKE '{1}%%' AND is_approved='{2}' AND s_lang='{3}' GROUP BY word ORDER BY word limit 50;".format(_end_id, _word, _is_approved,_s_lang)
 
     results = DictWords.objects.raw(query)
-    response = [{'mid':result.mid, 'id':result.id, 'word':result.word} for result in results]
+    response = [{'mid':result.mid, 'id':result.id, 'word':result.word, 'user':request.user.username} for result in results]
     return JsonResponse({'content':response})
 
 def query_WordContents(request):
@@ -555,6 +555,8 @@ def upload_translationMemories(request):
 @login_required
 def views_CorpusValidator(request):
     sort = request.GET.get('sort', 'name')
+    if sort == 'export':
+        sort = 'name'
     search_name = request.GET.get('searchname', '')
     delID = request.POST.getlist('check')
     
@@ -565,14 +567,12 @@ def views_CorpusValidator(request):
             print("An exception occurred")
   
     table = BilingualCorpusTable(BilingualCorpus.objects.filter(name__contains=search_name).order_by(sort))
-    search_Form = SearchFIleNameForm(initial={'searchname':search_name})
-    editable_table = BilingualSentenceTable(BilingualSentence.objects.all()[:10])
+    search_Form = SearchFileNameForm(initial={'searchname':search_name})
 
     return render(request, "validator/corpusvalidator.html", {
         'table': table, 
         'search_Form':search_Form,
-        'corpusfiles': BilingualCorpus.objects.all(),
-        'editabletable':editable_table
+        'corpusfiles': BilingualCorpus.objects.all()
         })
 
 @login_required
@@ -587,7 +587,7 @@ def views_POSValidator(request):
             print("An exception occurred")
 
     table = POSTaggedCorpusTable(POSTaggedCorpus.objects.filter(name__contains=search_name).order_by(sort))
-    search_Form = SearchFIleNameForm(initial={'searchname':search_name})       
+    search_Form = SearchFileNameForm(initial={'searchname':search_name})       
 
     return render(request, "validator/posvalidator.html", {
         'table': table, 
@@ -597,16 +597,12 @@ def views_POSValidator(request):
 
 def upload_CorpusFile(request):
     if request.method == 'POST':
-        
-
         form = BilingualCorpusForm(request.POST, request.FILES)
         if form.is_valid():
             corpus = form.save(commit=False)
             corpus.user = User.objects.get(pk = request.user.id)
-            corpus.save()
-            
+            corpus.save()            
             valid = store_Corpus_Sentences(corpus)
-
         return redirect('/corpus_validator/')
     else:
         form = BilingualCorpusForm(initial={'t_lang':'th'})
@@ -628,7 +624,7 @@ def upload_POSTaggedFile(request):
         return HttpResponse(form)
 
 def update_CorpusSentence(request):
-    if request.is_ajax and request.method == 'POST': 
+    if request.method == 'POST': 
         id = request.POST.get('id')
         field = request.POST.get('field')
         value = request.POST.get('value')
@@ -646,13 +642,10 @@ def update_CorpusSentence(request):
     return JsonResponse({}, status = 400)
 
 def get_CorpusSentence(request):
-    if request.is_ajax and request.method == 'POST': 
-
+    if request.method == 'POST': 
         page_cnt = 20
         file_id = request.POST.get('file_id')
-
         page_id = int(request.POST.get('page_id', 0)) - 1
-
         objects_cnt = BilingualSentence.objects.filter(corpus=file_id).count()
         total_pages = objects_cnt // page_cnt
         if objects_cnt % page_cnt != 0:
@@ -668,8 +661,19 @@ def get_CorpusSentence(request):
                     "data": data,
                     'status' : statuses
                 }
-
-
         return JsonResponse({'valid': False, 'data' : content}, status = 200)
+    return JsonResponse({}, status = 400)
+
+
+
+def export_Corpus(request):
+    if request.method == 'POST': 
+        e_id = request.POST.get('id')
+        e_name = request.POST.get('name')
+        e_type = request.POST.get('type')
+        e_status = request.POST.get('statuses')
+        data = [0, e_id, 1, e_name, 2, e_type, 3, e_status]
+        print(0, e_id, 1, e_name, 2, e_type, 3, e_status )
+        return JsonResponse({'valid': False, 'data' : data}, status = 200)
 
     return JsonResponse({}, status = 400)

@@ -259,7 +259,7 @@ $(function(){
                     },
                     dataType: 'json',
                     success: function (data) {
-                        // console.log(data);
+                 
                     },
                     error: function() {
                         $.alert({
@@ -295,7 +295,7 @@ $(function(){
                     text: 'Yes',
                     action: function(){
                         _exam = e.target.parentElement.parentElement;
-                        _frm = e.target.parentElement.parentElement.parentElement; //console.log(_frm.id);
+                        _frm = e.target.parentElement.parentElement.parentElement; 
                         if(_frm.id.substr(0,4) == "frm1") {
                             // delete sentence
                             $.ajax({
@@ -306,7 +306,7 @@ $(function(){
                                 },
                                 dataType: 'json',
                                 success: function (data) {
-                                    // console.log(data);
+                              
                                     _frm.removeChild(_exam);
                                 },
                                 error: function() {

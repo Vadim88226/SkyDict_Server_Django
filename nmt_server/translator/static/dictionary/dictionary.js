@@ -19,24 +19,24 @@ function similar_words() {
         'sl' : source_language.toLowerCase().substr(0,2)
         },
         dataType: 'json',
-        success: function (data) {  //console.log(data);
+        success: function (data) {
             if(selectedText != $('#id_searchWord').val()) return;
             if(data.content) {
                 document.getElementById('wordDict_help_popup').innerHTML = data.content; 
                 document.getElementById('wordDict_help_popup').style.display = "block";
                 _ajax_communication = false;
             } else {
-                document.getElementById('wordDict_help_popup').style.display = "none"; //console.log("empty");
+                document.getElementById('wordDict_help_popup').style.display = "none"; 
                 _ajax_communication = false;
             }
         },
         error: function() {
-            document.getElementById('wordDict_help_popup').style.display = "none"; //console.log("error");
+            document.getElementById('wordDict_help_popup').style.display = "none"; 
             _ajax_communication = false;
         },
         timeout: 1000,
     }).always(function(e){
-        // console.log(_ajax_communication);
+      
         _ajax_communication = false;
     });
 }
