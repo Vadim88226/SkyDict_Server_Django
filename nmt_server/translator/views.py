@@ -29,7 +29,7 @@ from django_tables2.export.views import ExportMixin
 from django_tables2.paginators import LazyPaginator
 
 from .apps import TranslatorConfig
-from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSettingForm, UserDictForm, BilingualCorpusForm, POSTaggedCorpusForm, SearchFIleNameForm
+from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSettingForm, UserDictForm, BilingualCorpusForm, POSTaggedCorpusForm, SearchFileNameForm
 from .tokens import account_activation_token
 from .models import DictWords, DictSentences, TransMemories, UserSetting, CorpusStatus, BilingualCorpus, POSTaggedCorpus, BilingualSentence, POSTaggedSentence
 from .utils import translate_sentences, translate_file, concordance_search_sdk, store_Corpus_Sentences, store_POSTTagged_Sentences
@@ -356,12 +356,12 @@ def query_UserDictionaryList(request):
     _is_approved = request.GET.get('is_approved', 0)
 
     if _is_approved == '2':
-        query = "SELECT max(id) as mid, id, word from translator_dictwords WHERE id>{0} AND word LIKE '{1}%%' AND s_lang='{2}' GROUP BY word ORDER BY word limit 50;".format(_end_id, _word,_s_lang)
+        query = "SELECT max(id) as mid, id, word, user_id from translator_dictwords WHERE id>{0} AND word LIKE '{1}%%' AND s_lang='{2}' GROUP BY word, user_id ORDER BY word, user_id limit 50;".format(_end_id, _word,_s_lang)
     else:
-        query = "SELECT max(id) as mid, id, word from translator_dictwords WHERE id>{0} AND word LIKE '{1}%%' AND is_approved='{2}' AND s_lang='{3}' GROUP BY word ORDER BY word limit 50;".format(_end_id, _word, _is_approved,_s_lang)
+        query = "SELECT max(id) as mid, id, word, user_id from translator_dictwords WHERE id>{0} AND word LIKE '{1}%%' AND is_approved='{2}' AND s_lang='{3}' GROUP BY word, user_id ORDER BY word, user_id limit 50;".format(_end_id, _word, _is_approved,_s_lang)
 
     results = DictWords.objects.raw(query)
-    response = [{'mid':result.mid, 'id':result.id, 'word':result.word} for result in results]
+    response = [{'mid':result.mid, 'id':result.id, 'word':result.word, 'user':User.objects.get(pk=result.user_id).username} for result in results]
     return JsonResponse({'content':response})
 
 def query_WordContents(request):
@@ -481,8 +481,7 @@ def view_ConcordanceSearch(request):
     concordance_table = concordanceTable(search_result)
 
     search_Form = SearchForm(initial={'searchCondance':searchCon})
-    concordance_table = concordanceTable(TransMemories.objects.filter(name__contains=searchCon).order_by(sort))
-    
+
     return render(request, "concordance/content.html", {
         'concordance_table': concordance_table, 
         'search_Form' : search_Form,
@@ -528,9 +527,10 @@ def upload_translationMemories(request):
             tm = form.save(commit=False)
             tm.user = User.objects.get(pk = request.user.id)
             filename, file_extension = os.path.splitext(tm.file_url.name)
+            tm.save()
             tm.sdltm_url.name = filename + ".sdltm"
             tmx_url = os.path.join(settings.MEDIA_ROOT, tm.file_url.name)
-            sdltm_url = os.path.join(settings.MEDIA_ROOT, filename + ".sdltm")
+            sdltm_url = os.path.join(settings.MEDIA_ROOT, tm.sdltm_url.name)
             exe_path = r"C:\\Program Files (x86)\\SDL\\SDL Trados Studio\\Studio15\\ImportTmx.exe"
             s_lang = "en-US"
             if tm.s_lang == "th":
@@ -565,7 +565,7 @@ def views_CorpusValidator(request):
             print("An exception occurred")
   
     table = BilingualCorpusTable(BilingualCorpus.objects.filter(name__contains=search_name).order_by(sort))
-    search_Form = SearchFIleNameForm(initial={'searchname':search_name})
+    search_Form = SearchFileNameForm(initial={'searchname':search_name})
     editable_table = BilingualSentenceTable(BilingualSentence.objects.all()[:10])
 
     return render(request, "validator/corpusvalidator.html", {
@@ -587,7 +587,7 @@ def views_POSValidator(request):
             print("An exception occurred")
 
     table = POSTaggedCorpusTable(POSTaggedCorpus.objects.filter(name__contains=search_name).order_by(sort))
-    search_Form = SearchFIleNameForm(initial={'searchname':search_name})       
+    search_Form = SearchFileNameForm(initial={'searchname':search_name})
 
     return render(request, "validator/posvalidator.html", {
         'table': table, 
@@ -597,8 +597,6 @@ def views_POSValidator(request):
 
 def upload_CorpusFile(request):
     if request.method == 'POST':
-        
-
         form = BilingualCorpusForm(request.POST, request.FILES)
         if form.is_valid():
             corpus = form.save(commit=False)
@@ -616,7 +614,6 @@ def upload_CorpusFile(request):
 def upload_POSTaggedFile(request):
     if request.method == 'POST': 
         form = POSTaggedCorpusForm(request.POST, request.FILES)
-        print(form.errors)
         if form.is_valid():
             taggedfile = form.save(commit=False)
             taggedfile.user = User.objects.get(pk = request.user.id)

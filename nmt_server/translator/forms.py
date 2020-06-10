@@ -82,5 +82,5 @@ class POSTaggedCorpusForm(forms.ModelForm):
         exclude = ['user']
 
 
-class SearchFIleNameForm(forms.Form):
+class SearchFileNameForm(forms.Form):
     searchname = forms.CharField(label='',required=False, widget=forms.TextInput(attrs={'placeholder': 'Enter Name','autofocus':True, 'autocomplete': 'off'} ))
