@@ -21,7 +21,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import PermissionDenied
-from django.db.models import Count, Max
+from django.db.models import Count, Max, Q
 from django.views.generic import ListView
 from django.core import serializers
 from django_tables2 import MultiTableMixin, RequestConfig, SingleTableMixin, SingleTableView, tables
@@ -32,7 +32,7 @@ from .apps import TranslatorConfig
 from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSettingForm, UserDictForm, BilingualCorpusForm, POSTaggedCorpusForm, SearchFileNameForm
 from .tokens import account_activation_token
 from .models import DictWords, DictSentences, TransMemories, UserSetting, CorpusStatus, BilingualCorpus, POSTaggedCorpus, BilingualSentence, POSTaggedSentence
-from .utils import translate_sentences, translate_file, concordance_search_sdk, store_Corpus_Sentences, store_POSTTagged_Sentences
+from .utils import translate_sentences, translate_file, concordance_search_sdk, store_Corpus_Sentences, store_POSTTagged_Sentences, export_BilingualCorpus2File
 from .tables import tmTable, concordanceTable, BilingualCorpusTable, POSTaggedCorpusTable,  BilingualSentenceTable
 from .filters import tmFilter
 
@@ -601,6 +601,8 @@ def upload_CorpusFile(request):
         form = BilingualCorpusForm(request.POST, request.FILES)
         if form.is_valid():
             corpus = form.save(commit=False)
+            corpus.file_name = corpus.file_url.name
+            print(corpus.file_name)
             corpus.user = User.objects.get(pk = request.user.id)
             corpus.save()            
             valid = store_Corpus_Sentences(corpus)
@@ -615,6 +617,7 @@ def upload_POSTaggedFile(request):
         form = POSTaggedCorpusForm(request.POST, request.FILES)
         if form.is_valid():
             taggedfile = form.save(commit=False)
+            taggedfile.file_name = taggedfile.file_url.name
             taggedfile.user = User.objects.get(pk = request.user.id)
             taggedfile.save()
             valid = store_POSTTagged_Sentences(taggedfile)
@@ -642,7 +645,8 @@ def update_CorpusSentence(request):
     return JsonResponse({}, status = 400)
 
 def get_CorpusSentence(request):
-    if request.method == 'POST': 
+
+    if request.method == 'POST':
         page_cnt = 20
         file_id = request.POST.get('file_id')
         page_id = int(request.POST.get('page_id', 0)) - 1
@@ -666,14 +670,23 @@ def get_CorpusSentence(request):
 
 
 
-def export_Corpus(request):
+def export_BilingualCorpus(request):
     if request.method == 'POST': 
-        e_id = request.POST.get('id')
-        e_name = request.POST.get('name')
-        e_type = request.POST.get('type')
-        e_status = request.POST.get('statuses')
-        data = [0, e_id, 1, e_name, 2, e_type, 3, e_status]
-        print(0, e_id, 1, e_name, 2, e_type, 3, e_status )
-        return JsonResponse({'valid': False, 'data' : data}, status = 200)
+        corpus_id = request.POST.get('id')
+        export_filename = request.POST.get('name')
+        export_filetype = request.POST.get('type')
+        export_status = request.POST.get('statuses')
+        export_filename += "."+export_filetype
+        export_status = "Unchecked"
+        status_ids = []
+        corpus_object = BilingualCorpus.objects.get(pk=corpus_id)
+        s_lang = corpus_object.s_lang
+        t_lang = corpus_object.t_lang
+        export_status = export_status.split(",")
+        status_ids = list(CorpusStatus.objects.filter(status__in=export_status).values_list("id", flat=True).distinct())
+        export_sentences = BilingualSentence.objects.filter(corpus=corpus_object, status__in=status_ids)
+        export_path = os.path.join(settings.MEDIA_ROOT, export_filename)
+        export_BilingualCorpus2File(export_path, export_sentences, export_filetype, s_lang, t_lang)
+        return JsonResponse({'valid': False, 'data' : "data"}, status = 200)
 
     return JsonResponse({}, status = 400)

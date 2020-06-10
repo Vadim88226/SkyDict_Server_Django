@@ -25,6 +25,6 @@ urlpatterns = [
     path('delete_vocabulary', views.delete_vocabulary, name='index'),
     path('update_corpussentence/', views.update_CorpusSentence, name='update_CorpusSentence'),
     path('get_corpussentence/', views.get_CorpusSentence, name='get_CorpusSentence'),
-    path('export_corpus/', views.export_Corpus, name='export_Corpus')
+    path('export_bilingualcorpus/', views.export_BilingualCorpus, name='export_BilingualCorpus')
     
 ]

@@ -118,7 +118,7 @@ $(function() {
     
     var export_corpusfn = function(datas){
         $.ajax({
-            url: "/export_corpus/",
+            url: "/export_bilingualcorpus/",
             headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
             type: "POST",
             data: {
