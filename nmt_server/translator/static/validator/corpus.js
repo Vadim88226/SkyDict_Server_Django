@@ -138,9 +138,10 @@ $(function() {
             },
             dataType: 'json',
             success: function(response) {
+                console.log(response)
                 if (response.valid) {
                     
-                    fileUrl = "../static/media/" + response.url;
+                    fileUrl = "../static/media/" + response.file_path;
                     var file = new File(["aa"], fileUrl);
                     var link = document.createElement("a");
                     link.download = file.name;
