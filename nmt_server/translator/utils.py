@@ -426,6 +426,4 @@ def export_BilingualCorpus2File(file_url, sentences, file_type, s_lang, t_lang):
         dst_wb.save(file_url)
     else:
         pass
-
-
-    return file_url
+    return os.path.basename(file_url)
