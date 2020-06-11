@@ -27,7 +27,7 @@ urlpatterns = [
     path('update_postaggedsentence/', views.update_POSTaggedsentence, name='update_POSTaggedsentence'),
     path('get_corpussentence/', views.get_CorpusSentence, name='get_CorpusSentence'),
     path('get_postaggedsentence/', views.get_POSTaggedsentence, name='get_POSTaggedsentence'),
-    path('export_corpus/', views.export_Corpus, name='export_Corpus'),
+    path('export_bilingualcorpus/', views.export_BilingualCorpus, name='export_BilingualCorpus'),
     path('export_postagged/', views.export_POSTagged, name='export_POSTagged'),
     path('tag_sentence/', views.tag_Sentence, name='tag_Sentence')
     
