@@ -473,3 +473,27 @@ fieldset>ul.selected{
 #sentencetable_previous > a:hover, #sentencetable_previous > :focus, #sentencetable_next > a:hover, #sentencetable_next > :focus{
     background-color: gainsboro;;
 }
+
+
+#corpus_file_table > div > table > tbody > tr > td:nth-child(7){
+    text-align: center;
+    width: 70px !important;
+}
+
+#corpus_file_table > div > table > thead > tr > th:nth-child(7){
+    width: 70px !important;
+}
+
+
+.ex_legend{
+    margin-bottom: 0px;width: 65px;
+    position: fixed;
+    margin-left: 80px;
+    background: white;
+    font-weight: bold;
+}
+
+.tb_bc{
+    border: 1px solid;
+    border-color: lightgrey;
+}

@@ -148,60 +148,86 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title" id="modal-title">Export Setting...</h4>
+          <h4 class="modal-title" id="modal-title">Export</h4>
         </div>
             <form id="export_setting_form" > 
                 <div class="modal-body">
                     {% csrf_token %}
                     <input type="hidden" id="ex_id" name="ex_id"/>
                     <input type="hidden" id="user_name" name="user_name" value="{{request.user}}"/>
-                    <table>
-                        <tr><td>Corpus Name : </td><td  id='ex_name' name='ex_name'></td></tr>
-                        <tr><td>Bilingual Corpus File :</td><td id='ex_url' name='ex_url'></td></tr>
-                        <tr><td>File Name :</td>
-                            <td><input type='text' class="form-control" id='new_name' name='new_name' required /></td>
-                           </td></tr>
-                        <tr><td>Save As Type :</td>
-                            <td>
-                                <select class="form-control" name="ex_type" class="custom-select mb-3">
-                                    <option selected value='txt'>.txt</option>
-                                    <option value="cav">.csv</option>
-                                    <option value="xlsx">.xlsx</option>
-                                    <option value="tmx">.tmx</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: left;" >
-                                <label class="form-check-label" for="status1">
-                                    <input type="checkbox" class="form-check-input" id="status1" name="status1" value="1" style="margin-right: 15px;margin-left: 15px;">Unchecked
-                                </label>
-                            </td>
-                            <td style="text-align: center;" >
-                                <label class="form-check-label" for="status2">
-                                    <input type="checkbox" class="form-check-input" id="status2" name="status2" value="2"   style="margin-right: 15px;" checked >Acceptable
-                                  </label>
-                            </td>
-                            
-                        </tr>
-                        <tr>
-                            <td style="text-align: left;" >
-                                <label class="form-check-label"  for="status3">
-                                    <input type="checkbox" class="form-check-input" id="status3" name="status3" value="3"  style="margin-right: 15px;margin-left: 15px;">Unacceptable
-                                </label>
-                            </td>
-                            <td style="text-align: center;" >
-                                <label class="form-check-label"  for="status4">
-                                    <input type="checkbox" class="form-check-input" id="status4" name="status4" value="4"  style="margin-right: 15px;">Amendable
-                                </label>
-                             
-                            </td>
-                        </tr>
+                 
+                    <table style="width:85%; margin-top: 10px;" >
+        
+                        <legend class="ex_legend" style="margin-top: 0px;" >From</legend>
+                        <tbody class="tb_bc">
+                            <tr><td class="col-md-5" >Corpus Name</td><td class="col-md-1"> : </td><td  id='ex_name' name='ex_name' class="col-md-6"></td></tr>
+                            <tr><td class="col-md-5">Bilingual Corpus File </td><td class="col-md-1"> : </td></td><td id='ex_url' name='ex_url'  class="col-md-6"></td></tr>
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                        </tbody>
+                        <tbody class="tb_bc">
+                        <legend class="ex_legend" style="margin-top: 105px; " >To</legend>
+                    
+                            <tr>
+                                <td class="col-md-5">File Name  </td><td class="col-md-1"> :</td>
+                                <td class="col-md-6" style="height: 44px !important;padding: 0px 10px 0px;"  ><input  type='text' class="form-control" id='new_name' name='new_name' required /></td>
+                                </td>
+                            </tr>
+                            <tr><td class="col-md-5">Save As Type </td><td class="col-md-1"> :</td>
+                                <td style="height: 44px !important;padding: 0px 10px 0px;" class="col-md-6">
+                                    <select class="form-control"  name="ex_type" class="custom-select mb-3">
+                                        <option selected value='txt'>.txt</option>
+                                        <option value="cav">.csv</option>
+                                        <option value="xlsx">.xlsx</option>
+                                        <option value="tmx">.tmx</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                        </tbody>
+                        <legend class="ex_legend" style="margin-top: 213px;"">Status</legend>
+                        <tbody class="tb_bc">
+                            <tr>
+                                <td style="text-align: left;" class="col-md-6">
+                                    <label class="form-check-label" for="status1">
+                                        <input type="checkbox" class="form-check-input" id="status1" name="Unchecked" value="1" style="margin-right: 15px;margin-left: 15px;">Unchecked
+                                    </label>
+                                </td>
+                                <td></td>
+                                <td style="text-align: left;" class="col-md-6">
+                                    <label class="form-check-label" for="status2" >
+                                        <input type="checkbox" class="form-check-input" id="status2" name="Acceptable" value="2"   style="margin-right: 15px;" checked >Acceptable
+                                    </label>
+                                </td>
+                                
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;" class="col-md-6">
+                                    <label class="form-check-label"  for="status3">
+                                        <input type="checkbox" class="form-check-input" id="status3" name="Unacceptable" value="3"  style="margin-right: 15px;margin-left: 15px;">Unacceptable
+                                    </label>
+                                </td>
+                                <td></td>
+                                <td style="text-align: left;" class="col-md-6">
+                                    <label class="form-check-label"  for="status4">
+                                        <input type="checkbox" class="form-check-input" id="status4" name="Amendable" value="4"  style="margin-right: 15px;">Amendable
+                                    </label>
+                                
+                                </td>
+                            </tr>
+                            </tbody>
                     </table> 
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default btn-setting-export">OK</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <div class="modal-footer" style="text-align: center;" >
+                    <button type="button" class="btn btn-default btn-setting-export" style="width: 100px;"">OK</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" style="width: 100px;margin-left: 100px;">Cancel</button>
                 </div>
             </form>
       </div>

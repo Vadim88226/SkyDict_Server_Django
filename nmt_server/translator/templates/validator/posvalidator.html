@@ -1,10 +1,11 @@
 {% extends 'validator/pos_index.html' %}
-<!-- ============================== POS validator ============================== -->
+<!-- ============================== Dictionary ============================== -->
 
 {% load django_tables2 %} {% block content %} {% csrf_token %}
 
+
 <script type="text/javascript">
-    var suburl = "POSfiletable";
+    var suburl = "postagged";
 </script>
 <!-- link div -->
 <div id="dict_menu_bar" class="" style="margin-top: -10px;">
@@ -13,16 +14,17 @@
 </div>
 
 
+
 <div class="dict_area ">
 
     <div class="nav nav-tabs submenu">
-        <div class='POS_tab active'>
-            <a data-toggle="tab" href="#div_POS_file">
-                POS file 
+        <div class='corpus_tab active'>
+            <a data-toggle="tab" href="#div_Postagged_file">
+                POS Tagged Files 
             </a>
         </div>
-        <div class='POS_tab'>
-            <a data-toggle="tab" href="#div_POS_Validator">
+        <div class='corpus_tab'>
+            <a data-toggle="tab" href="#div_POSTagged_Validator">
                 POS Validator
             </a>
         </div>
@@ -32,124 +34,141 @@
     <!-- Corpus file start area -->
 
     <div id="div_content" class="tab-content">
-        <div id="div_POS_file" class="tab-pane fade in active">
-            <div style="display: flex;">
-                <button type='button' class='btn_new sky_button' data-toggle="tab">
-                        <span class='glyphicon glyphicon-plus' ></span> New</button>
-                <input type="file" style="display: none;" name='TransFiles' id="TransFiles" />
-
-                <div style="width: 100%; text-align: right;">
-                    <form method="GET" style="display: contents;">
-                        <!-- {% csrf_token %} -->
-                        {{ search_Form.searchWord }}
-                        <button type="submit" style="display: none;">Search</button>
-                    </form>
-                    <button type='button' class='btn_delete sky_button'>Delete</button>
-                </div>
-            </div>
-            <form method="POST" id="corpus_file_table" action="#">
-                {% csrf_token %} {% render_table table %}
-            </form>
+        <div id="div_Postagged_file" class="tab-pane fade in active">
 
         </div>
-        <div class="POSvalidator tab-pane fade" id="div_POS_Validator">
-            <!-- <h1>HI POS Validator</h1> -->
+        <div class="corposvalidator tab-pane fade" id="div_POSTagged_Validator">
             {% csrf_token %}
-            <div id="content_user_vocabulary">
+            <div id="postagged_content">
                 <div class="list_side">
-                    <div style="display: flex;position: relative;width: 100%;">
-                        <div class="div_corpusfilelist">
-                            <input type="radio" id="Unapproved" name="allowed" value=0 checked>
-                            <label for="Unapproved">Corpus Files</label>
+                    <div>
+                        <fieldset id='postaggeds' >
+                            <legend>POS Tagged Files</legend>
+                                {% comment %} <div id='listdiv' > {% endcomment %}
+                                    {% for f in postaggeds %}
+
+                                        <ul class='' id='{{f.id}}' value='{{f.file_url}}'  >{{f.name}}</ul>
+
+                                    {% endfor %}
+                                {% comment %} </div> {% endcomment %}
+                        </fieldset>
+                    </div>
+                   
+                </div>
+                <div class='planey' > </div>
+                <input type="text" id="tokenid" hidden='true' data-token="{{ csrf_token }}"/>
+                <div class='container response' id='sentencetable' >
+                    <table id="postaggedcontenttable" class="display" cellspacing="0" width="100%">
+                       
+                    </table>
+                    <div class="" style="text-align: center;">
+                        <div class="col-sm-12">
+                            <div class="dataTables_paginate paging_simple" id="sentencetablee_paginate">
+                                <ul class="pagination" style="margin: 5px 0;">
+                                    <li class="paginate_button page-item previous" id="sentencetable_previous">
+                                        <a aria-controls="sentencetable" class="page-link">Previous</a>
+                                    </li>
+                                    <li class="page-item pages"  id="sentencetable_pageinfo">
+                                        <a aria-controls="sentencetable" id='pageinfo' style="border: none;margin: auto;height: 36px;">
+                                            Go to page 
+                                            <input type="number" name="pageno" id="pageno"  min = 0;/>
+                                            of 
+                                            <e id="allpagenumber" ></e>
+                                        </a>
+                                    </li>
+                                    <li class="paginate_button page-item next" id="sentencetable_next">
+                                        <a  aria-controls="sentencetable" class="page-link">Next</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                    <div id="list_vocabulary"></div>
-                </div>
-                <div class='content'>
-                    <!-- corpus file content table start -->
-
-                    <!-- corpus file content table start -->
-
-
-
-                            
-
-                    <!-- pos tagged part start  -->
+                    <div class="col-sm-12">
+                        <!-- pos tagged part start  -->
                         <div id="postag">
-                          <div class="row">
-                            <div class="col-md-8">
-                             
-                              <div id="form">
-                                <div class="form-group">
-                                  <label for="text" class="hidden-xs hidden-sm">Source :</label>
-                                  <textarea class="form-control show-edit" rows="2" id="text">John likes the blue house at the end of the street.</textarea>
-                                  <div id="textTagged" class="show-view" style="display: none;"></div>
+                            <div class="col-md-12">
+                                <div class="col-md-9">
+                        
+                                    <div id="pos_tagger">
+                                        <input type="text" id='pos_id' hidden />
+                                        <input type="text" id='pos_count' hidden />
+                                        <input type="text" id='pos_corpusid' hidden />
+                                        <div class="form-group">
+                                            <label for="text" class="hidden-xs hidden-sm">Source :</label>
+                                            <textarea class="form-control show-edit" rows="3"
+                                                id="pos_source"></textarea>
+                                            <div id="source_Tagged" class="show-view" style="display: none;">
+                                            
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="text" class="hidden-xs hidden-sm">Target :</label>
+                                            <textarea class="form-control show-edit" rows="3"
+                                                id="pos_target"></textarea>
+                                            <div id="target_Tagged" class="show-view" style="display: none;">
+                                            
+                                            </div>
+                                        </div>
+                        
+                                        <div class="form-group" role="toolbar" style="text-align: center;" >
+                                            <button type="button" class="btn btn-default show-edit" id="tagger">
+                                                <span class="glyphicon glyphicon-ok"></span> POS-tag!
+                                            </button>
+                                            <button type="button" class="btn btn-default show-view" id="editer"><span
+                                                    class="glyphicon glyphicon-edit" disabled ></span> Edit text</button>
+                                            <button type="button" class="btn btn-default show-view" id="saver"><span
+                                                    class="glyphicon glyphicon-save"></span> Save</button>
+                                        </div>
+                                        <input type="text" id='pos_status' hidden  />
+                                        <!-- <button type="button" class="btn btn-default show-view toggle-tools" data-toggle="button"><span class="glyphicon glyphicon-wrench"></span></button> -->
+                                        <!-- <select id="language" class="form-control language">
+                                            <option value="en" selected>English</option>
+                                            <option value="de">German</option>
+                                            <option value="fr">French</option>
+                                            <option value="es">Spanish</option>
+                                        </select> -->
+                                        
+                                    </div>
+                        
                                 </div>
-                                <div class="form-group">
-                                    <label for="text" class="hidden-xs hidden-sm">Target :</label>
-                                    <textarea class="form-control show-edit" rows="2" id="text">John likes the blue house at the end of the street.</textarea>
-                                    <div id="textTagged" class="show-view" style="display: none;"></div>
+                        
+                                <div class="col-md-3">
+                                    <div id="colors">
+                                        <div class="tagAdjective">Adjective</div>
+                                        <div class="tagAdverb">Adverb</div>
+                                        <div class="tagConjunction">Conjunction</div>
+                                        <div class="tagDeterminer">Determiner</div>
+                                        <div class="tagInterjection">Interjection</div>
+                                        <div class="tagNoun">Noun</div>
+                                        <div class="tagNumber">Number</div>
+                                        <div class="tagPreposition">Preposition</div>
+                                        <div class="tagPronoun">Pronoun</div>
+                                        <div class="tagVerb">Verb</div>
+                                    </div>
                                 </div>
-                               
-                                <div class="btn-toolbar" role="toolbar">
-                                    <button type="button" class="btn btn-default show-edit" id="submit"><span class="glyphicon glyphicon-ok"></span> POS-tag!</button>
-                                    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-                                    <button type="button" class="btn btn-default show-view" id="edit"><span class="glyphicon glyphicon-edit"></span> Edit text</button>
-                                    <!-- <button type="button" class="btn btn-default show-view toggle-tools" data-toggle="button"><span class="glyphicon glyphicon-wrench"></span></button> -->
-                                    <!-- <select id="language" class="form-control language">
-                                                              <option value="en" selected>English</option>
-                                                              <option value="de">German</option>
-                                                              <option value="fr">French</option>
-                                                              <option value="es">Spanish</option>
-                                                          </select> -->
-                                </div>
-
-                              </div>
                             </div>
-                            <div class="col-md-4">
-                              <div id="colors">
-                                                    <div class="tagAdjective">Adjective</div>
-                                                    <div class="tagAdverb">Adverb</div>
-                                                    <div class="tagConjunction">Conjunction</div>
-                                                    <div class="tagDeterminer">Determiner</div>
-                                                    <div class="tagInterjection">Interjection</div>
-                                                    <div class="tagNoun">Noun</div>
-                                                    <div class="tagNumber">Number</div>
-                                                    <div class="tagPreposition">Preposition</div>
-                                                    <div class="tagPronoun">Pronoun</div>
-                                                    <div class="tagVerb">Verb</div>
-                                              </div>
-                            </div>
-                          </div><!-- /row -->
-                          <div class="row">
+                        </div><!-- /row -->
+                        <!-- <div class="col-md-12">
                             <div class="col-md-4 col-md-push-8">
-                          <div id="stupidNiceStuff">
-
-
-
-
-
-
-
-
+                                <div id="stupidNiceStuff">
+                        
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Corpus file end area -->
-
-    <!-- Corpus validator start area -->
-
-    <!-- Corpus validator end area -->
 </div>
 
 
 
-<template id="div_POSfiletable_form">
+<template id="div_postagged_form">
     <div style="display: flex;">
         <div>
             <button type='button' class='btn_new sky_button'><span class='glyphicon glyphicon-plus'></span> New</button>
-            <input type="file" style="display: none;" name='TransFiles' id="TransFiles"/>
+            <input type="file" style="display: none;" name='postagged_' id="postagged_"/>
         </div>
         <div style="width: 100%; text-align: right;">
             <form method="GET" style="display: contents;"> 
@@ -159,16 +178,16 @@
             </form>
             <button type='button' class='btn_delete sky_button'>Delete</button></div>
     </div>
-    <form method="POST" id="corpus_file_table" action="#">
+    <form method="POST" id="postagged_table" action="#">
         {% csrf_token %}
         {% render_table table %}
     </form>
 </template>
 
 <!-- new corpus file templete start -->
-<template id="posfile_new">
-    <form method="POST" action="/upload_POSTaggedFile/" enctype="multipart/form-data" id="posfile_upload_form" name = "posfile_upload_form">
-        <div style='margin-top:18px'>New Translation Memory</div>
+<template id="postagged_new">
+    <form method="POST" action="/upload_POSTaggedFile/" enctype="multipart/form-data" id="pf_upload_form" name = "pf_upload_form">
+        <div style='margin-top:18px'>New POS Tagged File</div>
         <hr>
         {% csrf_token %}
         <input type="hidden" id="user" name="user" value="{{request.user}}"/>
@@ -185,6 +204,112 @@
         </table>
     </form>
 </template>
+
+
+<div id="tagTipContainer" class="show-view">
+    <div class="up">&#9650;</div>
+    <div id="tagTip"></div>
+</div>
+<div id="export_modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id="modal-title">Export</h4>
+        </div>
+            <form id="export_setting_form" > 
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <input type="hidden" id="ex_id" name="ex_id"/>
+                    <input type="hidden" id="user_name" name="user_name" value="{{request.user}}"/>
+                    <table style="width:85%; margin-top: 10px;" >
+        
+                        <legend class="ex_legend" style="margin-top: 0px;" >From</legend>
+                        <tbody class="tb_bc">
+                            <tr>
+                                <td class="col-md-4" >Corpus Name</td><td  class="col-md-1" > : </td><td  id='ex_name' name='ex_name' class="col-md-7"></td>
+                            </tr>
+                            <tr>
+                                <td  class="col-md-4" >Bilingual Corpus File </td><td class="col-md-1"> : </td></td><td id='ex_url' name='ex_url' class="col-md-7"></td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                        </tbody>
+                        <tbody class="tb_bc">
+                        <legend class="ex_legend" style="margin-top: 105px; " >To</legend>
+                    
+                            <tr>
+                                <td class="col-md-4">File Name  </td><td class="col-md-1"> :</td>
+                                <td class="col-md-7" style="height: 44px !important;padding: 0px 10px 0px;"  ><input   type='text' class="form-control" id='new_name' name='new_name' required /></td>
+                                </td>
+                            </tr>
+                            <tr><td class="col-md-4" >Save As Type </td><td class="col-md-1" > :</td>
+                                <td  name="ex_type" >.txt
+                                    <select class="form-control" style="width: 150px !important;display: none;" name="ex_type" class="custom-select mb-3"  >
+                                        <option selected value='txt'>.txt</option>
+                                     <!--   <option value="cav">.csv</option>
+                                        <option value="xlsx">.xlsx</option>
+                                        <option value="tmx">.tmx</option> -->
+                                   </select> 
+                                </td class="col-md-7" >
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                        </tbody>
+                        <legend class="ex_legend" style="margin-top: 213px;"">Status</legend>
+                        <tbody class="tb_bc">
+                            <tr>
+                                <td style="text-align: left;"  class="col-md-6">
+                                    <label class="form-check-label" for="status1">
+                                        <input type="checkbox" class="form-check-input" id="status1" name="Unchecked" value="1" style="margin-right: 15px;margin-left: 15px;">Unchecked
+                                    </label>
+                                </td>
+                                <td class="col-md-1"></td>
+                                <td style="text-align: left;" class="col-md-6" >
+                                    <label class="form-check-label" for="status2">
+                                        <input type="checkbox" class="form-check-input" id="status2" name="Acceptable" value="2"   style="margin-right: 15px;" checked >Acceptable
+                                    </label>
+                                </td>
+                                
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;" class="col-md-6">
+                                    <label class="form-check-label"  for="status3">
+                                        <input type="checkbox" class="form-check-input" id="status3" name="Unacceptable" value="3"  style="margin-right: 15px;margin-left: 15px;">Unacceptable
+                                    </label>
+                                </td>
+                                <td class="col-md-1"></td>
+                                <td style="text-align: left;" class="col-md-6">
+                                    <label class="form-check-label"  for="status4">
+                                        <input type="checkbox" class="form-check-input" id="status4" name="Amendable" value="4"  style="margin-right: 15px;">Amendable
+                                    </label>
+                                
+                                </td>
+                            </tr>
+                            </tbody>
+                    </table> 
+                </div>
+                <div class="modal-footer" style="text-align: center;" >
+                    <button type="button" class="btn btn-default btn-setting-export" style="width: 100px;"">OK</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" style="width: 100px;margin-left: 100px;">Cancel</button>
+                </div>
+            </form>
+      </div>
+    </div>
+</div>
+
+
 <!-- new corpus file templete end -->
 {% endblock content %}
 <!-- =============================== -->
+
+
+
+

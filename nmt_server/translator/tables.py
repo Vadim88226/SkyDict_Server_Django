@@ -53,7 +53,7 @@ class BilingualCorpusTable(tables.Table):
     s_lang = tables.Column(verbose_name="Languages")
     user = tables.Column(verbose_name='Owner')
     file_url = tables.Column(verbose_name='Bilingual Corpus File')
-    export = tables.TemplateColumn("<input type='button' style='width:100%' class='export_btn' value='export'/>")
+    export = tables.TemplateColumn("<button class='export_btn' style='cursor:pointer;width: 100%;' ><i class='fas'>&#xf56e;</i></button>")
 
     class Meta:
         model = BilingualCorpus
@@ -76,10 +76,11 @@ class POSTaggedCorpusTable(tables.Table):
     s_lang = tables.Column(verbose_name="Languages")
     # user = tables.Column(verbose_name='Owner')
     file_url = tables.Column(verbose_name='Bilingual Corpus File')
+    export = tables.TemplateColumn("<button class='export_btn' style='cursor:pointer;width: 100%;' ><i class='fas'>&#xf56e;</i></button>")
     class Meta:
         model = POSTaggedCorpus
         template_name = "django_tables2/bootstrap-responsive.html"
-        fields = ('counter', 'name', 's_lang', 'file_url', 'check')
+        fields = ('counter', 'name', 's_lang', 'file_url', 'check', 'export')
         attrs = {"class": "table table-hover paleblue"}
     def render_counter(self):
         self.row_counter = getattr(self, 'row_counter', itertools.count(1))

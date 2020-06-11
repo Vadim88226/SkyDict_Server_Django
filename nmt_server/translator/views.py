@@ -356,12 +356,12 @@ def query_UserDictionaryList(request):
     _is_approved = request.GET.get('is_approved', 0)
 
     if _is_approved == '2':
-        query = "SELECT max(id) as mid, id, word, user_id from translator_dictwords WHERE id>{0} AND word LIKE '{1}%%' AND s_lang='{2}' GROUP BY word, user_id ORDER BY word, user_id limit 50;".format(_end_id, _word,_s_lang)
+        query = "SELECT max(id) as mid, id, word from translator_dictwords WHERE id>{0} AND word LIKE '{1}%%' AND s_lang='{2}' GROUP BY word ORDER BY word limit 50;".format(_end_id, _word,_s_lang)
     else:
-        query = "SELECT max(id) as mid, id, word, user_id from translator_dictwords WHERE id>{0} AND word LIKE '{1}%%' AND is_approved='{2}' AND s_lang='{3}' GROUP BY word, user_id ORDER BY word, user_id limit 50;".format(_end_id, _word, _is_approved,_s_lang)
+        query = "SELECT max(id) as mid, id, word from translator_dictwords WHERE id>{0} AND word LIKE '{1}%%' AND is_approved='{2}' AND s_lang='{3}' GROUP BY word ORDER BY word limit 50;".format(_end_id, _word, _is_approved,_s_lang)
 
     results = DictWords.objects.raw(query)
-    response = [{'mid':result.mid, 'id':result.id, 'word':result.word, 'user':User.objects.get(pk=result.user_id).username} for result in results]
+    response = [{'mid':result.mid, 'id':result.id, 'word':result.word, 'user':request.user.username} for result in results]
     return JsonResponse({'content':response})
 
 def query_WordContents(request):
@@ -481,7 +481,8 @@ def view_ConcordanceSearch(request):
     concordance_table = concordanceTable(search_result)
 
     search_Form = SearchForm(initial={'searchCondance':searchCon})
-
+    concordance_table = concordanceTable(TransMemories.objects.filter(name__contains=searchCon).order_by(sort))
+    
     return render(request, "concordance/content.html", {
         'concordance_table': concordance_table, 
         'search_Form' : search_Form,
@@ -527,10 +528,9 @@ def upload_translationMemories(request):
             tm = form.save(commit=False)
             tm.user = User.objects.get(pk = request.user.id)
             filename, file_extension = os.path.splitext(tm.file_url.name)
-            tm.save()
             tm.sdltm_url.name = filename + ".sdltm"
             tmx_url = os.path.join(settings.MEDIA_ROOT, tm.file_url.name)
-            sdltm_url = os.path.join(settings.MEDIA_ROOT, tm.sdltm_url.name)
+            sdltm_url = os.path.join(settings.MEDIA_ROOT, filename + ".sdltm")
             exe_path = r"C:\\Program Files (x86)\\SDL\\SDL Trados Studio\\Studio15\\ImportTmx.exe"
             s_lang = "en-US"
             if tm.s_lang == "th":
@@ -568,7 +568,6 @@ def views_CorpusValidator(request):
   
     table = BilingualCorpusTable(BilingualCorpus.objects.filter(name__contains=search_name).order_by(sort))
     search_Form = SearchFileNameForm(initial={'searchname':search_name})
-    editable_table = BilingualSentenceTable(BilingualSentence.objects.all()[:10])
 
     return render(request, "validator/corpusvalidator.html", {
         'table': table, 
@@ -588,11 +587,12 @@ def views_POSValidator(request):
             print("An exception occurred")
 
     table = POSTaggedCorpusTable(POSTaggedCorpus.objects.filter(name__contains=search_name).order_by(sort))
-    search_Form = SearchFileNameForm(initial={'searchname':search_name})
+    search_Form = SearchFileNameForm(initial={'searchname':search_name})       
 
     return render(request, "validator/posvalidator.html", {
         'table': table, 
-        'search_Form': search_Form
+        'search_Form': search_Form,
+        'postaggeds': POSTaggedCorpus.objects.all()
         })
 
 
@@ -613,6 +613,7 @@ def upload_CorpusFile(request):
 def upload_POSTaggedFile(request):
     if request.method == 'POST': 
         form = POSTaggedCorpusForm(request.POST, request.FILES)
+        print(form.errors)
         if form.is_valid():
             taggedfile = form.save(commit=False)
             taggedfile.user = User.objects.get(pk = request.user.id)
@@ -641,6 +642,25 @@ def update_CorpusSentence(request):
 
     return JsonResponse({}, status = 400)
 
+def update_POSTaggedsentence(request):
+    if request.method == 'POST': 
+        id = request.POST.get('id')
+        field = request.POST.get('field')
+        value = request.POST.get('value')
+        if field == 'status':
+            value = CorpusStatus.objects.filter(status=value).first()
+            POSTaggedSentence.objects.filter(id=id).update(status=value)
+        elif field == 'source':
+            POSTaggedSentence.objects.filter(id=id).update(source=value)
+        elif field == 'target':
+            POSTaggedSentence.objects.filter(id=id).update(target=value)
+        else:
+            pass
+        return JsonResponse({"valid":True}, status = 200)
+
+    return JsonResponse({}, status = 400)
+
+
 def get_CorpusSentence(request):
     if request.method == 'POST': 
         page_cnt = 20
@@ -661,10 +681,31 @@ def get_CorpusSentence(request):
                     "data": data,
                     'status' : statuses
                 }
-        return JsonResponse({'valid': False, 'data' : content}, status = 200)
+        return JsonResponse({'valid': True, 'data' : content}, status = 200)
     return JsonResponse({}, status = 400)
 
-
+def get_POSTaggedsentence(request):
+    if request.method == 'POST': 
+        page_cnt = 10
+        file_id = request.POST.get('file_id')
+        page_id = int(request.POST.get('page_id', 0)) - 1
+        objects_cnt = POSTaggedSentence.objects.filter(corpus=file_id).count()
+        total_pages = objects_cnt // page_cnt
+        if objects_cnt % page_cnt != 0:
+            total_pages += 1
+        start_count = page_id * page_cnt
+        sentences = POSTaggedSentence.objects.filter(corpus = file_id)[start_count:start_count + page_cnt]
+        data = []
+        for i, sentence in enumerate(sentences):
+            data.append({"id":sentence.id, "count":start_count + i + 1, "source":sentence.source, "target":sentence.target, "status":sentence.status.status})
+        statuses = list(CorpusStatus.objects.all().values_list('status', flat=True).distinct())
+        content = {
+                    'total_pages':total_pages,
+                    "data": data,
+                    'status' : statuses
+                }
+        return JsonResponse({'valid': True, 'data' : content}, status = 200)
+    return JsonResponse({}, status = 400)
 
 def export_Corpus(request):
     if request.method == 'POST': 
@@ -674,6 +715,63 @@ def export_Corpus(request):
         e_status = request.POST.get('statuses')
         data = [0, e_id, 1, e_name, 2, e_type, 3, e_status]
         print(0, e_id, 1, e_name, 2, e_type, 3, e_status )
-        return JsonResponse({'valid': False, 'data' : data}, status = 200)
+        return JsonResponse({'valid': True, 'url' : 'corpus_files/threejs.svg'}, status = 200)
+    else:
+        return JsonResponse({'valid': False, 'error' : 'please give error content'}, status = 200)
+    return JsonResponse({}, status = 400)
 
+def export_POSTagged(request):
+    if request.method == 'POST': 
+        e_id = request.POST.get('id')
+        e_name = request.POST.get('name')
+        e_type = request.POST.get('type')
+        e_status = request.POST.get('statuses')
+        data = [0, e_id, 1, e_name, 2, e_type, 3, e_status]
+        print(0, e_id, 1, e_name, 2, e_type, 3, e_status )
+        return JsonResponse({'valid': True, 'url' : 'pos_tagged_files/threejs.svg'}, status = 200)
+    else:
+        return JsonResponse({'valid': False, 'error' : 'please give error content'}, status = 200)
+    return JsonResponse({}, status = 400)
+
+
+def tag_Sentence(request):
+    print('---')
+    if request.method == 'POST': 
+        source = request.POST.get('source')
+        target = request.POST.get('target')
+        
+        ex_tags1 = [
+            {'word' : 'John', 'pos' : 'Noun' },
+            {'word' : 'likes', 'pos' : 'Verb' },
+            {'word' : 'the', 'pos' : 'Determiner' },
+            {'word' : 'blue', 'pos' : 'Adjective' },
+            {'word' : 'house', 'pos' : 'Noun' },
+            {'word' : 'at', 'pos' : 'Preposition' },
+            {'word' : 'the', 'pos' : 'Determiner' },
+            {'word' : 'end', 'pos' : 'Noun' },
+            {'word' : 'of', 'pos' : 'Preposition' },
+            {'word' : 'the', 'pos' : 'Determiner' },
+            {'word' : 'street', 'pos' : 'Noun' },
+            {'word' : '.', 'pos' : 'Other' },
+            {'word' : '', 'pos' : 'Other' }
+        ]
+        ex_tags2 = [
+            {'word' : 'John', 'pos' : 'Noun' },
+            {'word' : 'likes', 'pos' : 'Verb' },
+            {'word' : 'the', 'pos' : 'Determiner' },
+            {'word' : 'blue', 'pos' : 'Adjective' },
+            {'word' : 'house', 'pos' : 'Noun' },
+            {'word' : 'at', 'pos' : 'Preposition' },
+            {'word' : 'the', 'pos' : 'Determiner' },
+            {'word' : 'end', 'pos' : 'Noun' },
+            {'word' : 'of', 'pos' : 'Preposition' },
+            {'word' : 'the', 'pos' : 'Determiner' },
+            {'word' : 'street', 'pos' : 'Noun' },
+            {'word' : '.', 'pos' : 'Other' },
+            {'word' : '', 'pos' : 'Other' }
+        ]
+        print(source, target)
+        return JsonResponse({'valid': True, 'source' : ex_tags1, 'target': ex_tags2}, status = 200)
+    else:
+        return JsonResponse({'valid': False, 'error' : 'please give error content'}, status = 200)
     return JsonResponse({}, status = 400)

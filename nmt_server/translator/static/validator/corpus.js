@@ -11,7 +11,6 @@ view_template("div_" + suburl + "_form");
 
 $(function() {
 
-
     $(document).on('click', ".btn_new", function(e) {
 
         $.ajax({
@@ -85,7 +84,8 @@ $(function() {
 
     
     $(document).on('click','#corpus_file_table > div > table > tbody > tr', function(e) {
-        if(e.target.className != 'export_btn'){
+
+        if(e.target.className != 'export_btn' && e.target.className != 'fas' ){
             e.currentTarget.cells[5].childNodes[0].checked = 1 - (e.currentTarget.cells[5].childNodes[0].checked);
             if (e.currentTarget.cells[5].childNodes[0].checked)
                 $(this).css('background-color', 'lightgrey');
@@ -102,12 +102,20 @@ $(function() {
     // corpusfile export 
     $(document).on('click', ".export_btn", function(e) {
         e.preventDefault();
+        $("#new_name").val('')
         var row = $(this).parent().parent()[0].children;
         var f_name = $(row[1]).text();
         var f_url = $(row[3]).text();
         var f_id = $(row[5].firstChild).val();
+        var f_typue = f_url.split('.');
+        if(f_url.length > 25){
+            var f_url_ = f_url.slice(0, 25) + "...";
+        }else{
+            var f_url_ = f_url;
+        }
+        
         $("#ex_name").html(f_name);
-        $("#ex_url").html(f_url);
+        $("#ex_url").html(f_url_);
         $("#ex_id").val(f_id);
         $("#export_modal").modal();
         setTimeout(() => {
@@ -130,17 +138,35 @@ $(function() {
             },
             dataType: 'json',
             success: function(response) {
-                $("#export_modal").modal('hide');
-                $.alert({
-                    title: 'Alert', content: 'SUCCESSFUL',
-                    icon: 'fa fa-smile-o', theme: 'modern', animation: 'scale', closeAnimation: 'scale',
-                    type: 'blue',
-                    autoClose: 'okay|2000',
-                    buttons: {
-                        okay: {  }
-                    }
-                });
-                $('#export_setting_form').not(':button, :submit, :reset, :hidden').val('').removeAttr('checked').removeAttr('selected');
+                if (response.valid) {
+                    
+                    fileUrl = "../static/media/" + response.url;
+                    var file = new File(["aa"], fileUrl);
+                    var link = document.createElement("a");
+                    link.download = file.name;
+                    link.href = fileUrl;
+                    link.click();
+                    $("#export_modal").modal('hide');
+                    $.alert({
+                        title: 'Alert', content: 'SUCCESSFUL',
+                        icon: 'fa fa-smile-o', theme: 'modern', animation: 'scale', closeAnimation: 'scale',
+                        type: 'blue',
+                        autoClose: 'okay|2000',
+                        buttons: {
+                            okay: {  }
+                        }
+                    });
+                    $('#export_setting_form').not(':button, :submit, :reset, :hidden').val('').removeAttr('checked').removeAttr('selected');
+                }else{
+                    $.alert({
+                        title: 'Alert', content: response.error,
+                        icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                        buttons: {
+                            yes: {  }
+                        }
+                    });
+                }
+               
             },
             error: function(response) {
            
@@ -170,15 +196,18 @@ $(function() {
         for (const key in params) {
             if (key > 4 && params.hasOwnProperty(key)) {
                 const element = params[key];
-                statusary.push(element.value);
+                statusary.push(element.name);
             }else{
                 const element = params[key];
                 parramsarray[element.name]=element.value;
             }
         }
         if(statusary.length){
+           
             parramsarray['status']=statusary.join(',');
-            export_corpusfn(parramsarray);
+            export_corpusfn(parramsarray); 
+        }else{
+            $('#status2')[0].checked =  true;
         }
       
     });
