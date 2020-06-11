@@ -151,13 +151,6 @@ def translate_docx_file(s_url, t_url, s_lang, t_lang):
     document = Document(s_url)
     for paragraph in document.paragraphs:
         inline = paragraph.runs
-        
-        # hyperlink = p.xpath("./w:hyperlink/w:r/w:t")
-        # hyperlink_text = ""
-        # for link in hyperlink:
-        #     link.text = "abcd"
-        #     hyperlink_text += link.text
-        # print(hyperlink_text)
         for i in range(len(inline)):
             orig = inline[i].text
             if orig.strip() != "":
@@ -309,6 +302,7 @@ def store_Corpus_Sentences(corpus_object):
     elif file_extension == '.tmx':
         with open(file_url, 'rb') as fin:
             tmx_file = tmxfile(fin, 'en', 'th')
+            objects = []
             for node in tmx_file.unit_iter():
                 objects.append(
                     BilingualSentence(
@@ -396,3 +390,40 @@ def store_POSTTagged_Sentences(corpus_object):
             return True
     else:
         return False
+
+# Export Bilingual Corpus to File
+def export_BilingualCorpus2File(file_url, sentences, file_type, s_lang, t_lang):
+    if file_type == 'txt':
+        with open(file_url, 'w', encoding='utf-8') as fout:
+            for sentence in sentences:
+                fout.write(sentence.source + '|' + sentence.target + '\n')
+            fout.close()
+    elif file_type == 'csv':
+        with open(file_url, 'w', encoding='utf-8') as csvfile:
+            writeCSV = csv.writer(csvfile, delimiter=',')
+            for sentence in sentences:
+                writeCSV.writerow([sentence.source, sentence.target])
+            csvfile.close()
+    elif file_type == 'tmx':
+        tmx_file = tmxfile()
+        for sentence in sentences:
+            tmx_file.addtranslation(sentence.source, s_lang, sentence.target, t_lang)
+        tmx_file.savefile(file_url)
+    elif file_type == 'xlsx':
+        dst_wb = openpyxl.Workbook()
+        ss_sheet = dst_wb['Sheet']
+        ss_sheet.title = 'transmem'
+        dst_wb.save(file_url)
+        dst_wb = openpyxl.load_workbook(file_url)
+        dst_ws = dst_wb['transmem']
+        dst_ws.cell(1, 1).value = 'en'
+        dst_ws.cell(1, 2).value = 'th'
+        row = 2
+        for sentence in sentences:
+            dst_ws.cell(row, 1).value = sentence.source
+            dst_ws.cell(row, 2).value = sentence.target
+            row += 1
+        dst_wb.save(file_url)
+    else:
+        pass
+    return os.path.basename(file_url)
