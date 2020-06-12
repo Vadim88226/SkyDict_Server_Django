@@ -496,11 +496,11 @@ $(document).ready(function() {
     var grid_POSTaggedsentence = function(source, target){
         var source_tags = ''
         for(var i = 0; i < source.length; i ++ ){
-            source_tags = source_tags + "<span class='taggedWord tag" + source[i].pos + "'>" + source[i].word + "</span>";
+            source_tags = source_tags + "<span class='taggedWord tag" + source[i].pos + "'>" + source[i].token + "</span>";
         }
         var target_tags = ''
         for(var i = 0; i < target.length; i ++ ){
-            target_tags = target_tags + "<span class='taggedWord tag" + target[i].pos + "'>" + target[i].word + "</span>";
+            target_tags = target_tags + "<span class='taggedWord tag" + target[i].pos + "'>" + target[i].token + "</span>";
         }
        
         $('#pos_source').hide();
@@ -533,7 +533,7 @@ $(document).ready(function() {
                 console.log(response)
                 if(response.valid){
                     CeedPOSdata = response;
-                    grid_POSTaggedsentence(response.source, response.target);
+                    grid_POSTaggedsentence(response.tagged_source, response.tagged_target);
                 }
             },
             error: function(response) {

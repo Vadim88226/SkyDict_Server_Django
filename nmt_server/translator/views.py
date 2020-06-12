@@ -1,6 +1,8 @@
 import re, json, os, linecache
 import subprocess 
 from langdetect import detect
+from pythainlp.tag import pos_tag
+from pythainlp.tokenize import word_tokenize
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
 from django.template import loader
@@ -654,14 +656,15 @@ def update_POSTaggedsentence(request):
             value = CorpusStatus.objects.filter(status=value).first()
             POSTaggedSentence.objects.filter(id=id).update(status=value)
         elif field == 'source':
-            POSTaggedSentence.objects.filter(id=id).update(source=value)
+            POSTaggedSentence.objects.filter(id=id).update(source=value, tagged_source='')
         elif field == 'target':
-            POSTaggedSentence.objects.filter(id=id).update(target=value)
+            POSTaggedSentence.objects.filter(id=id).update(target=value, tagged_target='')
         else:
             pass
         return JsonResponse({"valid":True}, status = 200)
 
-    return JsonResponse({}, status = 400)
+    else:
+        return JsonResponse({"valid":False}, status = 400)
 
 
 def get_CorpusSentence(request):
@@ -712,13 +715,12 @@ def get_POSTaggedsentence(request):
     return JsonResponse({}, status = 400)
 
 def export_BilingualCorpus(request):
-    if request.method == 'POST': 
+    if request.method == 'POST':
         corpus_id = request.POST.get('id')
         export_filename = request.POST.get('name')
         export_filetype = request.POST.get('type')
         export_status = request.POST.get('statuses')
         export_filename += "."+export_filetype
-        export_status = "Unchecked"
         status_ids = []
         corpus_object = BilingualCorpus.objects.get(pk=corpus_id)
         s_lang = corpus_object.s_lang
@@ -728,7 +730,7 @@ def export_BilingualCorpus(request):
         export_sentences = BilingualSentence.objects.filter(corpus=corpus_object, status__in=status_ids)
         export_path = os.path.join(settings.MEDIA_ROOT, export_filename)
         base_path = export_BilingualCorpus2File(export_path, export_sentences, export_filetype, s_lang, t_lang)
-        return JsonResponse({'valid': False, 'file_path' : base_path}, status = 200)
+        return JsonResponse({'valid': True, 'file_path' : base_path}, status = 200)
 
 def export_POSTagged(request):
     if request.method == 'POST': 
@@ -745,43 +747,31 @@ def export_POSTagged(request):
 
 
 def tag_Sentence(request):
-    print('---')
     if request.method == 'POST': 
         source = request.POST.get('source')
         target = request.POST.get('target')
+        nlp = TranslatorConfig.en_nlp
+        source_tokens = nlp(source)
+        tagged_source = []
+        for token in source_tokens:
+            tagged_source.append({'token':token.text, 'pos':token.pos_})
+        target_tokens = word_tokenize(target, engine='deepcut', keep_whitespace=False)
+        target_tags = pos_tag(target_tokens, corpus='pud')
+        tagged_target = []
+        for target_tag in target_tags:
+            tagged_target.append({'token':target_tag[0], 'pos':target_tag[1]})
         
-        ex_tags1 = [
-            {'word' : 'John', 'pos' : 'Noun' },
-            {'word' : 'likes', 'pos' : 'Verb' },
-            {'word' : 'the', 'pos' : 'Determiner' },
-            {'word' : 'blue', 'pos' : 'Adjective' },
-            {'word' : 'house', 'pos' : 'Noun' },
-            {'word' : 'at', 'pos' : 'Preposition' },
-            {'word' : 'the', 'pos' : 'Determiner' },
-            {'word' : 'end', 'pos' : 'Noun' },
-            {'word' : 'of', 'pos' : 'Preposition' },
-            {'word' : 'the', 'pos' : 'Determiner' },
-            {'word' : 'street', 'pos' : 'Noun' },
-            {'word' : '.', 'pos' : 'Other' },
-            {'word' : '', 'pos' : 'Other' }
-        ]
-        ex_tags2 = [
-            {'word' : 'John', 'pos' : 'Noun' },
-            {'word' : 'likes', 'pos' : 'Verb' },
-            {'word' : 'the', 'pos' : 'Determiner' },
-            {'word' : 'blue', 'pos' : 'Adjective' },
-            {'word' : 'house', 'pos' : 'Noun' },
-            {'word' : 'at', 'pos' : 'Preposition' },
-            {'word' : 'the', 'pos' : 'Determiner' },
-            {'word' : 'end', 'pos' : 'Noun' },
-            {'word' : 'of', 'pos' : 'Preposition' },
-            {'word' : 'the', 'pos' : 'Determiner' },
-            {'word' : 'street', 'pos' : 'Noun' },
-            {'word' : '.', 'pos' : 'Other' },
-            {'word' : '', 'pos' : 'Other' }
-        ]
-        print(source, target)
-        return JsonResponse({'valid': True, 'source' : ex_tags1, 'target': ex_tags2}, status = 200)
+        return JsonResponse({'valid': True, 'tagged_source' : tagged_source, 'tagged_target': tagged_target}, status = 200)
     else:
         return JsonResponse({'valid': False, 'error' : 'please give error content'}, status = 200)
     return JsonResponse({}, status = 400)
+
+def save_POSTaggedsentence(request):
+    if request.method == 'POST':
+        sentence_id = request.POST.get('id')
+        tagged_source = request.POST.get('tagged_source')
+        tagged_target = request.POST.get('tagged_target')
+        POSTaggedSentence.objects.filter(pk=sentence_id).update(tagged_source=tagged_source, tagged_target=tagged_target)
+        return JsonResponse({"valid":True}, status = 200)
+    else:
+        return JsonResponse({"valid":False}, status = 400)
