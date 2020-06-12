@@ -449,3 +449,4 @@ def tag_Thai_Sentence(sentence, keep_tokens = True):
     tagged_sentence = []
     for source_tag in sentence_tags:
         tagged_sentence.append({'token':source_tag[0], 'pos':source_tag[1]})
+    return tagged_sentence
