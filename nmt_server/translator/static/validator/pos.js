@@ -2,7 +2,6 @@
 function view_template(_templateID) {
     document.getElementById("div_Postagged_file").innerHTML = "";
     var t = document.querySelector('#' + _templateID);
-
     var clone = document.importNode(t.content, true);
     document.getElementById("div_Postagged_file").appendChild(clone);
 };
@@ -86,8 +85,8 @@ $(function() {
     
     $(document).on('click','#postagged_table > div > table > tbody > tr', function(e) {
         if(e.target.className != 'export_btn' && e.target.className != 'fas' ){
-            e.currentTarget.cells[4].childNodes[0].checked = 1 - (e.currentTarget.cells[4].childNodes[0].checked);
-            if (e.currentTarget.cells[4].childNodes[0].checked)
+            e.currentTarget.cells[5].childNodes[0].checked = 1 - (e.currentTarget.cells[5].childNodes[0].checked);
+            if (e.currentTarget.cells[5].childNodes[0].checked)
                 $(this).css('background-color', 'lightgrey');
             else
                 $(this).css('background-color', '');
@@ -203,7 +202,7 @@ $(function() {
             }
         }
         if(statusary.length){
-            parramsarray['status']=statusary.join(',');console.log(parramsarray);
+            parramsarray['status']=statusary.join(',');
             export_potaggedfn(parramsarray);
         }else{
             $('#status2')[0].checked =  true;
@@ -220,12 +219,12 @@ $(function() {
 // edittable 
 $(document).ready(function() {
 
-    var currentpageno = 1;
-    var allpage = 0;
-    var SentenceTable =  '';
-    var prepostaggedsUL = '';
-    var oldpostaggedsid = '';
-    var status = Array();
+    var currentpageno = 1; // this is value of current page.
+    var allpage = 0; // this is value of all page number of current selected file..
+    var SentenceTable =  ''; // please define sentence table of corpusfile
+    var prepostaggedsUL = ''; // this value is <UL> tag $(this) selected from corpusfile list 
+    var oldpostaggedsid = ''; // this value is server id of corpus file list
+    var status = Array(); // this is array to save status of sentence 
     SentenceTable = $('#postaggedcontenttable').DataTable({
         data : [],
         columns : [
@@ -270,7 +269,7 @@ $(document).ready(function() {
             style:    'os',
             selector: 'td:first-child'
         },    
-        "pageLength": 10,
+        "pageLength": 10, // page showed length
         "aaSorting": [],
         "searching": false,
         // "pagingType": "simple",
@@ -307,6 +306,7 @@ $(document).ready(function() {
             $(this).val(1);
         }
         currentpageno = newpageno;
+        // please first page data of new corpusfile selected by user in corpusfile list..
         get_POSTaggedSentence(oldpostaggedsid, newpageno)
     });
 
@@ -328,6 +328,7 @@ $(document).ready(function() {
         //get the index of the clicked cell
         var colIndex = SentenceTable.cell(el).index().column;
         if(oldvalue != newvalue){
+            // please send changed sentence by user in biligualcorpusfile sentence table...
             send_changedsentence(id, columns[colIndex].data, newvalue, SentenceTable.cell(el), oldvalue);
         }
         
@@ -340,6 +341,7 @@ $(document).ready(function() {
         var id = row.data().id;
         var oldvalue = SentenceTable.cell(el).data();
         var newvalue = $(this).val();
+        // please send changed sentence by user in biligualcorpusfile sentence table...
         send_changedsentence(id, 'status', newvalue, SentenceTable.cell(el), oldvalue);
     })
     // when postaggeds list click, event
@@ -357,6 +359,7 @@ $(document).ready(function() {
         }
         if( newpostaggedsid != oldpostaggedsid && newpostaggedsid != undefined ){
             currentpageno = 1; // set default 1 
+            // please first page data of new corpusfile selected by user in corpusfile list..
             get_POSTaggedSentence(newpostaggedsid, 1);
             oldpostaggedsid = newpostaggedsid;
         }
@@ -375,9 +378,9 @@ $(document).ready(function() {
             dataType: 'json',
             type: "POST",
             success: function (response) {
-                console.log(response);
                 allpage = response.data.total_pages;
                 status = response.data.status;
+                // please cleat data of table loaded, and add new page data..
                 SentenceTable.clear().rows.add(response.data.data).draw();
                 $('#pageno').val(pageno);
                 $('#allpagenumber').text(allpage) 
@@ -414,6 +417,7 @@ $(document).ready(function() {
             return;
         }
         if(currentpageno > 1){
+            // please get sentence of current page in POStagged corpusfile, from server...
             get_POSTaggedSentence(oldpostaggedsid, --currentpageno);
         }
          
@@ -430,11 +434,12 @@ $(document).ready(function() {
             return;
         }
         if(currentpageno < allpage){
+            // please get sentence of current page in POStagged corpusfile, from server...
             get_POSTaggedSentence(oldpostaggedsid, ++currentpageno);
         }
         
     })
-    
+    // pleae send data of sentence changed by user to server.
     function send_changedsentence(id, field, value, td, oldvalue){
         var tk = $('#tokenid').attr("data-token");
         $.ajax({
@@ -458,6 +463,7 @@ $(document).ready(function() {
                         okay: {  }
                     }
                 });
+                // if server error, go back row or changed data.
                 td.data(oldvalue).draw();
             },
             timeout: 2000
@@ -465,13 +471,48 @@ $(document).ready(function() {
         })
     }
     // POS Tagged event
-    var presentencetr = 0;
-    var presentencecss = '';
-    // current selected sentence data = Ceed
-    var Ceed = Array();
-    var CeedPOSdata = Array();
-
+    var presentencetr = 0; // pre "row or <tr>" of row that user click in sentence table
+    var presentencecss = ''; // pre "Backbround-color" of row that user click in sentence table
+    var Ceed = Array();// current selected sentence data array in postaggedcorpusfilesentence table = Ceed
+    var CeedPOSdata = Array(); // POS tagged data array of Ceed ( current selected sentence data)
+    var CWinST_ary = Array();  // array of Ckick Word in tagged Source and Tagged target div
+    var  EN_TAGS = [
+                    {'L':'ADJ', 'R':'Adjective'},
+                    {'L':'ADP', 'R':'Adposition'},
+                    {'L':'ADV', 'R':'Adverb'},
+                    {'L':'AUX', 'R':'Auxiliary'},
+                    {'L':'CCONJ', 'R':'Coordinating conjunction'},
+                    {'L':'DET', 'R':'Determiner'},
+                    {'L':'INTJ', 'R':'Interjection'},
+                    {'L':'NOUN', 'R':'Noun'},
+                    {'L':'NUM', 'R':'Numeral'},
+                    {'L':'PART', 'R':'Particle'},
+                    {'L':'PRON', 'R':'Pronoun'},
+                    {'L':'PROPN', 'R':'Propernoun'},
+                    {'L':'PUNCT', 'R':'Punctuation'},
+                    {'L':'SCONJ', 'R':'Subordinating conjunction'},
+                    {'L':'VERB', 'R':'Verb'}
+                ]; // Long and short Maps data array of every Tags
+    
+    var __tag_str__1 = ""; 
+    var __tag_str__2 = "";
+    var on = 0;
+    EN_TAGS.forEach(_tag_ => {
+        if(_tag_['L'] == 'NUM'){
+            on = 1;
+        }
+        if( on == '0' ){
+            __tag_str__1 = __tag_str__1 +  "<div class='tag" + _tag_['L'] + "'>" + _tag_['R'] + "</div>";
+        }else{
+            __tag_str__2 = __tag_str__2 +  "<div class='tag" + _tag_['L'] + "'>" + _tag_['R'] + "</div>";
+        }
+        
+    });
+    $('#colors1').html(__tag_str__1); // please show tags of color 1
+    $('#colors2').html(__tag_str__2); // please show tags of color 2
+                
     $(document).on('click','#postaggedcontenttable > tbody > tr', function(e) {
+        // please check pre selected row or <tr>
         if(presentencetr)
             $(presentencetr)[0].style.backgroundColor = presentencecss;
             presentencetr = this;
@@ -479,8 +520,8 @@ $(document).ready(function() {
 
         $(this).css('background-color', 'lightgrey');
         
-        var rowdata = SentenceTable.row($(this)).data();
-        Ceed = rowdata;
+        var rowdata = SentenceTable.row($(this)).data(); // this is data of current selected row or <tr>
+        Ceed = rowdata; // please save and use data of row when user click row of postaggedcorpusfile table.
         $('#pos_id').val(Ceed.id);
         $('#pos_count').val(Ceed.count);
         $('#pos_corpusid').val(oldpostaggedsid);
@@ -488,6 +529,10 @@ $(document).ready(function() {
         $('#pos_source').val(Ceed.source);
         $('#pos_target').val(Ceed.target);
         $('#pos_status').val(Ceed.status);
+        $('#pos_source').css('display');
+        if($('#pos_source').css('display') == 'none'){
+            tag_sentencefn(); // please tag current selected sentence.
+        }
         e.preventDefault();
     });
 
@@ -496,11 +541,11 @@ $(document).ready(function() {
     var grid_POSTaggedsentence = function(source, target){
         var source_tags = ''
         for(var i = 0; i < source.length; i ++ ){
-            source_tags = source_tags + "<span class='taggedWord tag" + source[i].pos + "'>" + source[i].word + "</span>";
+            source_tags = source_tags + "<span class='taggedWord tag" + source[i].pos + "'>" + source[i].token + "</span>";
         }
         var target_tags = ''
         for(var i = 0; i < target.length; i ++ ){
-            target_tags = target_tags + "<span class='taggedWord tag" + target[i].pos + "'>" + target[i].word + "</span>";
+            target_tags = target_tags + "<span class='taggedWord tag" + target[i].pos + "'>" + target[i].token + "</span>";
         }
        
         $('#pos_source').hide();
@@ -510,31 +555,42 @@ $(document).ready(function() {
         $('#source_Tagged').show();
         $('#target_Tagged').show();
        
-    }
-    $(document).on('click', '#tagger', function(){
-        
-        if(Ceed.length)return;
-
-        $(this)[0].disabled = true;
-        $('#editer')[0].disabled = false;
+    };
+    // this function is to save tagged sentence by user.
+    var save_taggedsentencefn = function(Taggerid, tagged_source, tagged_target){
         var tk_ = $('#tokenid').attr("data-token");
-        var source_ = $('#pos_source').val();
-        var target_ = $('#pos_target').val();
         $.ajax({
-            url: "/tag_sentence/",
+            url: "/save_postaggedsentence/",
             type: "POST",
             data: {
-                'source': source_,
-                'target': target_,
+                'id' : Taggerid,
+                'tagged_source': tagged_source,
+                'tagged_target': tagged_target,
                 'csrfmiddlewaretoken': tk_
             },
             success: function(response) {
-                
-                console.log(response)
+                // console.log(response);
                 if(response.valid){
-                    CeedPOSdata = response;
-                    grid_POSTaggedsentence(response.source, response.target);
+                    $.alert({
+                        title: 'Alert', content: 'SUCCESSFUL',
+                        icon: 'fa fa-smile-o', theme: 'modern', animation: 'scale', closeAnimation: 'scale',
+                        type: 'blue',
+                        autoClose: 'okay|1000',
+                        buttons: {
+                            okay: {  }
+                        }
+                    });
+                }else{
+                    $.alert({
+                        title: 'Alert', content: response.error,
+                        icon: 'fa fa-smile-o', theme: 'modern', animation: 'scale', closeAnimation: 'scale',
+                        type: 'blue',
+                        buttons: {
+                            okay: {  }
+                        }
+                    });
                 }
+                
             },
             error: function(response) {
                 $.alert({
@@ -548,6 +604,53 @@ $(document).ready(function() {
             timeout: 2000
 
         });
+    }
+    // this is function to tag selected sentence.
+    var tag_sentencefn = function() {
+        var tk_ = $('#tokenid').attr("data-token");
+        var source_ = $('#pos_source').val();
+        var target_ = $('#pos_target').val();
+        $.ajax({
+            url: "/tag_sentence/",
+            type: "POST",
+            data: {
+                'source': source_,
+                'target': target_,
+                'csrfmiddlewaretoken': tk_
+            },
+            success: function(response) {
+                
+                if(response.valid){
+                    // please save in pos tagged data (CeedPOSdata) from response of server
+                    CeedPOSdata = response;
+                    grid_POSTaggedsentence(response.tagged_source, response.tagged_target);
+                }
+            },
+            error: function(response) {
+                console.error(response);
+                $.alert({
+                    title: 'Alert', content: 'SERVER ERROR',
+                    icon: 'fa fa-rocket', animation: 'scale', closeAnimation: 'scale',
+                    buttons: {
+                        okay: {  }
+                    }
+                });
+            },
+            timeout: 2000
+
+        });
+    }
+    $(document).on('click', '#tagger', function(){
+
+        // please check if sentence data is and not.
+        if(Ceed.length == 0 ){
+            console.log('here i am tagger')
+            return;
+        }
+        $(this)[0].disabled = true;
+        $('#editer')[0].disabled = false;
+        $('#saver')[0].disabled = false;
+        tag_sentencefn();
     });
 
     $(document).on('click', '#editer', function(){
@@ -557,50 +660,77 @@ $(document).ready(function() {
         $('#pos_target').show();
         $(this)[0].disabled = true;
         $('#tagger')[0].disabled = false;
+        $('#saver')[0].disabled = false;
     });
 
     $(document).on('click', '#saver', function(){
-      console.log('HI, I am saver, Nice to meet you.')
+        // please check if sentence data is and not.
+        if(!Ceed.length == 0 || $('#tagger')[0].disabled != true ){
+            $(this)[0].disabled = true;
+            return false;
+        }
+        var source_spans = $('#source_Tagged').children();
+        var target_spans = $('#target_Tagged').children();
+        var Tsource_data = [];
+        var Ttarget_data = [];
+        var _get_attr = function (_id) {
+            var _tag = $(_id).attr('class').replace('taggedWord tag', '');
+            var _word = $(_id).text();
+            return _word + "/" + _tag;
+        }
+        
+        for (const Sspan of source_spans) {
+            Tsource_data.push(_get_attr(Sspan));
+        }
+        for (const Tspan of target_spans) {
+            Ttarget_data.push(_get_attr(Tspan));
+        }
+        var _Tsource_data = Tsource_data.join(',');
+        var _Ttarget_data = Ttarget_data.join(',');
+        // please save tagged sentence by user.
+        save_taggedsentencefn(Ceed.id, _Tsource_data,_Ttarget_data);
     });
 
-    var tagMap = Array();
-    $(document).on('click mouseover','.taggedWord', function(ev) {
+    // this is Listener when user ckick basic tags of tag memu(one only of all tags)
+    $(document).on('mouseover','.taggedWord', function(ev) {
         var word = $(ev.target);
         var tagName = word[0].classList[1];
-
-        // console.log(word[0].classList[1], tagName, tagInfo);
-
-        // if (tagName == "" || tagMap[tagName] == undefined) {
-        //     return; // cancel if tag not defined
-        // }
         
         $('#tagTipContainer').show();
-
-        // if (tagInfo[0] != "" ) {
-        //     var posName ='' //appData.i18n[tagInfo[0]] !== undefined ? appData.i18n[tagInfo[0]] : tagInfo[0];
-        //     var tagDescription = tagInfo[1];
-        //     var tagExamples = tagInfo[2];
-        //     var infoHtml = '<b>' + posName + '</b>, ' + tagName;
-        //     if (tagDescription != '') {
-        //         infoHtml += '<br />(' + tagDescription + ')';
-        //     }
-        //     if (tagExamples != '') {
-        //         infoHtml += "<br />" + appData.i18n['label_examples'] + " " + tagExamples;
-        //     }
-        //     $('#tagTip').html(infoHtml);
-        // }else {
-        $('#tagTip').html(tagName + ': ');
-        // }
-        // var pos = posAvailable.indexOf(tagInfo[0]) === -1 ? 'Other' : tagInfo[0];
-        // $('#tagTipContainer').removeClass();
-        // $('#tagTipContainer').addClass('tag' + pos);
-        // $('#tagTipContainer').offset({'left': word.offset().left});
-        // $('#tagTipContainer').offset({'top': word.offset().top + word.outerHeight()});
-        // $('#tagTipContainer .up').offset({'left': word.offset().left + word.outerWidth() / 2 - $('#tagTipContainer .up').outerWidth() / 2});
+        if(EN_TAGS.filter( TAG => TAG['L'] ==  tagName.replace('tag', '')).length > 0){
+            $('#tagTip').html(EN_TAGS.filter( TAG => TAG['L'] ==  tagName.replace('tag', ''))[0]['R']);
+        }else{
+            $('#tagTip').html('Other')
+        }
+        $('#tagTipContainer').removeClass();
+        $('#tagTipContainer').addClass(tagName);
+        $('#tagTipContainer').offset({'left': word.offset().left});
+        $('#tagTipContainer').offset({'top': word.offset().top + word.outerHeight()});
+        $('#tagTipContainer .up').offset({'left': word.offset().left + word.outerWidth() / 2 - $('#tagTipContainer .up').outerWidth() / 2});
     });
-    $('.taggedWord').bind('mouseout', function(ev) {
+    $(document).bind('mouseout', '.taggedWord', function(ev) {
         $('#tagTipContainer').hide();
     });
-  
+    $(window).bind('resize', function() { $('#tagTipContainer').hide(); });
+    $('#tagTipContainer').bind('click', function() { $('#tagTipContainer').hide(); });
+    
+    $(document).on('click, mousedown','.colors > div', function(e) {
+        var new_tag = $(this)[0].className;
+        $(this).css('background-color', 'aliceblue');
+
+        CWinST_ary.forEach(span_word => {
+            $(span_word)[0].className = "taggedWord " + new_tag;
+            $(span_word).css('outline', 'none');
+        });
+        CWinST_ary = new Array();
+    });
+    $(document).on('mouseup','.colors > div', function(e) {
+        $(this).css('background-color', '');
+    });
+
+    $(document).on('click, mousedown','.taggedWord', function(e) {
+        $(this).css('outline', '-webkit-focus-ring-color auto 1px');
+        CWinST_ary.push($(this)[0]); //plase save selected word of selected sentence in  this array (this array is simillar with temp array ).
+    });
 });
 

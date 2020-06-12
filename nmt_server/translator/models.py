@@ -48,7 +48,7 @@ class UserSetting(models.Model):
 
 class BilingualCorpus(models.Model):
     file_url = models.FileField(upload_to='corpus_files/', validators=[FileExtensionValidator(allowed_extensions=['txt', 'csv', 'tmx', 'xlsx'])])
-    file_name = models.CharField(max_length=255)
+    file_name = models.CharField(max_length=255, default='none')
     name = models.CharField(max_length=50,default='none')
     s_lang = models.CharField(max_length=5,default='en')
     t_lang = models.CharField(max_length=5,default='th')
@@ -59,7 +59,7 @@ class BilingualCorpus(models.Model):
 
 class POSTaggedCorpus(models.Model):
     file_url = models.FileField(upload_to='pos_tagged_files/', validators=[FileExtensionValidator(allowed_extensions=['txt', 'csv', 'tmx', 'xlsx'])])
-    file_name = models.CharField(max_length=255)
+    file_name = models.CharField(max_length=255, default='none')
     name = models.CharField(max_length=50,default='none')
     s_lang = models.CharField(max_length=5,default='en')
     t_lang = models.CharField(max_length=5,default='th')

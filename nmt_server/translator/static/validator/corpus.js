@@ -138,7 +138,6 @@ $(function() {
             },
             dataType: 'json',
             success: function(response) {
-                console.log(response)
                 if (response.valid) {
                     
                     fileUrl = "../static/media/" + response.file_path;

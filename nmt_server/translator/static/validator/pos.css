@@ -480,31 +480,79 @@ fieldset>ul.selected{
 
 
 /* Tag colors */
+/* 
+.tagADJ { background-color: #fc6; }
+.tagADP { background-color: #c99; }
+.tagADV { background-color: #cc9; }
+.tagAUX { background-color: #99c; }
+.tagCCONJ { background-color: #6f6; }
+.tagDET { background-color: #ccc; }
+.tagINTJ { background-color: #6c9; }
+.tagNOUN { background-color: #f9c; }
+.tagNUM { background-color: #ee7; }
+.tagPART { background-color: #cf6; }
+.tagPRON { background-color: rgb(104, 64, 64); }
+.tagPROPN { background-color: rgb(143, 58, 58); }
+.tagPUNCT { background-color: rgb(216, 24, 24); }
+.tagSCONJ { background-color: rgb(113, 46, 175); }
+.tagVERB { background-color: rgb(182, 48, 104); }
+.tagOther { background-color: rgb(187, 164, 174); } */
 
-.tagAdjective { background-color: #fc6; }
-.tagAdverb { background-color: #c99; }
-.tagConjunction { background-color: #cc9; }
-.tagDeterminer { background-color: #99c; }
-.tagInterjection { background-color: #6f6; }
-.tagNoun { background-color: #ccc; }
-.tagNumber { background-color: #6c9; }
-.tagPreposition { background-color: #f9c; }
-.tagPronoun { background-color: #ee7; }
-.tagVerb { background-color: #cf6; }
-.tagOther { background-color: #fff; }
+/* 
+#3498db
+#2980b9
+#8e44ad
+#9b59b6
+#e74c3c
+#c0392b
 
-.montessori .tagAdjective { background-color: #3a5f93; color: #ffffff; }
-.montessori .tagAdverb { background-color: #fd8401; }
-.montessori .tagConjunction { background-color: #fb9ff4; }
-.montessori .tagDeterminer { background-color: #8fd8ff; }
-.montessori .tagInterjection { background-color: #ffcb67; }
-.montessori .tagNoun { background-color: #000000; color: #ffffff; }
-.montessori .tagNumber { background-color: #82a4b6; }
-.montessori .tagPreposition { background-color: #00cc67; }
-.montessori .tagPronoun { background-color: #8957b0; color: #ffffff; }
-.montessori .tagVerb { background-color: #fe0000; color: #ffffff; }
-.montessori .tagOther { background-color: #fff; }
+#e67e22
+#f39c12
+#f1c40f
+#2ecc71
+#27ae60
+#16a085
 
+#2c3e50
+#34495e
+#7f8c8d
+#95a5a6
+#dc7633
+#bdc3c7 */
+.tagADJ { background-color: #3498db; }
+.tagADP { background-color: #e67e22; }
+.tagADV { background-color: #F9E79F; }
+.tagAUX { background-color: #9b59b6; }
+.tagCCONJ { background-color: #e74c3c;}
+.tagDET { background-color : #2980b9; }
+.tagINTJ { background-color: #f39c12; }
+.tagNOUN { background-color: #7d6608; }
+.tagNUM { background-color: #2ecc71; }
+.tagPART { background-color: #27ae60; }
+.tagPRON { background-color: #8e44ad; }
+.tagPROPN { background-color: #bdc3c7; }
+.tagPUNCT { background-color: #f1c40f; }
+.tagSCONJ { background-color: #F1948A; }
+.tagVERB { background-color: #95a5a6; }
+.tagOther { background-color: #dc7633; }
+
+/* .montessori .tagADJ { background-color: #3a5f93; color: #ffffff; }
+.montessori .tagADP { background-color: #fd8401; }
+.montessori .tagADV { background-color: #fb9ff4; }
+.montessori .tagAUX { background-color: #8fd8ff; }
+.montessori .tagCCONJ { background-color: #ffcb67; }
+.montessori .tagDET { background-color: #000000; color: #ffffff; }
+.montessori .tagINTJ { background-color: #82a4b6; }
+.montessori .tagNOUN { background-color: #00cc67; }
+.montessori .tagNUM { background-color: #8957b0; color: #ffffff; }
+.montessori .tagPART { background-color: #fe0000; color: #ffffff; }
+.montessori .tagPUNCT { background-color: rgb(50, 28, 172); }
+.montessori .tagPRON { background-color: rgb(165, 44, 44); }
+.montessori .tagPROPN { background-color: rgb(47, 173, 182); }
+.montessori .tagPUNCT { background-color: rgb(140, 219, 94); }
+.montessori .tagSCONJ { background-color: rgb(50, 82, 189); }
+.montessori .tagVERB { background-color: rgb(173, 36, 162); }
+ */
 
 
 /* color panel area */
@@ -533,11 +581,16 @@ select.language {
 
 /* Application specific */
 
-#colors div {
+.colors div {
     margin-bottom: 1px;
     padding: 3px 7px 2px 7px;
     border-radius: 3px;
+    overflow-x: overlay;
 }
+.colors > div:hover, .colors > div:focus{
+    outline: -webkit-focus-ring-color auto 1px;
+}
+
 
 /* #stupidNiceStuff {
 } */
@@ -551,15 +604,15 @@ select.language {
     border-radius: 5px;
     box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
     padding: 4px;
-    line-height: 1.8em;
+    line-height: 1.4em;
     min-height: 60px;
 }
-
 .taggedWord {
     cursor: pointer;
     border-radius: 2px;
     padding: 0.1em 0.2em 0.1em 0.2em;
     margin: 2px;
+    display: inline-table;
 }
 
 .taggedWord span {
@@ -713,11 +766,11 @@ select.language {
         padding: 10px 10px;
     }
 
-    #colors {
+    .colors {
         margin-bottom: 8px;
     }
 
-    #colors div {
+    .colors div {
         display: inline-block;
         min-width: 7.5em;
     }
@@ -732,9 +785,10 @@ select.language {
         display: none;
     }
 
-    .show-tools #colors {
+    .show-tools .colors {
         display: none;
     }
+
 }
 
 /* .lightgrey{
@@ -767,3 +821,15 @@ select.language {
     border: 1px solid;
     border-color: lightgrey;
 }
+
+    
+.col-md-2 {
+    padding: 5px;
+    overflow-wrap: inherit;
+    /* overflow: auto; */
+}
+
+/* 
+.form-group {
+    margin-bottom: 1px;
+} */

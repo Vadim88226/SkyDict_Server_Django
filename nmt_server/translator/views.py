@@ -1,6 +1,8 @@
 import re, json, os, linecache
 import subprocess 
 from langdetect import detect
+from pythainlp.tag import pos_tag
+from pythainlp.tokenize import word_tokenize
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
 from django.template import loader
@@ -728,7 +730,7 @@ def export_BilingualCorpus(request):
         export_sentences = BilingualSentence.objects.filter(corpus=corpus_object, status__in=status_ids)
         export_path = os.path.join(settings.MEDIA_ROOT, export_filename)
         base_path = export_BilingualCorpus2File(export_path, export_sentences, export_filetype, s_lang, t_lang)
-        return JsonResponse({'valid': False, 'file_path' : base_path}, status = 200)
+        return JsonResponse({'valid': True, 'file_path' : base_path}, status = 200)
 
 def export_POSTagged(request):
     if request.method == 'POST': 
@@ -741,47 +743,34 @@ def export_POSTagged(request):
         return JsonResponse({'valid': True, 'url' : 'pos_tagged_files/threejs.svg'}, status = 200)
     else:
         return JsonResponse({'valid': False, 'error' : 'please give error content'}, status = 200)
-    return JsonResponse({}, status = 400)
 
 
 def tag_Sentence(request):
-    print('---')
     if request.method == 'POST': 
         source = request.POST.get('source')
         target = request.POST.get('target')
+        nlp = TranslatorConfig.en_nlp
+        source_tokens = nlp(source)
+        tagged_source = []
+        for token in source_tokens:
+            tagged_source.append({'token':token.text, 'pos':token.pos_})
+        target_tokens = word_tokenize(target, engine='deepcut', keep_whitespace=False)
+        target_tags = pos_tag(target_tokens, corpus='pud')
+        tagged_target = []
+        for target_tag in target_tags:
+            tagged_target.append({'token':target_tag[0], 'pos':target_tag[1]})
         
-        ex_tags1 = [
-            {'word' : 'John', 'pos' : 'Noun' },
-            {'word' : 'likes', 'pos' : 'Verb' },
-            {'word' : 'the', 'pos' : 'Determiner' },
-            {'word' : 'blue', 'pos' : 'Adjective' },
-            {'word' : 'house', 'pos' : 'Noun' },
-            {'word' : 'at', 'pos' : 'Preposition' },
-            {'word' : 'the', 'pos' : 'Determiner' },
-            {'word' : 'end', 'pos' : 'Noun' },
-            {'word' : 'of', 'pos' : 'Preposition' },
-            {'word' : 'the', 'pos' : 'Determiner' },
-            {'word' : 'street', 'pos' : 'Noun' },
-            {'word' : '.', 'pos' : 'Other' },
-            {'word' : '', 'pos' : 'Other' }
-        ]
-        ex_tags2 = [
-            {'word' : 'John', 'pos' : 'Noun' },
-            {'word' : 'likes', 'pos' : 'Verb' },
-            {'word' : 'the', 'pos' : 'Determiner' },
-            {'word' : 'blue', 'pos' : 'Adjective' },
-            {'word' : 'house', 'pos' : 'Noun' },
-            {'word' : 'at', 'pos' : 'Preposition' },
-            {'word' : 'the', 'pos' : 'Determiner' },
-            {'word' : 'end', 'pos' : 'Noun' },
-            {'word' : 'of', 'pos' : 'Preposition' },
-            {'word' : 'the', 'pos' : 'Determiner' },
-            {'word' : 'street', 'pos' : 'Noun' },
-            {'word' : '.', 'pos' : 'Other' },
-            {'word' : '', 'pos' : 'Other' }
-        ]
-        print(source, target)
-        return JsonResponse({'valid': True, 'source' : ex_tags1, 'target': ex_tags2}, status = 200)
+        return JsonResponse({'valid': True, 'tagged_source' : tagged_source, 'tagged_target': tagged_target}, status = 200)
     else:
         return JsonResponse({'valid': False, 'error' : 'please give error content'}, status = 200)
     return JsonResponse({}, status = 400)
+
+
+def save_POSTaggedsentence(request):
+    if request.method == 'POST': 
+        source = request.POST.get('id')
+        source = request.POST.get('tagged_source')
+        target = request.POST.get('tagged_target')
+        return JsonResponse({'valid': True, 'success': True}, status = 200)
+    else:
+        return JsonResponse({'valid': False, 'error' : 'please give error content'}, status = 200)

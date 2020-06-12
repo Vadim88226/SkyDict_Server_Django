@@ -29,6 +29,6 @@ urlpatterns = [
     path('get_postaggedsentence/', views.get_POSTaggedsentence, name='get_POSTaggedsentence'),
     path('export_bilingualcorpus/', views.export_BilingualCorpus, name='export_BilingualCorpus'),
     path('export_postagged/', views.export_POSTagged, name='export_POSTagged'),
-    path('tag_sentence/', views.tag_Sentence, name='tag_Sentence')
-    
+    path('tag_sentence/', views.tag_Sentence, name='tag_Sentence'),
+    path('save_postaggedsentence/', views.save_POSTaggedsentence, name='save_POSTaggedsentence')
 ]

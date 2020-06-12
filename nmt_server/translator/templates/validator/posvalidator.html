@@ -86,8 +86,8 @@
                     <div class="col-sm-12">
                         <!-- pos tagged part start  -->
                         <div id="postag">
-                            <div class="col-md-12">
-                                <div class="col-md-9">
+                            <div class="col-md-12" style="padding-right: 5px;padding-left: 5px;" >
+                                <div class="col-md-8">
                         
                                     <div id="pos_tagger">
                                         <input type="text" id='pos_id' hidden />
@@ -95,15 +95,14 @@
                                         <input type="text" id='pos_corpusid' hidden />
                                         <div class="form-group">
                                             <label for="text" class="hidden-xs hidden-sm">Source :</label>
-                                            <textarea class="form-control show-edit" rows="3"
+                                            <textarea class="form-control show-edit" rows="5"
                                                 id="pos_source"></textarea>
                                             <div id="source_Tagged" class="show-view" style="display: none;">
-                                            
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="text" class="hidden-xs hidden-sm">Target :</label>
-                                            <textarea class="form-control show-edit" rows="3"
+                                            <textarea class="form-control show-edit" rows="5"
                                                 id="pos_target"></textarea>
                                             <div id="target_Tagged" class="show-view" style="display: none;">
                                             
@@ -131,21 +130,18 @@
                                     </div>
                         
                                 </div>
-                        
-                                <div class="col-md-3">
-                                    <div id="colors">
-                                        <div class="tagAdjective">Adjective</div>
-                                        <div class="tagAdverb">Adverb</div>
-                                        <div class="tagConjunction">Conjunction</div>
-                                        <div class="tagDeterminer">Determiner</div>
-                                        <div class="tagInterjection">Interjection</div>
-                                        <div class="tagNoun">Noun</div>
-                                        <div class="tagNumber">Number</div>
-                                        <div class="tagPreposition">Preposition</div>
-                                        <div class="tagPronoun">Pronoun</div>
-                                        <div class="tagVerb">Verb</div>
+                                
+                                <div class="col-md-2" style="margin-top:5px;">
+                                    <label for="text" class="hidden-xs hidden-sm" ></label>
+                                    <div id="colors1" class="colors" >
                                     </div>
                                 </div>
+                                <div class="col-md-2" style="margin-top:5px;">
+                                    <label for="text" class="hidden-xs hidden-sm"></label>
+                                    <div id="colors2" class="colors">
+                                    </div>
+                                </div>
+                                    
                             </div>
                         </div><!-- /row -->
                         <!-- <div class="col-md-12">

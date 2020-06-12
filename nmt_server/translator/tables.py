@@ -52,13 +52,13 @@ class BilingualCorpusTable(tables.Table):
     # updated_at = tables.DateTimeColumn(verbose_name='Last Modified', format='d/m/Y')
     s_lang = tables.Column(verbose_name="Languages")
     user = tables.Column(verbose_name='Owner')
-    file_name = tables.Column(verbose_name='Bilingual Corpus File')
+    file_url = tables.Column(verbose_name='Bilingual Corpus File')
     export = tables.TemplateColumn("<button class='export_btn' style='cursor:pointer;width: 100%;' ><i class='fas'>&#xf56e;</i></button>")
 
     class Meta:
         model = BilingualCorpus
         template_name = "django_tables2/bootstrap-responsive.html"
-        fields = ('counter', 'name', 's_lang', 'file_name', 'user', 'check', 'export')
+        fields = ('counter', 'name', 's_lang', 'file_url', 'user', 'check', 'export')
         attrs = {"class": "table table-hover paleblue"}
     def render_counter(self):
         self.row_counter = getattr(self, 'row_counter', itertools.count(1))
@@ -74,13 +74,13 @@ class POSTaggedCorpusTable(tables.Table):
     name = tables.Column(verbose_name='Name')
     # updated_at = tables.DateTimeColumn(verbose_name='Last Modified', format='d/m/Y')
     s_lang = tables.Column(verbose_name="Languages")
-    # user = tables.Column(verbose_name='Owner')
-    file_name = tables.Column(verbose_name='Bilingual Corpus File')
+    user = tables.Column(verbose_name='Owner')
+    file_url = tables.Column(verbose_name='Bilingual Corpus File')
     export = tables.TemplateColumn("<button class='export_btn' style='cursor:pointer;width: 100%;' ><i class='fas'>&#xf56e;</i></button>")
     class Meta:
         model = POSTaggedCorpus
         template_name = "django_tables2/bootstrap-responsive.html"
-        fields = ('counter', 'name', 's_lang', 'file_url', 'check', 'export')
+        fields = ('counter', 'name', 's_lang', 'file_url','user', 'check', 'export')
         attrs = {"class": "table table-hover paleblue"}
     def render_counter(self):
         self.row_counter = getattr(self, 'row_counter', itertools.count(1))
