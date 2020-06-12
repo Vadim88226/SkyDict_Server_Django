@@ -656,14 +656,15 @@ def update_POSTaggedsentence(request):
             value = CorpusStatus.objects.filter(status=value).first()
             POSTaggedSentence.objects.filter(id=id).update(status=value)
         elif field == 'source':
-            POSTaggedSentence.objects.filter(id=id).update(source=value)
+            POSTaggedSentence.objects.filter(id=id).update(source=value, tagged_source='')
         elif field == 'target':
-            POSTaggedSentence.objects.filter(id=id).update(target=value)
+            POSTaggedSentence.objects.filter(id=id).update(target=value, tagged_target='')
         else:
             pass
         return JsonResponse({"valid":True}, status = 200)
 
-    return JsonResponse({}, status = 400)
+    else:
+        return JsonResponse({"valid":False}, status = 400)
 
 
 def get_CorpusSentence(request):
@@ -714,13 +715,12 @@ def get_POSTaggedsentence(request):
     return JsonResponse({}, status = 400)
 
 def export_BilingualCorpus(request):
-    if request.method == 'POST': 
+    if request.method == 'POST':
         corpus_id = request.POST.get('id')
         export_filename = request.POST.get('name')
         export_filetype = request.POST.get('type')
         export_status = request.POST.get('statuses')
         export_filename += "."+export_filetype
-        export_status = "Unchecked"
         status_ids = []
         corpus_object = BilingualCorpus.objects.get(pk=corpus_id)
         s_lang = corpus_object.s_lang
@@ -765,12 +765,12 @@ def tag_Sentence(request):
         return JsonResponse({'valid': False, 'error' : 'please give error content'}, status = 200)
     return JsonResponse({}, status = 400)
 
-
 def save_POSTaggedsentence(request):
-    if request.method == 'POST': 
-        source = request.POST.get('id')
-        source = request.POST.get('tagged_source')
-        target = request.POST.get('tagged_target')
-        return JsonResponse({'valid': True, 'success': True}, status = 200)
+    if request.method == 'POST':
+        sentence_id = request.POST.get('id')
+        tagged_source = request.POST.get('tagged_source')
+        tagged_target = request.POST.get('tagged_target')
+        POSTaggedSentence.objects.filter(pk=sentence_id).update(tagged_source=tagged_source, tagged_target=tagged_target)
+        return JsonResponse({"valid":True}, status = 200)
     else:
-        return JsonResponse({'valid': False, 'error' : 'please give error content'}, status = 200)
+        return JsonResponse({"valid":False}, status = 400)
