@@ -18,6 +18,9 @@ from translate.storage.tmx import tmxfile
 import textdistance
 import difflib
 from nltk.corpus import stopwords
+from pythainlp.tag import pos_tag
+from pythainlp.tokenize import word_tokenize
+
 cachedStopWords = stopwords.words("english")
 
 def removeStopwords(text):
@@ -427,3 +430,22 @@ def export_BilingualCorpus2File(file_url, sentences, file_type, s_lang, t_lang):
     else:
         pass
     return os.path.basename(file_url)
+
+# POS tagging for English
+def tag_English_Sentence(sentence):
+    nlp = TranslatorConfig.en_nlp
+    sentence_tokens = nlp(sentence)
+    tagged_sentence = []
+    for token in sentence_tokens:
+        tagged_sentence.append({'token':token.text, 'pos':token.pos_})
+    return tagged_sentence
+
+# POS tagging for Thai
+def tag_Thai_Sentence(sentence, keep_tokens = True):
+    sentence_tokens = sentence.split()
+    if keep_tokens:
+        sentence_tokens = word_tokenize(sentence, engine='deepcut', keep_whitespace=False)
+    sentence_tags = pos_tag(sentence_tokens, corpus='pud')
+    tagged_sentence = []
+    for source_tag in sentence_tags:
+        tagged_sentence.append({'token':source_tag[0], 'pos':source_tag[1]})

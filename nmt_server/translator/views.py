@@ -1,8 +1,6 @@
 import re, json, os, linecache
 import subprocess 
 from langdetect import detect
-from pythainlp.tag import pos_tag
-from pythainlp.tokenize import word_tokenize
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
 from django.template import loader
@@ -31,10 +29,13 @@ from django_tables2.export.views import ExportMixin
 from django_tables2.paginators import LazyPaginator
 
 from .apps import TranslatorConfig
-from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSettingForm, UserDictForm, BilingualCorpusForm, POSTaggedCorpusForm, SearchFileNameForm
+from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSettingForm, UserDictForm, \
+    BilingualCorpusForm, POSTaggedCorpusForm, SearchFileNameForm
 from .tokens import account_activation_token
-from .models import DictWords, DictSentences, TransMemories, UserSetting, CorpusStatus, BilingualCorpus, POSTaggedCorpus, BilingualSentence, POSTaggedSentence
-from .utils import translate_sentences, translate_file, concordance_search_sdk, store_Corpus_Sentences, store_POSTTagged_Sentences, export_BilingualCorpus2File
+from .models import DictWords, DictSentences, TransMemories, UserSetting, CorpusStatus, BilingualCorpus, \
+    POSTaggedCorpus, BilingualSentence, POSTaggedSentence
+from .utils import translate_sentences, translate_file, concordance_search_sdk, store_Corpus_Sentences, \
+    store_POSTTagged_Sentences, export_BilingualCorpus2File, tag_English_Sentence, tag_Thai_Sentence
 from .tables import tmTable, concordanceTable, BilingualCorpusTable, POSTaggedCorpusTable,  BilingualSentenceTable
 from .filters import tmFilter
 
@@ -657,6 +658,7 @@ def update_POSTaggedsentence(request):
             POSTaggedSentence.objects.filter(id=id).update(status=value)
         elif field == 'source':
             POSTaggedSentence.objects.filter(id=id).update(source=value, tagged_source='')
+
         elif field == 'target':
             POSTaggedSentence.objects.filter(id=id).update(target=value, tagged_target='')
         else:
@@ -749,17 +751,9 @@ def tag_Sentence(request):
     if request.method == 'POST': 
         source = request.POST.get('source')
         target = request.POST.get('target')
-        nlp = TranslatorConfig.en_nlp
-        source_tokens = nlp(source)
-        tagged_source = []
-        for token in source_tokens:
-            tagged_source.append({'token':token.text, 'pos':token.pos_})
-        target_tokens = word_tokenize(target, engine='deepcut', keep_whitespace=False)
-        target_tags = pos_tag(target_tokens, corpus='pud')
-        tagged_target = []
-        for target_tag in target_tags:
-            tagged_target.append({'token':target_tag[0], 'pos':target_tag[1]})
-        
+        tagged_source = tag_English_Sentence(source)
+        tagged_target = tag_Thai_Sentence(target, False)
+        print(tagged_source)
         return JsonResponse({'valid': True, 'tagged_source' : tagged_source, 'tagged_target': tagged_target}, status = 200)
     else:
         return JsonResponse({'valid': False, 'error' : 'please give error content'}, status = 200)
@@ -770,6 +764,7 @@ def save_POSTaggedsentence(request):
         sentence_id = request.POST.get('id')
         tagged_source = request.POST.get('tagged_source')
         tagged_target = request.POST.get('tagged_target')
+        print(tagged_source)
         POSTaggedSentence.objects.filter(pk=sentence_id).update(tagged_source=tagged_source, tagged_target=tagged_target)
         return JsonResponse({"valid":True}, status = 200)
     else:
