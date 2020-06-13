@@ -531,7 +531,7 @@ $(document).ready(function() {
         $('#pos_source').val(Ceed.source);
         $('#pos_target').val(Ceed.target);
         $('#pos_status').val(Ceed.status);
-        tag_sentencefn(); // please tag current selected sentence.
+        tag_sentencefn('false'); // please tag current selected sentence.
        
     });
 
@@ -629,15 +629,16 @@ $(document).ready(function() {
         });
     }
     // this is function to tag selected sentence.
-    var tag_sentencefn = function() {
+    var tag_sentencefn = function(Tagged_status_) {
         var tk_ = $('#tokenid').attr("data-token");
         var source_ = $('#pos_source').val();
         var target_ = $('#pos_target').val();
-        var Tagged_status_ = $('#Tagged_status').val();
+        // var Tagged_status_ = $('#Tagged_status').val();
         $.ajax({
             url: "/tag_sentence/",
             type: "POST",
             data: {
+                'id' : Ceed.id,
                 'source': source_,
                 'target': target_,
                 'keep_tokens': Tagged_status_,
@@ -649,7 +650,7 @@ $(document).ready(function() {
                     // please save in pos tagged data (CeedPOSdata) from response of server
                     CeedPOSdata = response;
                     grid_POSTaggedsentence(response.tagged_source, response.tagged_target);
-                    $('#Tagged_status').val('true');
+                    // $('#Tagged_status').val('true');
                 }
             },
             error: function(response) {
@@ -678,7 +679,7 @@ $(document).ready(function() {
         $('#saver')[0].disabled = false;
         $('#saver').show();
         $('#editer').show()
-        tag_sentencefn();
+        tag_sentencefn('true');
     });
 
     $(document).on('click', '#editer', function(){
@@ -762,6 +763,14 @@ $(document).ready(function() {
     });
 
     $(document).on('click, mousedown','.taggedWord', function(e) {
+
+        if (e.ctrlKey) { 
+            console.log("Ctrl key is pressed."); 
+        } 
+        else { 
+            console.log ("Ctrl key is not pressed."); 
+        }
+
         if($(this)[0].style.cssText == 'outline: -webkit-focus-ring-color auto 1px;'){
             $(this).css('outline', '-webkit-focus-ring-color none 0px');
             CWinST_ary = CWinST_ary.filter(___word__ => ___word__ !== $(this)[0]);//plase remove selected word of selected sentence in  this array (this array is simillar with temp array ).
