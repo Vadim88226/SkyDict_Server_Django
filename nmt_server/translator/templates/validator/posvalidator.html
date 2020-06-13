@@ -95,14 +95,14 @@
                                         <input type="text" id='pos_corpusid' hidden />
                                         <div class="form-group">
                                             <label for="text" class="hidden-xs hidden-sm">Source :</label>
-                                            <textarea class="form-control show-edit" rows="5"
+                                            <textarea class="form-control show-edit" 
                                                 id="pos_source"></textarea>
                                             <div id="source_Tagged" class="show-view" style="display: none;">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="text" class="hidden-xs hidden-sm">Target :</label>
-                                            <textarea class="form-control show-edit" rows="5"
+                                            <textarea class="form-control show-edit"
                                                 id="pos_target"></textarea>
                                             <div id="target_Tagged" class="show-view" style="display: none;">
                                             
@@ -111,14 +111,15 @@
                         
                                         <div class="form-group" role="toolbar" style="text-align: center;" >
                                             <button type="button" class="btn btn-default show-edit" id="tagger">
-                                                <span class="glyphicon glyphicon-ok"></span> POS-tag!
+                                                <span class="glyphicon glyphicon-ok" ></span> POS-tag!
                                             </button>
-                                            <button type="button" class="btn btn-default show-view" id="editer"><span
+                                            <button type="button" class="btn btn-default show-view" id="editer"  style="display: none;"><span
                                                     class="glyphicon glyphicon-edit" disabled ></span> Edit text</button>
                                             <button type="button" class="btn btn-default show-view" id="saver"><span
                                                     class="glyphicon glyphicon-save"></span> Save</button>
                                         </div>
                                         <input type="text" id='pos_status' hidden  />
+                                        <input type="text" id='Tagged_status' hidden  />
                                         <!-- <button type="button" class="btn btn-default show-view toggle-tools" data-toggle="button"><span class="glyphicon glyphicon-wrench"></span></button> -->
                                         <!-- <select id="language" class="form-control language">
                                             <option value="en" selected>English</option>

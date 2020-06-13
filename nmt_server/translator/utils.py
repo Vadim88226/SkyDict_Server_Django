@@ -443,7 +443,7 @@ def tag_English_Sentence(sentence):
 # POS tagging for Thai
 def tag_Thai_Sentence(sentence, keep_tokens = True):
     sentence_tokens = sentence.split()
-    if keep_tokens:
+    if not keep_tokens:
         sentence_tokens = word_tokenize(sentence, engine='deepcut', keep_whitespace=False)
     sentence_tags = pos_tag(sentence_tokens, corpus='pud')
     tagged_sentence = []

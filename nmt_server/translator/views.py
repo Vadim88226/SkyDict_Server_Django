@@ -749,8 +749,13 @@ def tag_Sentence(request):
     if request.method == 'POST': 
         source = request.POST.get('source')
         target = request.POST.get('target')
+        keep_tokens = request.POST.get('keep_tokens')
+        
         tagged_source = tag_English_Sentence(source)
-        tagged_target = tag_Thai_Sentence(target, True)
+        keep_tokens = False
+        if keep_tokens == 'true':
+            keep_tokens = True
+        tagged_target = tag_Thai_Sentence(target, keep_tokens)
         return JsonResponse({'valid': True, 'tagged_source' : tagged_source, 'tagged_target': tagged_target}, status = 200)
     else:
         return JsonResponse({'valid': False, 'error' : 'please give error content'}, status = 200)
@@ -761,7 +766,6 @@ def save_POSTaggedsentence(request):
         sentence_id = request.POST.get('id')
         tagged_source = request.POST.get('tagged_source')
         tagged_target = request.POST.get('tagged_target')
-        # print(tagged_source)
         POSTaggedSentence.objects.filter(pk=sentence_id).update(tagged_source=tagged_source, tagged_target=tagged_target)
         return JsonResponse({"valid":True}, status = 200)
     else:

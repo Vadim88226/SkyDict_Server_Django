@@ -453,6 +453,7 @@ $(document).ready(function() {
             },
             success: function(response) {
                 td.data(value).draw();
+                console.log(response, 'next work was ready', 'please change pos sentence of sentences and tagged tags');
             },
             error: function(response) {
           
@@ -512,6 +513,7 @@ $(document).ready(function() {
     $('#colors2').html(__tag_str__2); // please show tags of color 2
                 
     $(document).on('click','#postaggedcontenttable > tbody > tr', function(e) {
+        e.preventDefault();
         // please check pre selected row or <tr>
         if(presentencetr)
             $(presentencetr)[0].style.backgroundColor = presentencecss;
@@ -529,31 +531,53 @@ $(document).ready(function() {
         $('#pos_source').val(Ceed.source);
         $('#pos_target').val(Ceed.target);
         $('#pos_status').val(Ceed.status);
-        $('#pos_source').css('display');
-        if($('#pos_source').css('display') == 'none'){
-            tag_sentencefn(); // please tag current selected sentence.
-        }
-        e.preventDefault();
+        tag_sentencefn(); // please tag current selected sentence.
+       
     });
 
 
 
     var grid_POSTaggedsentence = function(source, target){
-        var source_tags = ''
+        var source_tags = '';
+        var source_sentence = '';
         for(var i = 0; i < source.length; i ++ ){
+
             source_tags = source_tags + "<span class='taggedWord tag" + source[i].pos + "'>" + source[i].token + "</span>";
+            if (source_sentence == ''){
+                source_sentence = source[i].token;
+            }
+            else{
+                source_sentence = source_sentence + ' ' + source[i].token;
+            }
+
+
         }
-        var target_tags = ''
+        var target_tags = '';
+        var target_sentence = '';
         for(var i = 0; i < target.length; i ++ ){
+
             target_tags = target_tags + "<span class='taggedWord tag" + target[i].pos + "'>" + target[i].token + "</span>";
+            if(target_sentence==''){
+                target_sentence = target[i].token;
+            }
+            else{
+                target_sentence = target_sentence + " " + target[i].token ;
+            }
+
         }
-       
+        
+        $('#pos_source').val(source_sentence);
+        $('#pos_target').val(target_sentence);
         $('#pos_source').hide();
         $('#pos_target').hide();
         $('#source_Tagged').html(source_tags);
         $('#target_Tagged').html(target_tags);
         $('#source_Tagged').show();
         $('#target_Tagged').show();
+        $('#editer')[0].disabled = false;
+        $('#tagger')[0].disabled = true;
+        $('#editer').show();
+        $('#tagger').hide();
        
     };
     // this function is to save tagged sentence by user.
@@ -569,7 +593,6 @@ $(document).ready(function() {
                 'csrfmiddlewaretoken': tk_
             },
             success: function(response) {
-                // console.log(response);
                 if(response.valid){
                     $.alert({
                         title: 'Alert', content: 'SUCCESSFUL',
@@ -610,12 +633,14 @@ $(document).ready(function() {
         var tk_ = $('#tokenid').attr("data-token");
         var source_ = $('#pos_source').val();
         var target_ = $('#pos_target').val();
+        var Tagged_status_ = $('#Tagged_status').val();
         $.ajax({
             url: "/tag_sentence/",
             type: "POST",
             data: {
                 'source': source_,
                 'target': target_,
+                'keep_tokens': Tagged_status_,
                 'csrfmiddlewaretoken': tk_
             },
             success: function(response) {
@@ -624,6 +649,7 @@ $(document).ready(function() {
                     // please save in pos tagged data (CeedPOSdata) from response of server
                     CeedPOSdata = response;
                     grid_POSTaggedsentence(response.tagged_source, response.tagged_target);
+                    $('#Tagged_status').val('true');
                 }
             },
             error: function(response) {
@@ -644,12 +670,14 @@ $(document).ready(function() {
 
         // please check if sentence data is and not.
         if(Ceed.length == 0 ){
-            console.log('here i am tagger')
             return;
         }
         $(this)[0].disabled = true;
+        $(this).hide();
         $('#editer')[0].disabled = false;
         $('#saver')[0].disabled = false;
+        $('#saver').show();
+        $('#editer').show()
         tag_sentencefn();
     });
 
@@ -659,14 +687,17 @@ $(document).ready(function() {
         $('#pos_source').show();
         $('#pos_target').show();
         $(this)[0].disabled = true;
+        $(this).hide();
         $('#tagger')[0].disabled = false;
         $('#saver')[0].disabled = false;
+        $('#tagger').show();
+        $('#saver').show();
     });
 
     $(document).on('click', '#saver', function(){
         // please check if sentence data is and not.
-        if(!Ceed.length == 0 || $('#tagger')[0].disabled != true ){
-            $(this)[0].disabled = true;
+        if( Ceed.length == 0 || $('#tagger')[0].disabled == false ){
+            $('#tagger').click();
             return false;
         }
         var source_spans = $('#source_Tagged').children();
@@ -676,7 +707,8 @@ $(document).ready(function() {
         var _get_attr = function (_id) {
             var _tag = $(_id).attr('class').replace('taggedWord tag', '');
             var _word = $(_id).text();
-            return _word + "/" + _tag;
+            var _token_tag_ = {'token' : _word, 'pos' : _tag} 
+            return _token_tag_;
         }
         
         for (const Sspan of source_spans) {
@@ -685,8 +717,9 @@ $(document).ready(function() {
         for (const Tspan of target_spans) {
             Ttarget_data.push(_get_attr(Tspan));
         }
-        var _Tsource_data = Tsource_data.join(',');
-        var _Ttarget_data = Ttarget_data.join(',');
+        //please parse json format
+        var _Tsource_data = JSON.stringify(Tsource_data);
+        var _Ttarget_data = JSON.stringify(Ttarget_data);
         // please save tagged sentence by user.
         save_taggedsentencefn(Ceed.id, _Tsource_data,_Ttarget_data);
     });
@@ -729,8 +762,15 @@ $(document).ready(function() {
     });
 
     $(document).on('click, mousedown','.taggedWord', function(e) {
-        $(this).css('outline', '-webkit-focus-ring-color auto 1px');
-        CWinST_ary.push($(this)[0]); //plase save selected word of selected sentence in  this array (this array is simillar with temp array ).
+        if($(this)[0].style.cssText == 'outline: -webkit-focus-ring-color auto 1px;'){
+            $(this).css('outline', '-webkit-focus-ring-color none 0px');
+            CWinST_ary = CWinST_ary.filter(___word__ => ___word__ !== $(this)[0]);//plase remove selected word of selected sentence in  this array (this array is simillar with temp array ).
+        }else{
+            $(this).css('outline', '-webkit-focus-ring-color auto 1px');
+            CWinST_ary.push($(this)[0]); //plase save selected word of selected sentence in  this array (this array is simillar with temp array ).
+        }
+        
+        
     });
 });
 
