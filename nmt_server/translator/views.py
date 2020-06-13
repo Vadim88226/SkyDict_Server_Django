@@ -35,7 +35,7 @@ from .tokens import account_activation_token
 from .models import DictWords, DictSentences, TransMemories, UserSetting, CorpusStatus, BilingualCorpus, \
     POSTaggedCorpus, BilingualSentence, POSTaggedSentence
 from .utils import translate_sentences, translate_file, concordance_search_sdk, store_Corpus_Sentences, \
-    store_POSTTagged_Sentences, export_BilingualCorpus2File, tag_English_Sentence, tag_Thai_Sentence
+    store_POSTTagged_Sentences, export_BilingualCorpus2File, tag_Multi_Sentence
 from .tables import tmTable, concordanceTable, BilingualCorpusTable, POSTaggedCorpusTable,  BilingualSentenceTable
 from .filters import tmFilter
 
@@ -651,17 +651,32 @@ def update_POSTaggedsentence(request):
         id = request.POST.get('id')
         field = request.POST.get('field')
         value = request.POST.get('value')
+        # get POSTaggedSentence Object from id
+        pos_tagged_object = POSTaggedSentence.objects.get(id=id)
+        s_lang = POSTaggedCorpus.objects.filter(id=pos_tagged_object.corpus.id).first().s_lang
+        t_lang = POSTaggedCorpus.objects.filter(id=pos_tagged_object.corpus.id).first().t_lang
+        print(s_lang, t_lang)
+        json_source = pos_tagged_object.tagged_source
+        try:
+            tagged_source = json.loads(pos_tagged_object.tagged_source)
+        except json.decoder.JSONDecodeError:
+            tagged_source = []
+        try:
+            tagged_target = json.loads(pos_tagged_object.tagged_target)
+        except json.decoder.JSONDecodeError:
+            tagged_target = []
         if field == 'status':
             value = CorpusStatus.objects.filter(status=value).first()
             POSTaggedSentence.objects.filter(id=id).update(status=value)
         elif field == 'source':
-            POSTaggedSentence.objects.filter(id=id).update(source=value, tagged_source='')
-
+            POSTaggedSentence.objects.filter(id=id).update(source=value, tagged_source='[]')
+            tagged_source = tag_Multi_Sentence(s_lang, value)
         elif field == 'target':
-            POSTaggedSentence.objects.filter(id=id).update(target=value, tagged_target='')
+            POSTaggedSentence.objects.filter(id=id).update(target=value, tagged_target='[]')
+            tagged_source = tag_Multi_Sentence(t_lang, value, False)
         else:
             pass
-        return JsonResponse({"valid":True}, status = 200)
+        return JsonResponse({"valid":True, 'tagged_source':tagged_source, 'tagged_target':tagged_target}, status = 200)
 
     else:
         return JsonResponse({"valid":False}, status = 400)
@@ -747,15 +762,33 @@ def export_POSTagged(request):
 
 def tag_Sentence(request):
     if request.method == 'POST': 
+        id = request.POST.get('id', 1)
         source = request.POST.get('source')
         target = request.POST.get('target')
-        keep_tokens = request.POST.get('keep_tokens')
-        
-        tagged_source = tag_English_Sentence(source)
+        keep_tokens_flag = request.POST.get('keep_tokens')
+        print(keep_tokens_flag)
         keep_tokens = False
-        if keep_tokens == 'true':
+        if keep_tokens_flag == 'true':
             keep_tokens = True
-        tagged_target = tag_Thai_Sentence(target, keep_tokens)
+        pos_tagged_object = POSTaggedSentence.objects.get(id=id)
+        s_lang = POSTaggedCorpus.objects.filter(id=pos_tagged_object.corpus.id).first().s_lang
+        t_lang = POSTaggedCorpus.objects.filter(id=pos_tagged_object.corpus.id).first().t_lang
+
+        if keep_tokens:
+            tagged_source = tag_Multi_Sentence(s_lang, source)
+            tagged_target = tag_Multi_Sentence(t_lang, target, keep_tokens)
+        else:
+            tagged_target = pos_tagged_object.tagged_target
+            tagged_source = pos_tagged_object.tagged_source
+            print(tagged_source)
+            if not tagged_source or tagged_source == '[]':
+                tagged_source = tag_Multi_Sentence(s_lang, source)
+            else:
+                tagged_source = json.loads(tagged_source)
+            if not tagged_target or tagged_target == '[]':
+                tagged_target = tag_Multi_Sentence(t_lang, target, keep_tokens)
+            else:
+                tagged_target = json.loads(tagged_target)
         return JsonResponse({'valid': True, 'tagged_source' : tagged_source, 'tagged_target': tagged_target}, status = 200)
     else:
         return JsonResponse({'valid': False, 'error' : 'please give error content'}, status = 200)

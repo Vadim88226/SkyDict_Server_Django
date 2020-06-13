@@ -431,6 +431,15 @@ def export_BilingualCorpus2File(file_url, sentences, file_type, s_lang, t_lang):
         pass
     return os.path.basename(file_url)
 
+# POS tagging function
+def tag_Multi_Sentence(lang, sentence, keep_tokens=True):
+    if lang == 'en':
+        return tag_English_Sentence(sentence)
+    elif lang == 'th':
+        return tag_Thai_Sentence(sentence, keep_tokens)
+    else:
+        return None
+
 # POS tagging for English
 def tag_English_Sentence(sentence):
     nlp = TranslatorConfig.en_nlp
