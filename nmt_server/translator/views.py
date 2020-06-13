@@ -669,11 +669,10 @@ def update_POSTaggedsentence(request):
             POSTaggedSentence.objects.filter(id=id).update(status=value)
         elif field == 'source':
             tagged_source = tag_Multi_Sentence(s_lang, value)
-            POSTaggedSentence.objects.filter(id=id).update(source=value, tagged_source=tagged_source)
-            tagged_source = tag_Multi_Sentence(s_lang, value)
+            POSTaggedSentence.objects.filter(id=id).update(source=value, tagged_source=json.dumps(tagged_source))
         elif field == 'target':
             tagged_target = tag_Multi_Sentence(t_lang, value, False)
-            POSTaggedSentence.objects.filter(id=id).update(target=value, tagged_target=tagged_target)
+            POSTaggedSentence.objects.filter(id=id).update(target=value, tagged_target=json.dumps(tagged_target))
         else:
             pass
         
@@ -782,10 +781,14 @@ def tag_Sentence(request):
             tagged_source = pos_tagged_object.tagged_source
             if not tagged_source or tagged_source == '[]':
                 tagged_source = tag_Multi_Sentence(s_lang, source)
+                pos_tagged_object.tagged_source = json.dumps(tagged_source)
+                pos_tagged_object.save()
             else:
                 tagged_source = json.loads(tagged_source)
             if not tagged_target or tagged_target == '[]':
                 tagged_target = tag_Multi_Sentence(t_lang, target, keep_tokens)
+                pos_tagged_object.tagged_target = json.dumps(tagged_target)
+                pos_tagged_object.save()
             else:
                 tagged_target = json.loads(tagged_target)
         return JsonResponse({'valid': True, 'tagged_source' : tagged_source, 'tagged_target': tagged_target}, status = 200)
