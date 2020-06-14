@@ -446,7 +446,7 @@ def tag_English_Sentence(sentence):
     sentence_tokens = nlp(sentence)
     tagged_sentence = []
     for token in sentence_tokens:
-        tagged_sentence.append({'token':token.text, 'pos':token.pos_})
+        tagged_sentence.append({"token":token.text, "pos":token.pos_})
     return tagged_sentence
 
 # POS tagging for Thai
@@ -457,5 +457,5 @@ def tag_Thai_Sentence(sentence, keep_tokens = True):
     sentence_tags = pos_tag(sentence_tokens, corpus='pud')
     tagged_sentence = []
     for source_tag in sentence_tags:
-        tagged_sentence.append({'token':source_tag[0], 'pos':source_tag[1]})
+        tagged_sentence.append({"token":source_tag[0], "pos":source_tag[1]})
     return tagged_sentence
