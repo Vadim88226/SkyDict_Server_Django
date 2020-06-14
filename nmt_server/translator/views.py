@@ -655,7 +655,6 @@ def update_POSTaggedsentence(request):
         pos_tagged_object = POSTaggedSentence.objects.get(id=id)
         s_lang = POSTaggedCorpus.objects.filter(id=pos_tagged_object.corpus.id).first().s_lang
         t_lang = POSTaggedCorpus.objects.filter(id=pos_tagged_object.corpus.id).first().t_lang
-        print(s_lang, t_lang)
         json_source = pos_tagged_object.tagged_source
         try:
             tagged_source = json.loads(pos_tagged_object.tagged_source)
@@ -669,13 +668,15 @@ def update_POSTaggedsentence(request):
             value = CorpusStatus.objects.filter(status=value).first()
             POSTaggedSentence.objects.filter(id=id).update(status=value)
         elif field == 'source':
-            POSTaggedSentence.objects.filter(id=id).update(source=value, tagged_source='[]')
+            tagged_source = tag_Multi_Sentence(s_lang, value)
+            POSTaggedSentence.objects.filter(id=id).update(source=value, tagged_source=tagged_source)
             tagged_source = tag_Multi_Sentence(s_lang, value)
         elif field == 'target':
-            POSTaggedSentence.objects.filter(id=id).update(target=value, tagged_target='[]')
-            tagged_source = tag_Multi_Sentence(t_lang, value, False)
+            tagged_target = tag_Multi_Sentence(t_lang, value, False)
+            POSTaggedSentence.objects.filter(id=id).update(target=value, tagged_target=tagged_target)
         else:
             pass
+        
         return JsonResponse({"valid":True, 'tagged_source':tagged_source, 'tagged_target':tagged_target}, status = 200)
 
     else:
@@ -762,11 +763,10 @@ def export_POSTagged(request):
 
 def tag_Sentence(request):
     if request.method == 'POST': 
-        id = request.POST.get('id', 1)
+        id = request.POST.get('id')
         source = request.POST.get('source')
         target = request.POST.get('target')
         keep_tokens_flag = request.POST.get('keep_tokens')
-        print(keep_tokens_flag)
         keep_tokens = False
         if keep_tokens_flag == 'true':
             keep_tokens = True
@@ -780,7 +780,6 @@ def tag_Sentence(request):
         else:
             tagged_target = pos_tagged_object.tagged_target
             tagged_source = pos_tagged_object.tagged_source
-            print(tagged_source)
             if not tagged_source or tagged_source == '[]':
                 tagged_source = tag_Multi_Sentence(s_lang, source)
             else:

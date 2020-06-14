@@ -453,7 +453,10 @@ $(document).ready(function() {
             },
             success: function(response) {
                 td.data(value).draw();
-                console.log(response, 'next work was ready', 'please change pos sentence of sentences and tagged tags');
+
+                if(field != 'status' && response['tagged_'+field].length > 0){
+                    grid_POSTaggedsentenceONE(response['tagged_'+field], field);
+                }
             },
             error: function(response) {
           
@@ -536,8 +539,26 @@ $(document).ready(function() {
     });
 
 
+    var grid_POSTaggedsentenceONE = function(tagged_data, data_id){
+        var tags_str = '';
+        var sentence_str = '';
+        for(var i = 0; i < tagged_data.length; i ++ ){
 
-    var grid_POSTaggedsentence = function(source, target){
+            tags_str = tags_str + "<span class='taggedWord tag" + tagged_data[i].pos + "'>" + tagged_data[i].token + "</span>";
+            if (sentence_str == ''){
+                sentence_str = tagged_data[i].token;
+            }
+            else{
+                sentence_str = sentence_str + ' ' + tagged_data[i].token;
+            }
+
+        }
+        
+        $('#pos_'+data_id).val(sentence_str);
+        $('#'+ data_id +'_Tagged').html(tags_str);
+
+    }
+    var grid_POSTaggedsentenceALL = function(source, target){
         var source_tags = '';
         var source_sentence = '';
         for(var i = 0; i < source.length; i ++ ){
@@ -649,8 +670,8 @@ $(document).ready(function() {
                 if(response.valid){
                     // please save in pos tagged data (CeedPOSdata) from response of server
                     CeedPOSdata = response;
-                    grid_POSTaggedsentence(response.tagged_source, response.tagged_target);
-                    // $('#Tagged_status').val('true');
+                    grid_POSTaggedsentenceALL(response.tagged_source, response.tagged_target);
+
                 }
             },
             error: function(response) {
@@ -748,27 +769,33 @@ $(document).ready(function() {
     $(window).bind('resize', function() { $('#tagTipContainer').hide(); });
     $('#tagTipContainer').bind('click', function() { $('#tagTipContainer').hide(); });
     
+
+    var clear_tag_colorfn = function(new_tag){
+        CWinST_ary.forEach(span_word => {
+            if(new_tag != 'old'){
+                $(span_word)[0].className = "taggedWord " + new_tag;
+            }else{
+                $(span_word).css('outline', 'none');
+            }
+            
+        });
+
+    }
     $(document).on('click, mousedown','.colors > div', function(e) {
         var new_tag = $(this)[0].className;
         $(this).css('background-color', 'aliceblue');
-
-        CWinST_ary.forEach(span_word => {
-            $(span_word)[0].className = "taggedWord " + new_tag;
-            $(span_word).css('outline', 'none');
-        });
-        CWinST_ary = new Array();
+        clear_tag_colorfn(new_tag);
     });
     $(document).on('mouseup','.colors > div', function(e) {
         $(this).css('background-color', '');
     });
 
+    
     $(document).on('click, mousedown','.taggedWord', function(e) {
 
-        if (e.ctrlKey) { 
-            console.log("Ctrl key is pressed."); 
-        } 
-        else { 
-            console.log ("Ctrl key is not pressed."); 
+        if (!e.ctrlKey) { 
+            clear_tag_colorfn('old');
+            CWinST_ary = new Array();
         }
 
         if($(this)[0].style.cssText == 'outline: -webkit-focus-ring-color auto 1px;'){
