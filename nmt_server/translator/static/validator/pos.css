@@ -522,19 +522,19 @@ fieldset>ul.selected{
 .tagADJ { background-color: #3498db; }
 .tagADP { background-color: #e67e22; }
 .tagADV { background-color: #F9E79F; }
-.tagAUX { background-color: #9b59b6; }
+.tagAUX { background-color: #9b59b6b3; }
 .tagCCONJ { background-color: #e74c3c;}
-.tagDET { background-color : #2980b9; }
+.tagDET { background-color : #2980b9d1; }
 .tagINTJ { background-color: #f39c12; }
 .tagNOUN { background-color: #7d6608; }
-.tagNUM { background-color: #2ecc71; }
+.tagNUM { background-color: #2ecc71a6; }
 .tagPART { background-color: #27ae60; }
-.tagPRON { background-color: #8e44ad; }
-.tagPROPN { background-color: #bdc3c7; }
+.tagPRON { background-color: #bdc3c7; }
+.tagPROPN { background-color: #8e44ad; }
 .tagPUNCT { background-color: #f1c40f; }
-.tagSCONJ { background-color: #F1948A; }
-.tagVERB { background-color: #95a5a6; }
-.tagOther { background-color: #dc7633; }
+.tagSCONJ { background-color: #b6c4ea; }
+.tagVERB { background-color: gray; }
+.tagOTH { background-color: #95a5a6; }
 
 /* .montessori .tagADJ { background-color: #3a5f93; color: #ffffff; }
 .montessori .tagADP { background-color: #fd8401; }

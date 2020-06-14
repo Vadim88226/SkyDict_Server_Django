@@ -492,10 +492,11 @@ $(document).ready(function() {
                     {'L':'NUM', 'R':'Numeral'},
                     {'L':'PART', 'R':'Particle'},
                     {'L':'PRON', 'R':'Pronoun'},
-                    {'L':'PROPN', 'R':'Propernoun'},
+                    {'L':'PROPN', 'R':'Proper noun'},
                     {'L':'PUNCT', 'R':'Punctuation'},
                     {'L':'SCONJ', 'R':'Subordinating conjunction'},
-                    {'L':'VERB', 'R':'Verb'}
+                    {'L':'VERB', 'R':'Verb'},
+                    {'L':'OTH', 'R':'Other'}
                 ]; // Long and short Maps data array of every Tags
     
     var __tag_str__1 = ""; 
@@ -597,6 +598,7 @@ $(document).ready(function() {
         $('#target_Tagged').show();
         $('#editer')[0].disabled = false;
         $('#tagger')[0].disabled = true;
+        $('#saver')[0].disabled = false;
         $('#editer').show();
         $('#tagger').hide();
        
@@ -711,7 +713,7 @@ $(document).ready(function() {
         $(this)[0].disabled = true;
         $(this).hide();
         $('#tagger')[0].disabled = false;
-        $('#saver')[0].disabled = false;
+        $('#saver')[0].disabled = true;
         $('#tagger').show();
         $('#saver').show();
     });
@@ -785,6 +787,9 @@ $(document).ready(function() {
         var new_tag = $(this)[0].className;
         $(this).css('background-color', 'aliceblue');
         clear_tag_colorfn(new_tag);
+        setTimeout(() => {
+            $(this).css('background-color', '');
+        }, 100);
     });
     $(document).on('mouseup','.colors > div', function(e) {
         $(this).css('background-color', '');
