@@ -529,11 +529,11 @@ fieldset>ul.selected{
 .tagNOUN { background-color: #7d6608; }
 .tagNUM { background-color: #2ecc71a6; }
 .tagPART { background-color: #27ae60; }
-.tagPRON { background-color: #bdc3c7; }
+.tagPRON { background-color: #de7075; }
 .tagPROPN { background-color: #8e44ad; }
 .tagPUNCT { background-color: #f1c40f; }
-.tagSCONJ { background-color: #b6c4ea; }
-.tagVERB { background-color: gray; }
+.tagSCONJ { background-color: #e8a697; }
+.tagVERB { background-color: #e061c5; }
 .tagOTH { background-color: #95a5a6; }
 
 /* .montessori .tagADJ { background-color: #3a5f93; color: #ffffff; }
