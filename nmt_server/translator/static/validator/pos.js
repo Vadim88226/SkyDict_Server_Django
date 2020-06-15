@@ -545,6 +545,9 @@ $(document).ready(function() {
         var sentence_str = '';
         for(var i = 0; i < tagged_data.length; i ++ ){
 
+            if(tagged_data[i].pos == "X"){
+                tagged_data[i].pos = "OTH";
+            }
             tags_str = tags_str + "<span class='taggedWord tag" + tagged_data[i].pos + "'>" + tagged_data[i].token + "</span>";
             if (sentence_str == ''){
                 sentence_str = tagged_data[i].token;
@@ -564,6 +567,9 @@ $(document).ready(function() {
         var source_sentence = '';
         for(var i = 0; i < source.length; i ++ ){
 
+            if(source[i].pos == "X"){
+                source[i].pos = "OTH";
+            }
             source_tags = source_tags + "<span class='taggedWord tag" + source[i].pos + "'>" + source[i].token + "</span>";
             if (source_sentence == ''){
                 source_sentence = source[i].token;
@@ -577,7 +583,10 @@ $(document).ready(function() {
         var target_tags = '';
         var target_sentence = '';
         for(var i = 0; i < target.length; i ++ ){
-
+            
+            if(target[i].pos == "X"){
+                target[i].pos = "OTH";
+            }
             target_tags = target_tags + "<span class='taggedWord tag" + target[i].pos + "'>" + target[i].token + "</span>";
             if(target_sentence==''){
                 target_sentence = target[i].token;

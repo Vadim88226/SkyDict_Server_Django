@@ -189,7 +189,7 @@
         {% csrf_token %}
         <input type="hidden" id="user" name="user" value="{{request.user}}"/>
         <table>
-            <tr><td>Bilingual Corpus File: </td><td class='file_url'></td></tr>
+            <tr><td>Bilingual(POS Tagged) Corpus File: </td><td class='file_url'></td></tr>
             <tr><td>Name: </td><td class='name'></td></tr>
             <tr><td>Source Language: </td><td class='s_lang'></td></tr>
             <tr><td>Target Language: </td><td class='t_lang'></td></tr>
@@ -245,14 +245,12 @@
                                 </td>
                             </tr>
                             <tr><td class="col-md-4" >Save As Type </td><td class="col-md-1" > :</td>
-                                <td  name="ex_type" >.txt
-                                    <select class="form-control" style="width: 150px !important;display: none;" name="ex_type" class="custom-select mb-3"  >
+                                <td class="col-md-7" name="ex_type" >
+                                    <select class="form-control" style="width: 150px !important;" name="ex_type" class="custom-select mb-3">
                                         <option selected value='txt'>.txt</option>
-                                     <!--   <option value="cav">.csv</option>
-                                        <option value="xlsx">.xlsx</option>
-                                        <option value="tmx">.tmx</option> -->
+                                        <option value="csv">.csv</option>
                                    </select> 
-                                </td class="col-md-7" >
+                                </td  >
                             </tr>
                         </tbody>
                         <tbody>
