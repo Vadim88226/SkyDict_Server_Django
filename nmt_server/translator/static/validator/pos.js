@@ -105,14 +105,13 @@ $(function() {
         var row = $(this).parent().parent()[0].children;
         var f_name = $(row[1]).text();
         var f_url = $(row[3]).text();
-        var f_id = $(row[4].firstChild).val();
+        var f_id = $(row[5].firstChild).val();
         var f_typue = f_url.split('.');
         if(f_url.length > 25){
             var f_url_ = f_url.slice(0, 25) + "...";
         }else{
             var f_url_ = f_url;
         }
-        
         $("#ex_name").html(f_name);
         $("#ex_url").html(f_url_);
         $("#ex_id").val(f_id);
@@ -125,7 +124,7 @@ $(function() {
     
     var export_potaggedfn = function(datas){
         $.ajax({
-            url: "/export_postagged/",
+            url: "/export_postaggedcorpus/",
             headers:{ "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()  },
             type: "POST",
             data: {

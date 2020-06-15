@@ -58,7 +58,7 @@ class BilingualCorpus(models.Model):
     updated_at = models.DateTimeField(auto_now=True, blank=True)
 
 class POSTaggedCorpus(models.Model):
-    file_url = models.FileField(upload_to='pos_tagged_files/', validators=[FileExtensionValidator(allowed_extensions=['txt', 'csv', 'tmx', 'xlsx'])])
+    file_url = models.FileField(upload_to='pos_tagged_files/', validators=[FileExtensionValidator(allowed_extensions=['txt', 'csv', 'tmx', 'xlsx','ptc'])])
     file_name = models.CharField(max_length=255, default='none')
     name = models.CharField(max_length=50,default='none')
     s_lang = models.CharField(max_length=5,default='en')

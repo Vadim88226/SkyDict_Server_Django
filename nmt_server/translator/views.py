@@ -35,7 +35,7 @@ from .tokens import account_activation_token
 from .models import DictWords, DictSentences, TransMemories, UserSetting, CorpusStatus, BilingualCorpus, \
     POSTaggedCorpus, BilingualSentence, POSTaggedSentence
 from .utils import translate_sentences, translate_file, concordance_search_sdk, store_Corpus_Sentences, \
-    store_POSTTagged_Sentences, export_BilingualCorpus2File, tag_Multi_Sentence
+    store_POSTagged_Sentences, export_BilingualCorpus2File, export_POSTaggedCorpus2File, tag_Multi_Sentence
 from .tables import tmTable, concordanceTable, BilingualCorpusTable, POSTaggedCorpusTable,  BilingualSentenceTable
 from .filters import tmFilter
 
@@ -622,7 +622,7 @@ def upload_POSTaggedFile(request):
             taggedfile.file_name = taggedfile.file_url.name
             taggedfile.user = User.objects.get(pk = request.user.id)
             taggedfile.save()
-            valid = store_POSTTagged_Sentences(taggedfile)
+            valid = store_POSTagged_Sentences(taggedfile)
         return redirect('/pos_validator/')
     else:
         form = POSTaggedCorpusForm(initial={'t_lang':'th'})
@@ -669,10 +669,10 @@ def update_POSTaggedsentence(request):
             POSTaggedSentence.objects.filter(id=id).update(status=value)
         elif field == 'source':
             tagged_source = tag_Multi_Sentence(s_lang, value)
-            POSTaggedSentence.objects.filter(id=id).update(source=value, tagged_source=json.dumps(tagged_source))
+            POSTaggedSentence.objects.filter(id=id).update(source=value, tagged_source=json.dumps(tagged_source, ensure_ascii=False))
         elif field == 'target':
             tagged_target = tag_Multi_Sentence(t_lang, value, False)
-            POSTaggedSentence.objects.filter(id=id).update(target=value, tagged_target=json.dumps(tagged_target))
+            POSTaggedSentence.objects.filter(id=id).update(target=value, tagged_target=json.dumps(tagged_target, ensure_ascii=False))
         else:
             pass
         
@@ -747,15 +747,25 @@ def export_BilingualCorpus(request):
         base_path = export_BilingualCorpus2File(export_path, export_sentences, export_filetype, s_lang, t_lang)
         return JsonResponse({'valid': True, 'file_path' : base_path}, status = 200)
 
-def export_POSTagged(request):
+def export_POSTaggedCorpus(request):
     if request.method == 'POST': 
-        e_id = request.POST.get('id')
-        e_name = request.POST.get('name')
-        e_type = request.POST.get('type')
-        e_status = request.POST.get('statuses')
-        data = [0, e_id, 1, e_name, 2, e_type, 3, e_status]
-        print(0, e_id, 1, e_name, 2, e_type, 3, e_status )
-        return JsonResponse({'valid': True, 'url' : 'pos_tagged_files/threejs.svg'}, status = 200)
+        corpus_id = request.POST.get('id')
+        print(corpus_id)
+        export_filename = request.POST.get('name')
+        print(export_filename)
+        export_filetype = request.POST.get('type')
+        export_status = request.POST.get('statuses')
+        export_filename += "."+export_filetype
+        status_ids = []
+        corpus_object = POSTaggedCorpus.objects.get(pk=corpus_id)
+        s_lang = corpus_object.s_lang
+        t_lang = corpus_object.t_lang
+        export_status = export_status.split(",")
+        status_ids = list(CorpusStatus.objects.filter(status__in=export_status).values_list("id", flat=True).distinct())
+        export_sentences = POSTaggedSentence.objects.filter(corpus=corpus_object, status__in=status_ids)
+        export_path = os.path.join(settings.MEDIA_ROOT, export_filename)
+        base_path = export_POSTaggedCorpus2File(export_path, export_sentences, export_filetype, s_lang, t_lang)
+        return JsonResponse({'valid': True, 'url' : base_path}, status = 200)
     else:
         return JsonResponse({'valid': False, 'error' : 'please give error content'}, status = 200)
 
@@ -781,13 +791,13 @@ def tag_Sentence(request):
             tagged_source = pos_tagged_object.tagged_source
             if not tagged_source or tagged_source == '[]':
                 tagged_source = tag_Multi_Sentence(s_lang, source)
-                pos_tagged_object.tagged_source = json.dumps(tagged_source)
+                pos_tagged_object.tagged_source = json.dumps(tagged_source, ensure_ascii=False)
                 pos_tagged_object.save()
             else:
                 tagged_source = json.loads(tagged_source)
             if not tagged_target or tagged_target == '[]':
                 tagged_target = tag_Multi_Sentence(t_lang, target, keep_tokens)
-                pos_tagged_object.tagged_target = json.dumps(tagged_target)
+                pos_tagged_object.tagged_target = json.dumps(tagged_target, ensure_ascii=False)
                 pos_tagged_object.save()
             else:
                 tagged_target = json.loads(tagged_target)

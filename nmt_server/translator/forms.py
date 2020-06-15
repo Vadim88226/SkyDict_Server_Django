@@ -72,7 +72,7 @@ class POSTaggedCorpusForm(forms.ModelForm):
     s_language = [('en', 'English'), ('th','Thai')]
     s_lang = forms.ChoiceField(label='Source Language: ', choices=s_language)
     t_lang = forms.ChoiceField(label='Target Language: ', choices=s_language)
-    file_url = forms.FileField(label="File: ", widget=forms.FileInput(attrs={'type':'file','accept':".txt, .csv, .xlsx, .tmx"}), )
+    file_url = forms.FileField(label="File: ", widget=forms.FileInput(attrs={'type':'file','accept':".ptc, .txt, .csv, .xlsx, .tmx"}), )
     name = forms.CharField(label="Name: ", widget=forms.TextInput(attrs={'placeholder':'Enter Name','class':'form-control'}))
     note = forms.CharField(label="Note: ", widget=forms.Textarea(attrs={'rows': 5,'class':'form-control'}))
     

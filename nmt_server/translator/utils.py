@@ -318,7 +318,7 @@ def store_Corpus_Sentences(corpus_object):
         return False
 
 # store CorpusSentences in DB
-def store_POSTTagged_Sentences(corpus_object):
+def store_POSTagged_Sentences(corpus_object):
     file_url = os.path.join(settings.MEDIA_ROOT, corpus_object.file_url.name)
     # get Unchecked object
     status_object = CorpusStatus.objects.filter(status='Unchecked').first()
@@ -391,6 +391,23 @@ def store_POSTTagged_Sentences(corpus_object):
                 )
             POSTaggedSentence.objects.bulk_create(objects)
             return True
+    elif file_extension == '.ptc':
+        with open(file_url, encoding='utf-8') as csvfile:
+            readCSV = csv.reader(csvfile, delimiter=',')
+            objects = []
+            for row in readCSV:
+                try:
+                    objects.append(
+                        POSTaggedSentence(
+                            corpus=corpus_object, source = row[0], target = row[1],
+                            tagged_source = row[2], tagged_target = row[3],
+                            status = CorpusStatus.objects.filter(status=row[4]).first()
+                        )
+                    )
+                except IndexError as error:
+                    pass
+            POSTaggedSentence.objects.bulk_create(objects)
+            return True
     else:
         return False
 
@@ -431,6 +448,19 @@ def export_BilingualCorpus2File(file_url, sentences, file_type, s_lang, t_lang):
         pass
     return os.path.basename(file_url)
 
+# Export Bilingual Corpus to File
+def export_POSTaggedCorpus2File(file_url, sentences, file_type, s_lang, t_lang):
+    if file_type == 'ptc':
+        with open(file_url, 'w', encoding='utf-8') as csvfile:
+            writeCSV = csv.writer(csvfile, delimiter=',', dialect='excel')
+            for sentence in sentences:
+                writeCSV.writerow([sentence.source, sentence.target, 
+                    sentence.tagged_source, sentence.tagged_target, 
+                    CorpusStatus.objects.get(id=sentence.status.id).status])
+            csvfile.close()
+    else:
+        pass
+    return os.path.basename(file_url)
 # POS tagging function
 def tag_Multi_Sentence(lang, sentence, keep_tokens=True):
     if lang == 'en':
