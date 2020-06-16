@@ -9,6 +9,8 @@ class User(AbstractUser):
     @property
     def is_linguist(self):
         return self.linguist
+    def __str__(self):
+        return self.username
 
 class DictWords(models.Model):
     word = models.CharField(max_length=255)
