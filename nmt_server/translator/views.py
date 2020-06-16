@@ -15,7 +15,6 @@ from django.contrib.auth import views as auth_views
 from django.views.decorators.csrf import requires_csrf_token
 
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
@@ -32,7 +31,7 @@ from .apps import TranslatorConfig
 from .forms import SignupForm, AddWordsForm, TransMemoryForm, SearchForm, UserSettingForm, UserDictForm, \
     BilingualCorpusForm, POSTaggedCorpusForm, SearchFileNameForm
 from .tokens import account_activation_token
-from .models import DictWords, DictSentences, TransMemories, UserSetting, CorpusStatus, BilingualCorpus, \
+from .models import User, DictWords, DictSentences, TransMemories, UserSetting, CorpusStatus, BilingualCorpus, \
     POSTaggedCorpus, BilingualSentence, POSTaggedSentence
 from .utils import translate_sentences, translate_file, concordance_search_sdk, store_Corpus_Sentences, \
     store_POSTagged_Sentences, export_BilingualCorpus2File, export_POSTaggedCorpus2File, tag_Multi_Sentence
