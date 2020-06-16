@@ -519,7 +519,7 @@ fieldset>ul.selected{
 #95a5a6
 #dc7633
 #bdc3c7 */
-.tagADJ { background-color: #3498db; }
+/* .tagADJ { background-color: #3498db; }
 .tagADP { background-color: #e67e22; }
 .tagADV { background-color: #F9E79F; }
 .tagAUX { background-color: #9b59b6b3; }
@@ -534,25 +534,43 @@ fieldset>ul.selected{
 .tagPUNCT { background-color: #f1c40f; }
 .tagSCONJ { background-color: #e8a697; }
 .tagVERB { background-color: #e061c5; }
-.tagOTH { background-color: #95a5a6; }
+.tagOTH { background-color: #95a5a6; } */
 
-/* .montessori .tagADJ { background-color: #3a5f93; color: #ffffff; }
-.montessori .tagADP { background-color: #fd8401; }
-.montessori .tagADV { background-color: #fb9ff4; }
-.montessori .tagAUX { background-color: #8fd8ff; }
-.montessori .tagCCONJ { background-color: #ffcb67; }
-.montessori .tagDET { background-color: #000000; color: #ffffff; }
-.montessori .tagINTJ { background-color: #82a4b6; }
-.montessori .tagNOUN { background-color: #00cc67; }
-.montessori .tagNUM { background-color: #8957b0; color: #ffffff; }
-.montessori .tagPART { background-color: #fe0000; color: #ffffff; }
-.montessori .tagPUNCT { background-color: rgb(50, 28, 172); }
-.montessori .tagPRON { background-color: rgb(165, 44, 44); }
-.montessori .tagPROPN { background-color: rgb(47, 173, 182); }
-.montessori .tagPUNCT { background-color: rgb(140, 219, 94); }
-.montessori .tagSCONJ { background-color: rgb(50, 82, 189); }
-.montessori .tagVERB { background-color: rgb(173, 36, 162); }
- */
+
+
+.tagADJ { border-bottom: 2px solid #3498db; border-right: 2px solid #3498db; }
+.tagADP { border-bottom: 2px solid #e67e22; border-right: 2px solid #e67e22; }
+.tagADV { border-bottom: 2px solid #F9E79F; border-right: 2px solid #F9E79F; }
+.tagAUX { border-bottom: 2px solid #9b59b6b3; border-right: 2px solid #9b59b6b3; }
+.tagCCONJ { border-bottom: 2px solid #e74c3c; border-right: 2px solid #e74c3c;}
+.tagDET { border-bottom: 2px solid #2980b9d1; border-right: 2px solid #2980b9d1; }
+.tagINTJ { border-bottom: 2px solid #f39c12; border-right: 2px solid #f39c12; }
+.tagNOUN { border-bottom: 2px solid #7d6608; border-right: 2px solid #7d6608; }
+.tagNUM { border-bottom: 2px solid #2ecc71a6;  border-right: 2px solid #2ecc71a6; }
+.tagPART { border-bottom: 2px solid #27ae60; border-right: 2px solid #27ae60; }
+.tagPRON { border-bottom: 2px solid #de7075; border-right: 2px solid #de7075; }
+.tagPROPN { border-bottom: 2px solid #8e44ad; border-right: 2px solid #8e44ad; }
+.tagPUNCT { border-bottom: 2px solid #f1c40f; border-right: 2px solid #f1c40f; }
+.tagSCONJ { border-bottom: 2px solid #e8a697; border-right: 2px solid #e8a697; }
+.tagVERB { border-bottom: 2px solid #e061c5; border-right: 2px solid #e061c5; }
+.tagOTH { border-bottom: 2px solid #95a5a6; border-right: 2px solid #95a5a6; }
+
+#tagTipContainer.tagADJ, .colors > .tagADJ  { background-color :  #3498db; }
+#tagTipContainer.tagADP, .colors > .tagADP { background-color :  #e67e22; }
+#tagTipContainer.tagADV, .colors > .tagADV { background-color :  #F9E79F; }
+#tagTipContainer.tagAUX, .colors > .tagAUX { background-color :  #9b59b6b3; }
+#tagTipContainer.tagCCONJ, .colors > .tagCCONJ { background-color :  #e74c3c;}
+#tagTipContainer.tagDET, .colors > .tagDET { background-color :  #2980b9d1; }
+#tagTipContainer.tagINTJ, .colors > .tagINTJ { background-color :  #f39c12; }
+#tagTipContainer.tagNOUN, .colors > .tagNOUN { background-color :  #7d6608; }
+#tagTipContainer.tagNUM, .colors > .tagNUM { background-color :  #2ecc71a6; }
+#tagTipContainer.tagPART, .colors > .tagPART { background-color :  #27ae60; }
+#tagTipContainer.tagPRON, .colors > .tagPRON { background-color :  #de7075; }
+#tagTipContainer.tagPROPN, .colors > .tagPROPN { background-color : #8e44ad; }
+#tagTipContainer.tagPUNCT, .colors > .tagPUNCT { background-color : #f1c40f; }
+#tagTipContainer.tagSCONJ, .colors > .tagSCONJ { background-color : #e8a697; }
+#tagTipContainer.tagVERB, .colors > .tagVERB { background-color : #e061c5; }
+#tagTipContainer.tagOTH, .colors > .tagOTH { background-color : #95a5a6; }
 
 
 /* color panel area */
@@ -611,7 +629,7 @@ select.language {
     cursor: pointer;
     border-radius: 2px;
     padding: 0.1em 0.2em 0.1em 0.2em;
-    margin: 2px;
+    margin: 2px 8px;
     display: inline-table;
 }
 
@@ -833,3 +851,17 @@ select.language {
 .form-group {
     margin-bottom: 1px;
 } */
+
+
+.status_icons{
+    width: 25%;
+    height: 16px;
+    vertical-align: initial;
+    border: 1px solid white;
+}
+.status_icons.selected{
+    background-color: #80808085;
+}
+.status_icons:hover{
+    border: 1px solid black;
+}

@@ -377,11 +377,12 @@ textarea::placeholder {
 
 .sky_header_menu__nav_link {
     display: block;
-    font-family: "Montserrat", sans-serif;
-    font-size: 20px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 16px;
     color: inherit;
     padding: 8px 0px;
-    font-weight: 300;
+    color: #006494;
+    font-weight: 600;
 }
 
 .menu__main_section {
@@ -436,7 +437,9 @@ textarea::placeholder {
 
 input[type=text],
 input[type=email],
-input[type=password] {
+input[type=password],
+input[type=radio]
+ {
     padding: 10px 15px;
     border: 1px solid #666;
     border-radius: 5px;
@@ -448,11 +451,11 @@ input[type=password] {
     width: -moz-available;
 
 }
-
 input[type=text]:placeholder-shown[required],
 input[type=email]:placeholder-shown[required],
 input[type=number]:placeholder-shown[required],
-input[type=password]:placeholder-shown[required] {
+input[type=password]:placeholder-shown[required],
+input[type=radio]:placeholder-shown[required] {
     background-image: url(../icons/asterisk.svg);
     background-size: 8px;
     background-repeat: no-repeat;
@@ -461,7 +464,8 @@ input[type=password]:placeholder-shown[required] {
 
 input[type=text]:focus,
 input[type=email]:focus,
-input[type=password]:focus {
+input[type=password]:focus,
+input[type=radio]:focus  {
     /* border-bottom: 1px solid #006494; */
     outline: none;
 }
@@ -488,7 +492,13 @@ input[type=password]:focus {
 .text_input input+label:after {
     opacity: 1;
 }
-
+div.text_input.menu__sign__form__role > label{
+    padding: 5px;
+    transform-origin: left;
+    transform: translate(3px, -50%) scale(0.8);
+    color: #004c03;
+    opacity: 1;
+}
 .text_input label:after {
     content: "";
     position: absolute;
@@ -503,7 +513,8 @@ input[type=password]:focus {
 
 .menu__login__form__pass,
 .menu__login__form__name,
-.menu__sign__form__email {
+.menu__sign__form__email,
+.roll {
     position: relative;
     margin-top: 24px;
 }

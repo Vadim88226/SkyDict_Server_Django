@@ -233,21 +233,19 @@ $(document).ready(function() {
             { "data" : "target", "title" : "Target" , "className": "editable"   },
             { "data" : "status", "title" : "Status", 
                 "render": function(d,t,r){
-                    var $select = $("<select></select>", {
+                    var $buttons = $("<kmc></kmc>", {
                         "id": r['id']+"_select",
                         "value": d
                     });
-                    $.each(status, function(k,v){
-                        var $option = $("<option></option>", {
-                            "text": v,
-                            "value": v
-                        });
-                        if(d === v){
-                            $option.attr("selected", "selected")
-                        }
-                        $select.append($option);
-                    });
-                    return $select.prop("outerHTML");
+                   
+                    var $bun =  "<span class='glyphicon glyphicon-question-sign status_icons selected'></span>" + 
+                                "<span class='glyphicon glyphicon-ok status_icons' ></span>"+
+                                "<span class='glyphicon glyphicon-remove status_icons' /></span>"+
+                                "<span class='glyphicon glyphicon-pencil status_icons' /></span>";
+                    
+
+                    $buttons.append($bun);
+                    return $bun;
                 }
             }
         ],
@@ -334,7 +332,18 @@ $(document).ready(function() {
     }
 
     // change status event
-    $('body').on('change', '#postaggedcontenttable > tbody > tr > td > select', function(){
+    // $('body').on('change', '#postaggedcontenttable > tbody > tr > td > select', function(){
+    //     var el = $(this).parent();
+    //     var row = SentenceTable.row(el);
+    //     var id = row.data().id;
+    //     var oldvalue = SentenceTable.cell(el).data();
+    //     var newvalue = $(this).val();
+    //     // please send changed sentence by user in biligualcorpusfile sentence table...
+    //     send_changedsentence(id, 'status', newvalue, SentenceTable.cell(el), oldvalue);
+    // })
+
+    $('body').on('click', '#postaggedcontenttable > tbody > tr > td > span.status_icons ', function(e){
+        console.log(e, $(this));
         var el = $(this).parent();
         var row = SentenceTable.row(el);
         var id = row.data().id;
@@ -343,6 +352,7 @@ $(document).ready(function() {
         // please send changed sentence by user in biligualcorpusfile sentence table...
         send_changedsentence(id, 'status', newvalue, SentenceTable.cell(el), oldvalue);
     })
+
     // when postaggeds list click, event
     $("#postaggeds > ul ").on('click', function(e){
         
@@ -763,7 +773,7 @@ $(document).ready(function() {
         
         $('#tagTipContainer').show();
         if(EN_TAGS.filter( TAG => TAG['L'] ==  tagName.replace('tag', '')).length > 0){
-            $('#tagTip').html(EN_TAGS.filter( TAG => TAG['L'] ==  tagName.replace('tag', ''))[0]['R']);
+            $('#tagTip').html(EN_TAGS.filter( TAG => TAG['L'] ==  tagName.replace('tag', ''))[0]['L']);
         }else{
             $('#tagTip').html('Other')
         }
@@ -771,7 +781,7 @@ $(document).ready(function() {
         $('#tagTipContainer').addClass(tagName);
         $('#tagTipContainer').offset({'left': word.offset().left});
         $('#tagTipContainer').offset({'top': word.offset().top + word.outerHeight()});
-        $('#tagTipContainer .up').offset({'left': word.offset().left + word.outerWidth() / 2 - $('#tagTipContainer .up').outerWidth() / 2});
+        $('#tagTipContainer .up').offset({'left': word.offset().left + word.outerWidth() / 4 - $('#tagTipContainer .up').outerWidth() / 2});
     });
     $(document).bind('mouseout', '.taggedWord', function(ev) {
         $('#tagTipContainer').hide();

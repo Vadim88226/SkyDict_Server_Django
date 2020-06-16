@@ -207,12 +207,12 @@ $(function() {
         $('#menu_logo').html(clone);
         setTimeout(function() { document.getElementById("reset_email").focus(); }, 0);
     });
-
     $(document).on('click', ".menu__sign__form__submit", function() {
         var email = $("#sign_email").val();
         var uname = $("#sign_username").val();
         var firstname = $("#firstname").val();
         var lastname = $("#lastname").val();
+        var role_ = $("input[name=sign_role]:checked").val();
         var pwd = $("#sign_password").val();
         var sign_confirm = $("#sign_confirm").val();
         var csrftoken = $("[name=csrfmiddlewaretoken]").val();
@@ -227,6 +227,7 @@ $(function() {
                 'username': uname,
                 'first_name': firstname,
                 'last_name': lastname,
+                'role' : role_,
                 'password1': pwd,
                 'password2': sign_confirm,
             },

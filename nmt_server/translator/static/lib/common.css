@@ -267,7 +267,9 @@ button:focus {
 
 input[type=text],
 input[type=email],
-input[type=password] {
+input[type=password],
+input[type=radio]
+{
     padding: 10px 15px;
     border: 1px solid #666;
     border-radius: 5px;
@@ -287,7 +289,8 @@ input[type=password] {
 input[type=text]:placeholder-shown[required],
 input[type=email]:placeholder-shown[required],
 input[type=number]:placeholder-shown[required],
-input[type=password]:placeholder-shown[required] {
+input[type=password]:placeholder-shown[required],
+input[type=radio]:placeholder-shown[required] {
     background-image: url(../icons/asterisk.svg);
     background-size: 8px;
     background-repeat: no-repeat;
@@ -297,6 +300,7 @@ input[type=password]:placeholder-shown[required] {
 input[type=text]:focus,
 input[type=email]:focus,
 input[type=password]:focus,
+input[type=radio]:focus,
 input:focus {
     /* border-bottom: 1px solid #006494; */
     outline: none;
@@ -345,7 +349,8 @@ label {
 .menu__login__form__name,
 .menu__login__form__email,
 .menu__sign__form__email,
-.menu__login__form__signname {
+.menu__login__form__signname,
+.menu__sign__form__role {
     position: relative;
     margin-top: 24px;
 }

@@ -58,6 +58,13 @@
                 id='sign_email' required placeholder=" ">
             <label>Email address</label>
         </div>
+        <div class="text_input menu__sign__form__role" style="padding: 10px 15px;border: 1px solid #666;border-radius: 5px;" >
+                <input type="radio" value="admin" id="sign_role1" name="sign_role" >
+                <kmc for="sign_role1" style="margin-right: 40px;" >Administrator</kmc>
+                <input type="radio" value="linguist" id="sign_role2" name="sign_role" checked >
+                <kmc for="sign_role2" >Linguist</kmc>
+            <label style="background-color: white">Role</label>
+        </div>
         <div class="text_input menu__login__form__pass">
             <input name='sign_password' type='password' dl-attr='value: $0.data_password'
             tabindex="10" id='sign_password' required placeholder=" ">
