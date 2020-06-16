@@ -1,9 +1,14 @@
 from __future__ import unicode_literals
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.core.validators import FileExtensionValidator
 from datetime import datetime
 
+class User(AbstractUser):
+    linguist = models.BooleanField(default=False, )
+    @property
+    def is_linguist(self):
+        return self.linguist
 
 class DictWords(models.Model):
     word = models.CharField(max_length=255)
