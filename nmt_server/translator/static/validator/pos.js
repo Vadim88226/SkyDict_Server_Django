@@ -242,7 +242,6 @@ $(document).ready(function() {
                     
                     for (let o = 0; o < iconary.length; o++) {
                         const ele = iconary[o];
-                        console.log(status[o], d);
                         if( status[o] == d ){
                             $bun = $bun + "<span class='glyphicon glyphicon-" + ele +" status_icons selected' id='" + status[o] + "' accessKey='"+ o +"' ></span>";
                         }else{
@@ -529,9 +528,9 @@ $(document).ready(function() {
             on = 1;
         }
         if( on == '0' ){
-            __tag_str__1 = __tag_str__1 +  "<div class='tag" + _tag_['L'] + "'>" + _tag_['R'] + "</div>";
+            __tag_str__1 = __tag_str__1 +  "<div class='tag" + _tag_['L'] + "'>" + _tag_['L'] + "</div>";
         }else{
-            __tag_str__2 = __tag_str__2 +  "<div class='tag" + _tag_['L'] + "'>" + _tag_['R'] + "</div>";
+            __tag_str__2 = __tag_str__2 +  "<div class='tag" + _tag_['L'] + "'>" + _tag_['L'] + "</div>";
         }
         
     });
@@ -760,7 +759,7 @@ $(document).ready(function() {
         var Tsource_data = [];
         var Ttarget_data = [];
         var _get_attr = function (_id) {
-            var _tag = $(_id).attr('class').replace('taggedWord tag', '');
+            var _tag = $(_id).attr('class').replace('taggedWord tag', '').replace('selected', '');
             var _word = $(_id).text();
             var _token_tag_ = {'token' : _word, 'pos' : _tag} 
             return _token_tag_;
@@ -806,9 +805,10 @@ $(document).ready(function() {
     var clear_tag_colorfn = function(new_tag){
         CWinST_ary.forEach(span_word => {
             if(new_tag != 'old'){
-                $(span_word)[0].className = "taggedWord " + new_tag;
+                $(span_word)[0].className = "taggedWord " + new_tag +" selected";
             }else{
-                $(span_word).css('outline', 'none');
+                $(span_word)[0].className = $(span_word)[0].className.replace('selected',''); 
+                // $(span_word).css('outline', 'none');
             }
             
         });
@@ -833,17 +833,21 @@ $(document).ready(function() {
             clear_tag_colorfn('old');
             CWinST_ary = new Array();
         }
-
-        if($(this)[0].style.cssText == 'outline: -webkit-focus-ring-color auto 1px;'){
-            $(this).css('outline', '-webkit-focus-ring-color none 0px');
+        
+        if($(this)[0].className.search('selected') > -1){
+            //$(this)[0].style.cssText == 'outline: -webkit-focus-ring-color auto 1px;'
+            $(this)[0].className = $(this)[0].className.replace('selected', '');
+            //$(this).css('outline', '-webkit-focus-ring-color none 0px');
             CWinST_ary = CWinST_ary.filter(___word__ => ___word__ !== $(this)[0]);//plase remove selected word of selected sentence in  this array (this array is simillar with temp array ).
         }else{
-            $(this).css('outline', '-webkit-focus-ring-color auto 1px');
+            $(this)[0].className = $(this)[0].className + ' selected';
+            //$(this).css('outline', '-webkit-focus-ring-color auto 1px');
             CWinST_ary.push($(this)[0]); //plase save selected word of selected sentence in  this array (this array is simillar with temp array ).
         }
         
         
     });
+
+
+    
 });
-
-

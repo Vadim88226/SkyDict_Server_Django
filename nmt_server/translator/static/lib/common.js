@@ -316,4 +316,17 @@ $(function() {
             timeout: 3000
         });
     });
+
+        
+ 
+
 });
+var rolecheck = function(id){
+    if(id == '1'){
+        document.getElementById("sign_role1").checked = true;
+        document.getElementById("sign_role2").checked = false;
+    }else{
+        document.getElementById("sign_role2").checked = true;
+        document.getElementById("sign_role1").checked = false;
+    }
+}

@@ -656,3 +656,7 @@ textarea {
 .validator.active {
     color: black
 }
+
+kmc{
+    cursor: pointer;
+}
