@@ -264,9 +264,9 @@ $(function() {
             dataType: 'json',
             success: function(data, status) {
                 if (data.content == "ok") {
-                    $(".PopupMenu").remove();
-                    //window.location.reload();
-                    window.location = window.location;
+                    // $(".PopupMenu").remove();
+                    window.location.reload();
+                    // window.location = window.location;
                 } else {
                     var err = data.content;
                     err = err.replace(/password1/g, "Password");
