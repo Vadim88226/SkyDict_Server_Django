@@ -224,6 +224,7 @@ $(document).ready(function() {
     var prepostaggedsUL = ''; // this value is <UL> tag $(this) selected from corpusfile list 
     var oldpostaggedsid = ''; // this value is server id of corpus file list
     var status = Array(); // this is array to save status of sentence 
+    var iconary = Array('question-sign','ok', 'remove','pencil' );
     SentenceTable = $('#postaggedcontenttable').DataTable({
         data : [],
         columns : [
@@ -237,12 +238,24 @@ $(document).ready(function() {
                         "id": r['id']+"_select",
                         "value": d
                     });
-                   
-                    var $bun =  "<span class='glyphicon glyphicon-question-sign status_icons selected'></span>" + 
-                                "<span class='glyphicon glyphicon-ok status_icons' ></span>"+
-                                "<span class='glyphicon glyphicon-remove status_icons' /></span>"+
-                                "<span class='glyphicon glyphicon-pencil status_icons' /></span>";
+                    var $bun =  '';
                     
+                    for (let o = 0; o < iconary.length; o++) {
+                        const ele = iconary[o];
+                        console.log(status[o], d);
+                        if( status[o] == d ){
+                            $bun = $bun + "<span class='glyphicon glyphicon-" + ele +" status_icons selected' id='" + status[o] + "' accessKey='"+ o +"' ></span>";
+                        }else{
+                            $bun = $bun + "<span class='glyphicon glyphicon-" + ele +" status_icons' id='" + status[o] + "' accessKey='"+ o +"' ></span>";
+                        }
+                        
+                    }
+                       
+            // var $bun =  "<span class='glyphicon glyphicon-question-sign status_icons selected' id='Unchecked' accessKey='1' ></span>" + 
+            //             "<span class='glyphicon glyphicon-ok status_icons' id='Acceptable' accessKey='2' ></span>"+
+            //             "<span class='glyphicon glyphicon-remove status_icons' id='Unacceptable' accessKey='3' /></span>"+
+            //             "<span class='glyphicon glyphicon-pencil status_icons' id='Amendable' accessKey='4' /></span>";
+            
 
                     $buttons.append($bun);
                     return $bun;
@@ -343,12 +356,12 @@ $(document).ready(function() {
     // })
 
     $('body').on('click', '#postaggedcontenttable > tbody > tr > td > span.status_icons ', function(e){
-        console.log(e, $(this));
+       
         var el = $(this).parent();
         var row = SentenceTable.row(el);
         var id = row.data().id;
         var oldvalue = SentenceTable.cell(el).data();
-        var newvalue = $(this).val();
+        var newvalue = $(this)[0].id;
         // please send changed sentence by user in biligualcorpusfile sentence table...
         send_changedsentence(id, 'status', newvalue, SentenceTable.cell(el), oldvalue);
     })
@@ -832,4 +845,5 @@ $(document).ready(function() {
         
     });
 });
+
 
