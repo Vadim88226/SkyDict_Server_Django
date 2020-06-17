@@ -264,10 +264,10 @@ $(document).ready(function() {
                 "targets": [ 0 ],
                 "visible": false
             },
-            { "width": "3%", "targets": 1, "className": "text-center", },
-            { "width": "44%", "targets": 2 , "className": "text-left",},
-            { "width": "44%", "targets": 3 , "className": "text-left",},
-            { "width": "9%", "targets": 4 , "className": "text-center",}
+            { "width": "4%", "targets": 1, "className": "text-center", },
+            { "width": "43%", "targets": 2 , "className": "text-left",},
+            { "width": "43%", "targets": 3 , "className": "text-left",},
+            { "width": "10%", "targets": 4 , "className": "text-center",}
         ],
         select: {
             style:    'os',
@@ -288,8 +288,11 @@ $(document).ready(function() {
         // The cell that has been clicked will be editable
         if($(this)[0].className != " editable")
             return;
-        $(this).attr('contenteditable', 'true');
+       
+        if(SentenceTable.row($(this)).data().status != "Amendable")
+            return;
         var el = $(this);
+        $(this).attr('contenteditable', 'true');
         // The cell have now the focus
         el.focus();
         $(this).blur(endEdition);
@@ -554,7 +557,7 @@ $(document).ready(function() {
             if(tagged_data[i].pos == "X"){
                 tagged_data[i].pos = "OTH";
             }
-            tags_str = tags_str + "<span class='taggedWord tag" + tagged_data[i].pos + "'>" + tagged_data[i].token + "</span>";
+            tags_str = tags_str + "<span class='taggedWord tag" + tagged_data[i].pos + "'   id='" + tagged_data[i].token + "'  >" + tagged_data[i].token + "<e class='tag_item' >[" + tagged_data[i].pos + "]</e></span>";
             if (sentence_str == ''){
                 sentence_str = tagged_data[i].token;
             }
@@ -576,7 +579,7 @@ $(document).ready(function() {
             if(source[i].pos == "X"){
                 source[i].pos = "OTH";
             }
-            source_tags = source_tags + "<span class='taggedWord tag" + source[i].pos + "'>" + source[i].token + "</span>";
+            source_tags = source_tags + "<span class='taggedWord tag" + source[i].pos + "'  id='" + source[i].token + "'  >" + source[i].token + "<e class='tag_item' >[" + source[i].pos + "]</e></span>";
             if (source_sentence == ''){
                 source_sentence = source[i].token;
             }
@@ -593,7 +596,7 @@ $(document).ready(function() {
             if(target[i].pos == "X"){
                 target[i].pos = "OTH";
             }
-            target_tags = target_tags + "<span class='taggedWord tag" + target[i].pos + "'>" + target[i].token + "</span>";
+            target_tags = target_tags + "<span class='taggedWord tag" + target[i].pos + "' id='" + target[i].token + "'  >" + target[i].token + "<e class='tag_item' >[" + target[i].pos + "]</e></span>";
             if(target_sentence==''){
                 target_sentence = target[i].token;
             }
@@ -745,7 +748,7 @@ $(document).ready(function() {
         var Ttarget_data = [];
         var _get_attr = function (_id) {
             var _tag = $(_id).attr('class').replace('taggedWord tag', '').replace('selected', '');
-            var _word = $(_id).text();
+            var _word = $(_id)[0].id;
             var _token_tag_ = {'token' : _word, 'pos' : _tag} 
             return _token_tag_;
         }
@@ -760,6 +763,7 @@ $(document).ready(function() {
         var _Tsource_data = JSON.stringify(Tsource_data);
         var _Ttarget_data = JSON.stringify(Ttarget_data);
         // please save tagged sentence by user.
+        console.log(Ceed.id, _Tsource_data,_Ttarget_data);
         save_taggedsentencefn(Ceed.id, _Tsource_data,_Ttarget_data);
     });
 
@@ -767,8 +771,9 @@ $(document).ready(function() {
     $(document).on('mouseover','.taggedWord', function(ev) {
         var word = $(ev.target);
         var tagName = word[0].classList[1];
-        
-        $('#tagTipContainer').show();
+        if(!tagName)
+            return;
+        // $('#tagTipContainer').show();
         if(EN_TAGS.filter( TAG => TAG['L'] ==  tagName.replace('tag', '')).length > 0){
             $('#tagTip').html(EN_TAGS.filter( TAG => TAG['L'] ==  tagName.replace('tag', ''))[0]['L']);
         }else{
@@ -789,11 +794,17 @@ $(document).ready(function() {
 
     var clear_tag_colorfn = function(new_tag){
         CWinST_ary.forEach(span_word => {
+            
             if(new_tag != 'old'){
+
                 $(span_word)[0].className = "taggedWord " + new_tag +" selected";
+                $(span_word)[0].innerHTML = $(span_word)[0].id + "<e class='tag_item' >["+ new_tag.replace('tag','')  + "]</e>";
             }else{
+
                 $(span_word)[0].className = $(span_word)[0].className.replace('selected',''); 
+
                 // $(span_word).css('outline', 'none');
+
             }
             
         });

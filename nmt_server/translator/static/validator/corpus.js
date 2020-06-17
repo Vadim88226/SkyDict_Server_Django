@@ -266,10 +266,10 @@ $(document).ready(function() {
                 "targets": [ 0 ],
                 "visible": false
             },
-            { "width": "3%", "targets": 1, "className": "text-center", },
-            { "width": "44%", "targets": 2 , "className": "text-left",},
-            { "width": "44%", "targets": 3 , "className": "text-left",},
-            { "width": "9%", "targets": 4 , "className": "text-center",}
+            { "width": "4%", "targets": 1, "className": "text-center", },
+            { "width": "43%", "targets": 2 , "className": "text-left",},
+            { "width": "43", "targets": 3 , "className": "text-left",},
+            { "width": "10%", "targets": 4 , "className": "text-center",}
         ],
         select: {
             style:    'os',

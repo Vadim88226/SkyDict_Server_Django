@@ -79,8 +79,17 @@
                                     <li class="paginate_button page-item next" id="sentencetable_next">
                                         <a  aria-controls="sentencetable" class="page-link">Next</a>
                                     </li>
+                                    
                                 </ul>
+                                <div  style="display: inline-block; vertical-align: top;margin-left: 25px;margin-top: 15px;">
+                                    <span class="glyphicon glyphicon-question-sign" id="Unchecked" accesskey="0"></span> : Unchecked &nbsp;
+                                    <span class="glyphicon glyphicon-ok" id="Acceptable" accesskey="1"></span> : Acceptable&nbsp;
+                                    <span class="glyphicon glyphicon-remove" id="Unacceptable" accesskey="2"></span> : Unacceptable&nbsp;
+                                    <span class="glyphicon glyphicon-pencil" id="Amendable" accesskey="3"></span> : Amendable
+                                </div>
+                               
                             </div>
+                            
                         </div>
                     </div>
                     <div class="col-sm-12" style="padding-right: 5px;">
@@ -164,7 +173,7 @@
             {% if request.user.is_staff %}
                 <button type='button' class='btn_delete sky_button'>Delete</button>
             {% else %}
-                <button type='' class='btn_delete' disabled style="margin: 10px 0 10px 0;width: 160px;padding: 5px 10px 5px 10px;border: none;background-color: white;" >.</button>
+                <button type='' disabled style="margin: 10px 0 10px 0;width: 160px;padding: 5px 10px 5px 10px;border: none;background-color: white;" >&nbsp;</button>
             {% endif %}
             </div>
     </div>

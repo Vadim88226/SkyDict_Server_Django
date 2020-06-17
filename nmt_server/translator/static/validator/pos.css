@@ -405,6 +405,7 @@ table.dataTable thead th, table.dataTable thead td {
     font-size: 14px;
     text-align: center;
     background-color: #fff;
+    z-index: 5;
 }
 table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.dataTable.display tbody th, table.dataTable.display tbody td {
     border: 1px solid #ddd !important;
@@ -816,9 +817,14 @@ select.language {
 
 .status_icons{
     width: 25%;
-    height: 16px;
-    vertical-align: initial;
+    height: 20px;
+    vertical-align: middle;
+    font-size: 18px;
+    cursor: pointer;
 }
 .status_icons.selected{
-    background-color: #721cd485;
+    background-color: green;
+}
+.tag_item{
+    font-size: 10px;
 }
