@@ -56,6 +56,11 @@ class UserSettingForm(forms.ModelForm):
      
 class BilingualCorpusForm(forms.ModelForm):
     s_language = [('en', 'English'), ('th','Thai')]
+    linguist_objects = User.objects.filter(linguist=True)
+    linguist_list =[]
+    for linguiest_object in linguist_objects:
+        linguist_list.append((linguiest_object.id, linguiest_object.username))
+    linguist = forms.ChoiceField(label='Linguist: ', choices=linguist_list)
     s_lang = forms.ChoiceField(label='Source Language: ', choices=s_language)
     t_lang = forms.ChoiceField(label='Target Language: ', choices=s_language)
     file_url = forms.FileField(label="File: ", widget=forms.FileInput(attrs={'type':'file','accept':".txt, .csv, .xlsx, .tmx"}), )
@@ -67,8 +72,14 @@ class BilingualCorpusForm(forms.ModelForm):
         fields = ['name', 's_lang', 't_lang', 'file_url', 'note']
         exclude = ['user']
 
+
 class POSTaggedCorpusForm(forms.ModelForm):
     s_language = [('en', 'English'), ('th','Thai')]
+    linguist_objects = User.objects.filter(linguist=True)
+    linguist_list =[]
+    for linguist_object in linguist_objects:
+        linguist_list.append((linguist_object.id, linguist_object.username))
+    linguist = forms.ChoiceField(label='Linguist: ', choices=linguist_list)
     s_lang = forms.ChoiceField(label='Source Language: ', choices=s_language)
     t_lang = forms.ChoiceField(label='Target Language: ', choices=s_language)
     file_url = forms.FileField(label="File: ", widget=forms.FileInput(attrs={'type':'file','accept':".ptc, .txt, .csv, .xlsx, .tmx"}), )

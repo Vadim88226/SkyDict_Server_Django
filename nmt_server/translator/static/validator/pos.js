@@ -25,6 +25,7 @@ $(function() {
                 $("#pf_upload_form .name").html(_form.name);
                 $("#pf_upload_form .s_lang").html(_form.s_lang);
                 $("#pf_upload_form .t_lang").html(_form.t_lang);
+                $("#pf_upload_form .linguist").html(_form.linguist);
                 $("#pf_upload_form .note").html(_form.note);
             }
         })

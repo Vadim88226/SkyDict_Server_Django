@@ -44,9 +44,7 @@ INSTALLED_APPS = [
     'django_tables2',
     'translator.translation_model',
 ]
-
 AUTH_USER_MODEL = 'translator.User'
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -92,8 +90,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'skydict_db',
-        'USER': 'root',
-        'PASSWORD': 'vadim',
+        'USER': 'scote',
+        'PASSWORD': '11111111111',
         'HOST': 'localhost',
         'PORT': '3306',
     }

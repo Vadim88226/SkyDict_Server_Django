@@ -215,9 +215,16 @@ def log_out(request):
 # sign up function
 def register(request):
     if request.method == "POST":
+        role = request.POST.get("role", "linguist")
         form = SignupForm(data=request.POST)
         if form.is_valid():
             user = form.save(commit=False)
+            if role == 'admin':
+                user.is_staff = True
+                user.linguist = False
+            else:
+                user.is_staff = False
+                user.linguist = True
             user.is_active = False
             user.save()
             current_site = get_current_site(request)
@@ -567,14 +574,19 @@ def views_CorpusValidator(request):
             BilingualCorpus.objects.get(id = _id).delete()
         except:
             print("An exception occurred")
-  
-    table = BilingualCorpusTable(BilingualCorpus.objects.filter(name__contains=search_name).order_by(sort))
+    if request.user.is_linguist:
+        table = BilingualCorpusTable(BilingualCorpus.objects.filter(name__contains=search_name, user=request.user).order_by(sort))
+        corpus_files = BilingualCorpus.objects.filter(user=request.user)
+    else:
+        table = BilingualCorpusTable(BilingualCorpus.objects.filter(name__contains=search_name).order_by(sort))
+        corpus_files = BilingualCorpus.objects.all()
     search_Form = SearchFileNameForm(initial={'searchname':search_name})
 
+    
     return render(request, "validator/corpusvalidator.html", {
         'table': table, 
         'search_Form':search_Form,
-        'corpusfiles': BilingualCorpus.objects.all()
+        'corpusfiles': corpus_files
         })
 
 @login_required
@@ -587,25 +599,33 @@ def views_POSValidator(request):
             POSTaggedCorpus.objects.get(id = _id).delete()
         except:
             print("An exception occurred")
-
-    table = POSTaggedCorpusTable(POSTaggedCorpus.objects.filter(name__contains=search_name).order_by(sort))
-    search_Form = SearchFileNameForm(initial={'searchname':search_name})       
+    # check request user is staff or linguist
+    if request.user.is_linguist:
+        table = POSTaggedCorpusTable(POSTaggedCorpus.objects.filter(name__contains=search_name, user=request.user).order_by(sort))
+        corpus_files = POSTaggedCorpus.objects.filter(user=request.user)
+    else:
+        table = POSTaggedCorpusTable(POSTaggedCorpus.objects.filter(name__contains=search_name).order_by(sort))
+        corpus_files = POSTaggedCorpus.objects.all()
+    search_Form = SearchFileNameForm(initial={'searchname':search_name})
 
     return render(request, "validator/posvalidator.html", {
         'table': table, 
         'search_Form': search_Form,
-        'postaggeds': POSTaggedCorpus.objects.all()
+        'postaggeds': corpus_files
         })
 
 
 def upload_CorpusFile(request):
     if request.method == 'POST':
+
         form = BilingualCorpusForm(request.POST, request.FILES)
+        
         if form.is_valid():
+            linguist_id = form.cleaned_data.get("linguist")
             corpus = form.save(commit=False)
             corpus.file_name = corpus.file_url.name
-            corpus.user = User.objects.get(pk = request.user.id)
-            corpus.save()            
+            corpus.user = User.objects.get(id=linguist_id)
+            corpus.save()
             valid = store_Corpus_Sentences(corpus)
         return redirect('/corpus_validator/')
     else:
@@ -617,9 +637,10 @@ def upload_POSTaggedFile(request):
     if request.method == 'POST': 
         form = POSTaggedCorpusForm(request.POST, request.FILES)
         if form.is_valid():
+            linguist_id = form.cleaned_data.get("linguist")
             taggedfile = form.save(commit=False)
             taggedfile.file_name = taggedfile.file_url.name
-            taggedfile.user = User.objects.get(pk = request.user.id)
+            taggedfile.user = User.objects.get(id=linguist_id)
             taggedfile.save()
             valid = store_POSTagged_Sentences(taggedfile)
         return redirect('/pos_validator/')
