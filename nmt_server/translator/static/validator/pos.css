@@ -500,40 +500,40 @@ fieldset>ul.selected{
 
 
 
-.taggedWord.tagADJ { border-bottom: 4px solid #3498db; border-right: 4px solid #3498db; border-top: 2px solid white;border-left: 2px solid white;}
-.taggedWord.tagADP { border-bottom: 4px solid #e67e22; border-right: 4px solid #e67e22; border-top: 2px solid white;border-left: 2px solid white;}
-.taggedWord.tagADV { border-bottom: 4px solid #F9E79F; border-right: 4px solid #F9E79F; border-top: 2px solid white;border-left: 2px solid white;}
-.taggedWord.tagAUX { border-bottom: 4px solid #9b59b6b3; border-right: 4px solid #9b59b6b3; border-top: 2px solid white;border-left: 2px solid white;}
-.taggedWord.tagCCONJ { border-bottom: 4px solid #e74c3c; border-right: 4px solid #e74c3c;border-top: 2px solid white;border-left: 2px solid white;}
-.taggedWord.tagDET { border-bottom: 4px solid #2980b9d1; border-right: 4px solid #2980b9d1; border-top: 2px solid white;border-left: 2px solid white;}
-.taggedWord.tagINTJ { border-bottom: 4px solid #f39c12; border-right: 4px solid #f39c12; border-top: 2px solid white;border-left: 2px solid white;}
-.taggedWord.tagNOUN { border-bottom: 4px solid #7d6608; border-right: 4px solid #7d6608; border-top: 2px solid white;border-left: 2px solid white;}
-.taggedWord.tagNUM { border-bottom: 4px solid #2ecc71a6;  border-right: 4px solid #2ecc71a6; border-top: 2px solid white;border-left: 2px solid white;}
-.taggedWord.tagPART { border-bottom: 4px solid #27ae60; border-right: 4px solid #27ae60; border-top: 2px solid white;border-left: 2px solid white;}
-.taggedWord.tagPRON { border-bottom: 4px solid #de7075; border-right: 4px solid #de7075; border-top: 2px solid white;border-left: 2px solid white;}
-.taggedWord.tagPROPN { border-bottom: 4px solid #8e44ad; border-right: 4px solid #8e44ad; border-top: 2px solid white;border-left: 2px solid white;}
-.taggedWord.tagPUNCT { border-bottom: 4px solid #f1c40f; border-right: 4px solid #f1c40f; border-top: 2px solid white;border-left: 2px solid white;}
-.taggedWord.tagSCONJ { border-bottom: 4px solid #e8a697; border-right: 4px solid #e8a697; border-top: 2px solid white;border-left: 2px solid white; }
-.taggedWord.tagVERB { border-bottom: 4px solid #e061c5; border-right: 4px solid #e061c5; border-top: 2px solid white;border-left: 2px solid white;}
-.taggedWord.tagOTH { border-bottom: 4px solid #95a5a6; border-right: 4px solid #95a5a6; border-top: 2px solid white;border-left: 2px solid white;}
+.taggedWord.tagADJ { border-bottom: 2px solid #3498db; border-right: 2px solid  white; border-top: 2px solid white;border-left: 2px solid white;}
+.taggedWord.tagADP { border-bottom: 2px solid #e67e22; border-right: 2px solid white; border-top: 2px solid white;border-left: 2px solid white;}
+.taggedWord.tagADV { border-bottom: 2px solid #F9E79F; border-right: 2px solid white; border-top: 2px solid white;border-left: 2px solid white;}
+.taggedWord.tagAUX { border-bottom: 2px solid #9b59b6b3; border-right: 2px solid white; border-top: 2px solid white;border-left: 2px solid white;}
+.taggedWord.tagCCONJ { border-bottom: 2px solid #e74c3c; border-right: 2px solid white;border-top: 2px solid white;border-left: 2px solid white;}
+.taggedWord.tagDET { border-bottom: 2px solid #2980b9d1; border-right: 2px solid white; border-top: 2px solid white;border-left: 2px solid white;}
+.taggedWord.tagINTJ { border-bottom: 2px solid #f39c12; border-right: 2px solid white; border-top: 2px solid white;border-left: 2px solid white;}
+.taggedWord.tagNOUN { border-bottom: 2px solid #7d6608; border-right: 2px solid white; border-top: 2px solid white;border-left: 2px solid white;}
+.taggedWord.tagNUM { border-bottom: 2px solid #2ecc71a6;  border-right: 2px solid white; border-top: 2px solid white;border-left: 2px solid white;}
+.taggedWord.tagPART { border-bottom: 2px solid #27ae60; border-right: 2px solid white; border-top: 2px solid white;border-left: 2px solid white;}
+.taggedWord.tagPRON { border-bottom: 2px solid #de7075; border-right: 2px solid white; border-top: 2px solid white;border-left: 2px solid white;}
+.taggedWord.tagPROPN { border-bottom: 2px solid #8e44ad; border-right: 2px solid white; border-top: 2px solid white;border-left: 2px solid white;}
+.taggedWord.tagPUNCT { border-bottom: 2px solid #f1c40f; border-right: 2px solid white; border-top: 2px solid white;border-left: 2px solid white;}
+.taggedWord.tagSCONJ { border-bottom: 2px solid #e8a697; border-right: 2px solid white; border-top: 2px solid white;border-left: 2px solid white; }
+.taggedWord.tagVERB { border-bottom: 2px solid #e061c5; border-right: 2px solid white; border-top: 2px solid white;border-left: 2px solid white;}
+.taggedWord.tagOTH { border-bottom: 2px solid #95a5a6; border-right: 2px solid white; border-top: 2px solid white;border-left: 2px solid white;}
 
 
-.taggedWord.tagADJ.selected { border-bottom: 4px solid #3498db; border-right: 4px solid #3498db; border-top: 2px solid #3498db;border-left: 2px solid #3498db;}
-.taggedWord.tagADP.selected { border-bottom: 4px solid #e67e22; border-right: 4px solid #e67e22;  border-top: 2px solid #e67e22;  border-left: 2px solid #e67e22; }
-.taggedWord.tagADV.selected { border-bottom: 4px solid #F9E79F; border-right: 4px solid #F9E79F;  border-top: 2px solid #F9E79F;  border-left: 2px solid #F9E79F; }
-.taggedWord.tagAUX.selected { border-bottom: 4px solid #9b59b6b3; border-right: 4px solid #9b59b6b3; border-top: 2px solid #9b59b6b3; border-left: 2px solid #9b59b6b3; }
-.taggedWord.tagCCONJ.selected { border-bottom: 4px solid #e74c3c; border-right: 4px solid #e74c3c;border-top: 2px solid #e74c3c;border-left: 2px solid #e74c3c;}
-.taggedWord.tagDET.selected { border-bottom: 4px solid #2980b9d1; border-right: 4px solid #2980b9d1; border-top: 2px solid #2980b9d1; border-left: 2px solid #2980b9d1; }
-.taggedWord.tagINTJ.selected { border-bottom: 4px solid #f39c12; border-right: 4px solid #f39c12;  border-top: 2px solid #f39c12;  border-left: 2px solid #f39c12; }
-.taggedWord.tagNOUN.selected { border-bottom: 4px solid #7d6608; border-right: 4px solid #7d6608; border-top: 2px solid #7d6608; border-left: 2px solid #7d6608; }
-.taggedWord.tagNUM.selected { border-bottom: 4px solid #2ecc71a6; border-right: 4px solid #2ecc71a6;border-top: 2px solid #2ecc71a6;border-left: 2px solid #2ecc71a6; }
-.taggedWord.tagPART.selected { border-bottom: 4px solid #27ae60; border-right: 4px solid #27ae60;border-top: 2px solid #27ae60;border-left: 2px solid #27ae60; }
-.taggedWord.tagPRON.selected { border-bottom: 4px solid #de7075; border-right: 4px solid #de7075;border-top: 2px solid #de7075;border-left: 2px solid #de7075; }
-.taggedWord.tagPROPN.selected { border-bottom: 4px solid #8e44ad; border-right: 4px solid #8e44ad;border-top: 2px solid #8e44ad;border-left: 2px solid #8e44ad; }
-.taggedWord.tagPUNCT.selected { border-bottom: 4px solid #f1c40f; border-right: 4px solid #f1c40f;border-top: 2px solid #f1c40f;border-left: 2px solid #f1c40f; }
-.taggedWord.tagSCONJ.selected { border-bottom: 4px solid #e8a697; border-right: 4px solid #e8a697; border-top: 2px solid #e8a697; border-left: 2px solid #e8a697; }
-.taggedWord.tagVERB.selected { border-bottom: 4px solid #e061c5; border-right: 4px solid #e061c5; border-top: 2px solid #e061c5; border-left: 2px solid #e061c5; }
-.taggedWord.tagOTH.selected { border-bottom: 4px solid #95a5a6; border-right: 4px solid #95a5a6;border-top: 2px solid #95a5a6;border-left: 2px solid #95a5a6; }
+.taggedWord.tagADJ.selected { border-bottom: 2px solid #3498db; border-right: 2px solid #3498db; border-top: 2px solid #3498db;border-left: 2px solid #3498db;}
+.taggedWord.tagADP.selected { border-bottom: 2px solid #e67e22; border-right: 2px solid #e67e22;  border-top: 2px solid #e67e22;  border-left: 2px solid #e67e22; }
+.taggedWord.tagADV.selected { border-bottom: 2px solid #F9E79F; border-right: 2px solid #F9E79F;  border-top: 2px solid #F9E79F;  border-left: 2px solid #F9E79F; }
+.taggedWord.tagAUX.selected { border-bottom: 2px solid #9b59b6b3; border-right: 2px solid #9b59b6b3; border-top: 2px solid #9b59b6b3; border-left: 2px solid #9b59b6b3; }
+.taggedWord.tagCCONJ.selected { border-bottom: 2px solid #e74c3c; border-right: 2px solid #e74c3c;border-top: 2px solid #e74c3c;border-left: 2px solid #e74c3c;}
+.taggedWord.tagDET.selected { border-bottom: 2px solid #2980b9d1; border-right: 2px solid #2980b9d1; border-top: 2px solid #2980b9d1; border-left: 2px solid #2980b9d1; }
+.taggedWord.tagINTJ.selected { border-bottom: 2px solid #f39c12; border-right: 2px solid #f39c12;  border-top: 2px solid #f39c12;  border-left: 2px solid #f39c12; }
+.taggedWord.tagNOUN.selected { border-bottom: 2px solid #7d6608; border-right: 2px solid #7d6608; border-top: 2px solid #7d6608; border-left: 2px solid #7d6608; }
+.taggedWord.tagNUM.selected { border-bottom: 2px solid #2ecc71a6; border-right: 2px solid #2ecc71a6;border-top: 2px solid #2ecc71a6;border-left: 2px solid #2ecc71a6; }
+.taggedWord.tagPART.selected { border-bottom: 2px solid #27ae60; border-right: 2px solid #27ae60;border-top: 2px solid #27ae60;border-left: 2px solid #27ae60; }
+.taggedWord.tagPRON.selected { border-bottom: 2px solid #de7075; border-right: 2px solid #de7075;border-top: 2px solid #de7075;border-left: 2px solid #de7075; }
+.taggedWord.tagPROPN.selected { border-bottom: 2px solid #8e44ad; border-right: 2px solid #8e44ad;border-top: 2px solid #8e44ad;border-left: 2px solid #8e44ad; }
+.taggedWord.tagPUNCT.selected { border-bottom: 2px solid #f1c40f; border-right: 2px solid #f1c40f;border-top: 2px solid #f1c40f;border-left: 2px solid #f1c40f; }
+.taggedWord.tagSCONJ.selected { border-bottom: 2px solid #e8a697; border-right: 2px solid #e8a697; border-top: 2px solid #e8a697; border-left: 2px solid #e8a697; }
+.taggedWord.tagVERB.selected { border-bottom: 2px solid #e061c5; border-right: 2px solid #e061c5; border-top: 2px solid #e061c5; border-left: 2px solid #e061c5; }
+.taggedWord.tagOTH.selected { border-bottom: 2px solid #95a5a6; border-right: 2px solid #95a5a6;border-top: 2px solid #95a5a6;border-left: 2px solid #95a5a6; }
 
 #tagTipContainer.tagADJ, .colors > .tagADJ  { background-color :  #3498db; }
 #tagTipContainer.tagADP, .colors > .tagADP { background-color :  #e67e22; }
@@ -601,7 +601,7 @@ select.language {
 }
 .taggedWord {
     cursor: pointer;
-    border-radius: 2px;
+    border-radius: 3.5px;
     padding: 0.1em 0.2em 0.1em 0.2em;
     margin: 2px 8px;
     display: inline-table;
@@ -826,5 +826,6 @@ select.language {
     background-color: green;
 }
 .tag_item{
-    font-size: 10px;
+    font-size: 11px;
+    font-weight: 600;
 }

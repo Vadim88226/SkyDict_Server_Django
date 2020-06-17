@@ -264,7 +264,7 @@ $(document).ready(function() {
                 "targets": [ 0 ],
                 "visible": false
             },
-            { "width": "4%", "targets": 1, "className": "text-center", },
+            { "width": "4% !important", "targets": 1, "className": "text-center", },
             { "width": "43%", "targets": 2 , "className": "text-left",},
             { "width": "43%", "targets": 3 , "className": "text-left",},
             { "width": "10%", "targets": 4 , "className": "text-center",}
