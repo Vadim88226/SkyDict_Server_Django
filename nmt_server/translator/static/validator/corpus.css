@@ -384,15 +384,6 @@ th {
     margin: -1px 0;
 }
 
-/* a{
-    color: black;
-} */
-/* 
-.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
-    border: 1px solid #ddd !important;
-    background-color: #fff;
-  
-} */
 
 table.dataTable thead th, table.dataTable thead td {
     padding: 8px;
@@ -403,7 +394,7 @@ table.dataTable thead th, table.dataTable thead td {
 }
 table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.dataTable.display tbody th, table.dataTable.display tbody td {
     border: 1px solid #ddd !important;
-    padding: 2px !important;
+    padding: 8px !important;
     font-size: 14px;
 }
 table.dataTable {
@@ -496,4 +487,14 @@ fieldset>ul.selected{
 .tb_bc{
     border: 1px solid;
     border-color: lightgrey;
+}
+
+
+.status_icons{
+    width: 25%;
+    height: 16px;
+    vertical-align: initial;
+}
+.status_icons.selected{
+    background-color: #721cd485;
 }

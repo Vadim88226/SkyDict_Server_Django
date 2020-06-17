@@ -7,6 +7,7 @@
 <script type="text/javascript">
     var suburl = "corpusfile";
 </script>
+
 <!-- link div -->
 <div id="dict_menu_bar" class="" style="margin-top: -10px;">
     <a id="view_Corpos_link" href="/corpus_validator" style="color:#000000;">Corpus Validator</a>
@@ -92,17 +93,15 @@
     </div>
     <!-- Corpus file end area -->
 
-    <!-- Corpus validator start area -->
-
-    <!-- Corpus validator end area -->
 </div>
-
 
 
 <template id="div_corpusfile_form">
     <div style="display: flex;">
         <div>
-            <button type='button' class='btn_new sky_button'><span class='glyphicon glyphicon-plus'></span> New</button>
+            {% if request.user.is_staff %}
+                <button type='button' class='btn_new sky_button'><span class='glyphicon glyphicon-plus'></span> New</button>
+            {% endif %}
             <input type="file" style="display: none;" name='corpusfile_' id="corpusfile_"/>
         </div>
         <div style="width: 100%; text-align: right;">
@@ -111,8 +110,25 @@
                 {{ search_Form.searchname }}
                 <button type="submit" style="display: none;">Search</button>
             </form>
-            <button type='button' class='btn_delete sky_button'>Delete</button></div>
+            {% if request.user.is_staff %}
+                <button type='button' class='btn_delete sky_button'>Delete</button>
+            {% else %}
+                <button type='' class='btn_delete' disabled style="margin: 10px 0 10px 0;width: 160px;padding: 5px 10px 5px 10px;border: none;background-color: white;" >.</button>
+            {% endif %}
+        </div>
     </div>
+    {% if not request.user.is_staff %}
+        <style>
+            #corpus_file_table > div > table > thead > tr > th:nth-child(7){
+                display: none;
+            }
+            #corpus_file_table > div > table > tbody > tr> td:nth-child(7){
+                display: none;
+            }
+
+            
+        </style>
+    {% endif %}
     <form method="POST" id="corpus_file_table" action="#">
         {% csrf_token %}
         {% render_table table %}
@@ -233,6 +249,8 @@
       </div>
     </div>
 </div>
+
+
 <!-- new corpus file templete end -->
 {% endblock content %}
 <!-- =============================== -->

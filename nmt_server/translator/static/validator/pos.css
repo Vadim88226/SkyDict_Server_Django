@@ -312,9 +312,9 @@ textarea {
     .content div {
         font-size: small;
     }
-    .color_div{
+    /* .color_div{
         width: auto;
-    }
+    } */
 }
 
 th {
@@ -344,15 +344,15 @@ th {
         width: 50%;
       
     }
-    .color_div{
-        width: auto;
-    }
+    /* .color_div{
+        width: 90px;
+    } */
 }
 
 @media (max-width: 1600px ){
-    .color_div{
-        width: auto;
-    }
+    /* .color_div{
+        width: 90px;
+    } */
 }
 #menu > div.menu__main_section{
     overflow-y: initial;
@@ -480,51 +480,6 @@ fieldset>ul.selected{
 }
 
 
-
-
-/* /////////// C-O-L-O-R-S/////////////////////// */
-
-
-/* Tag colors */
-/* 
-.tagADJ { background-color: #fc6; }
-.tagADP { background-color: #c99; }
-.tagADV { background-color: #cc9; }
-.tagAUX { background-color: #99c; }
-.tagCCONJ { background-color: #6f6; }
-.tagDET { background-color: #ccc; }
-.tagINTJ { background-color: #6c9; }
-.tagNOUN { background-color: #f9c; }
-.tagNUM { background-color: #ee7; }
-.tagPART { background-color: #cf6; }
-.tagPRON { background-color: rgb(104, 64, 64); }
-.tagPROPN { background-color: rgb(143, 58, 58); }
-.tagPUNCT { background-color: rgb(216, 24, 24); }
-.tagSCONJ { background-color: rgb(113, 46, 175); }
-.tagVERB { background-color: rgb(182, 48, 104); }
-.tagOther { background-color: rgb(187, 164, 174); } */
-
-/* 
-#3498db
-#2980b9
-#8e44ad
-#9b59b6
-#e74c3c
-#c0392b
-
-#e67e22
-#f39c12
-#f1c40f
-#2ecc71
-#27ae60
-#16a085
-
-#2c3e50
-#34495e
-#7f8c8d
-#95a5a6
-#dc7633
-#bdc3c7 */
 /* .tagADJ { background-color: #3498db; }
 .tagADP { background-color: #e67e22; }
 .tagADV { background-color: #F9E79F; }
@@ -597,9 +552,6 @@ fieldset>ul.selected{
 #tagTipContainer.tagOTH, .colors > .tagOTH { background-color : #95a5a6; }
 
 
-/* color panel area */
-
-
 
 .tab-pane {
     padding-top: 10px;
@@ -633,9 +585,6 @@ select.language {
     outline: -webkit-focus-ring-color auto 1px;
 }
 
-
-/* #stupidNiceStuff {
-} */
 
 #pos_target, #pos_source {
     min-height: 80px;
@@ -863,7 +812,6 @@ select.language {
 .col-md-2 {
     padding: 5px;
     overflow-wrap: inherit;
-    /* overflow: auto; */
 }
 
 .status_icons{

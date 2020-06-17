@@ -84,7 +84,6 @@ $(function() {
 
     
     $(document).on('click','#corpus_file_table > div > table > tbody > tr', function(e) {
-
         if(e.target.className != 'export_btn' && e.target.className != 'fas' ){
             e.currentTarget.cells[5].childNodes[0].checked = 1 - (e.currentTarget.cells[5].childNodes[0].checked);
             if (e.currentTarget.cells[5].childNodes[0].checked)
@@ -216,41 +215,45 @@ $(function() {
 
 });
 
-
-
 // edittable 
 $(document).ready(function() {
-
+    
+    var presentencetr = 0; // pre "row or <tr>" of row that user click in sentence table
+    var presentencecss = ''; // pre "Backbround-color" of row that user click in sentence table
     var currentpageno = 1;
     var allpage = 0;
     var SentenceTable =  '';
     var precorpusfileUL = '';
     var oldcorpusfileid = '';
     var status = Array();
+    var iconary = Array('question-sign','ok', 'remove','pencil' );
     SentenceTable = $('#corpusfilecontenttable').DataTable({
         data : [],
         columns : [
             { "data" : "id",  }, 
             { "data" : "count", "title" : "#"  },
-            { "data" : "source", "title" : "Source", "className": "editable" ,   },
+            { "data" : "source", "title" : "Source", "className": '' ,   },
             { "data" : "target", "title" : "Target" , "className": "editable"   },
             { "data" : "status", "title" : "Status", 
                 "render": function(d,t,r){
-                    var $select = $("<select></select>", {
+                    var $buttons = $("<kmc></kmc>", {
                         "id": r['id']+"_select",
                         "value": d
                     });
-                    $.each(status, function(k,v){
-                        var $option = $("<option></option>", {
-                            "text": v,
-                            "value": v
-                        });
-                        if(d === v){
-                            $option.attr("selected", "selected")
+                    var $bun =  '';
+                    
+                    for (let o = 0; o < iconary.length; o++) {
+                        const ele = iconary[o];
+                        if( status[o] == d ){
+                            $bun = $bun + "<span class='glyphicon glyphicon-" + ele +" status_icons selected' id='" + status[o] + "' accessKey='"+ o +"' ></span>";
+                        }else{
+                            $bun = $bun + "<span class='glyphicon glyphicon-" + ele +" status_icons' id='" + status[o] + "' accessKey='"+ o +"' ></span>";
                         }
-                        $select.append($option);
-                    });
-                    return $select.prop("outerHTML");
+                        
+                    }
+
+                    $buttons.append($bun);
+                    return $bun;
                 }
             }
         ],
@@ -291,6 +294,16 @@ $(document).ready(function() {
         // The cell have now the focus
         el.focus();
         $(this).blur(endEdition);
+    });
+    $(document).on('click','#corpusfilecontenttable > tbody > tr', function(e) {
+        e.preventDefault();
+        // please check pre selected row or <tr>
+        if(presentencetr)
+            $(presentencetr)[0].style.backgroundColor = presentencecss;
+            presentencetr = this;
+            presentencecss = $(this)[0].style.backgroundColor;
+
+        $(this).css('background-color', 'lightgrey');    
     });
     // page no input box
     $('body').on('change', '#pageno', function(){
@@ -333,16 +346,21 @@ $(document).ready(function() {
         }
         
     }
-
-    // change status event
-    $('body').on('change', '#corpusfilecontenttable > tbody > tr > td > select', function(){
+    $(document).on('click', '#corpusfilecontenttable > tbody > tr > td > span.status_icons ', function(e){
         var el = $(this).parent();
+        var child_list = el[0].children;
+        for( var i = 0; i< 4 ; i ++ ){
+           const icon = child_list[ i ];
+           icon.className = icon.className.replace('selected', '');
+        }
+        $(this)[0].className = $(this)[0].className + " selected";
         var row = SentenceTable.row(el);
         var id = row.data().id;
         var oldvalue = SentenceTable.cell(el).data();
-        var newvalue = $(this).val();
+        var newvalue = $(this)[0].id;
+        // please send changed sentence by user in biligualcorpusfile sentence table...
         send_changedsentence(id, 'status', newvalue, SentenceTable.cell(el), oldvalue);
-    })
+    });
     // when corpusfile list click, event
     $("#corpusfiles > ul ").on('click', function(e){
         
@@ -464,7 +482,5 @@ $(document).ready(function() {
         })
     }
         
-
-    
 });
 

@@ -230,7 +230,7 @@ $(document).ready(function() {
         columns : [
             { "data" : "id",  }, 
             { "data" : "count", "title" : "#"  },
-            { "data" : "source", "title" : "Source", "className": "editable" ,   },
+            { "data" : "source", "title" : "Source", "className": "" ,   },
             { "data" : "target", "title" : "Target" , "className": "editable"   },
             { "data" : "status", "title" : "Status", 
                 "render": function(d,t,r){
@@ -249,12 +249,6 @@ $(document).ready(function() {
                         }
                         
                     }
-                       
-            // var $bun =  "<span class='glyphicon glyphicon-question-sign status_icons selected' id='Unchecked' accessKey='1' ></span>" + 
-            //             "<span class='glyphicon glyphicon-ok status_icons' id='Acceptable' accessKey='2' ></span>"+
-            //             "<span class='glyphicon glyphicon-remove status_icons' id='Unacceptable' accessKey='3' /></span>"+
-            //             "<span class='glyphicon glyphicon-pencil status_icons' id='Amendable' accessKey='4' /></span>";
-            
 
                     $buttons.append($bun);
                     return $bun;
@@ -344,16 +338,6 @@ $(document).ready(function() {
     }
 
     // change status event
-    // $('body').on('change', '#postaggedcontenttable > tbody > tr > td > select', function(){
-    //     var el = $(this).parent();
-    //     var row = SentenceTable.row(el);
-    //     var id = row.data().id;
-    //     var oldvalue = SentenceTable.cell(el).data();
-    //     var newvalue = $(this).val();
-    //     // please send changed sentence by user in biligualcorpusfile sentence table...
-    //     send_changedsentence(id, 'status', newvalue, SentenceTable.cell(el), oldvalue);
-    // })
-
     $('body').on('click', '#postaggedcontenttable > tbody > tr > td > span.status_icons ', function(e){
        
         var el = $(this).parent();
@@ -831,7 +815,7 @@ $(document).ready(function() {
 
         if (!e.ctrlKey) { 
             clear_tag_colorfn('old');
-            CWinST_ary = new Array();
+            CWinST_ary = new Array(); 
         }
         
         if($(this)[0].className.search('selected') > -1){
@@ -845,9 +829,6 @@ $(document).ready(function() {
             CWinST_ary.push($(this)[0]); //plase save selected word of selected sentence in  this array (this array is simillar with temp array ).
         }
         
-        
     });
 
-
-    
 });
