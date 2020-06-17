@@ -102,7 +102,10 @@
 <template id="div_corpusfile_form">
     <div style="display: flex;">
         <div>
+            {% if request.user.is_staff %}
             <button type='button' class='btn_new sky_button'><span class='glyphicon glyphicon-plus'></span> New</button>
+            
+            {% endif %}
             <input type="file" style="display: none;" name='corpusfile_' id="corpusfile_"/>
         </div>
         <div style="width: 100%; text-align: right;">
@@ -111,7 +114,11 @@
                 {{ search_Form.searchname }}
                 <button type="submit" style="display: none;">Search</button>
             </form>
+            {% if request.user.is_staff %}
             <button type='button' class='btn_delete sky_button'>Delete</button></div>
+            {% else %}
+            <button type='button' class='btn_delete sky_button' disabled>Delete</button></div>
+            {% endif %}
     </div>
     <form method="POST" id="corpus_file_table" action="#">
         {% csrf_token %}
@@ -125,12 +132,13 @@
         <div style='margin-top:18px'>New Bilingual Corpusfile</div>
         <hr>
         {% csrf_token %}
-        <input type="hidden" id="user" name="user" value="{{request.user}}"/>
+        <!-- <input type="hidden" id="user" name="user" value="{{request.user}}"/> -->
         <table>
             <tr><td>Bilingual Corpus File: </td><td class='file_url'></td></tr>
             <tr><td>Name: </td><td class='name'></td></tr>
             <tr><td>Source Language: </td><td class='s_lang'></td></tr>
             <tr><td>Target Language: </td><td class='t_lang'></td></tr>
+            <tr><td>Linguist: </td><td class='linguist'></td></tr>
             <tr><td>Note: </td><td class="note"></td></tr>
             <tr><td></td><td style="text-align: center;">
                 <button type="button" class="btn_uploadTm_back sky_button" >Back</button>
