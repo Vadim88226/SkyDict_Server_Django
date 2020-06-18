@@ -290,8 +290,11 @@ $(document).ready(function() {
         // The cell that has been clicked will be editable
         if($(this)[0].className != " editable")
             return;
-        $(this).attr('contenteditable', 'true');
+        if(SentenceTable.row($(this)).data().status != "Amendable")
+            return;
+        
         var el = $(this);
+        $(this).attr('contenteditable', 'true');
         // The cell have now the focus
         el.focus();
         $(this).blur(endEdition);
@@ -466,6 +469,7 @@ $(document).ready(function() {
                 'csrfmiddlewaretoken': tk
             },
             success: function(response) {
+                td.data(value).draw();
             },
             error: function(response) {
           

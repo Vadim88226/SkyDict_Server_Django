@@ -128,10 +128,10 @@
     </div>
     {% if not request.user.is_staff %}
         <style>
-            #corpus_file_table > div > table > thead > tr > th:nth-child(7){
+            #corpus_file_table > div > table > thead > tr > th:nth-child(7), #corpus_file_table > div > table > thead > tr > th:nth-child(6), #corpus_file_table > div > table > thead > tr > th:nth-child(5){
                 display: none;
             }
-            #corpus_file_table > div > table > tbody > tr> td:nth-child(7){
+            #corpus_file_table > div > table > tbody > tr> td:nth-child(7), #corpus_file_table > div > table > tbody > tr> td:nth-child(6), #corpus_file_table > div > table > tbody > tr> td:nth-child(5){
                 display: none;
             }
 
