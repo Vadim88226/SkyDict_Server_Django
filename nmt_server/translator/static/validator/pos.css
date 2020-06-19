@@ -82,7 +82,7 @@ td {
 
 th {
     position: sticky;
-    box-shadow: 0px 0px 0px 0px #DDDDDDFF;
+    box-shadow: 0px 0px 0px 1px #DDDDDDFF;
     top: 0;
 }
 
@@ -459,6 +459,7 @@ fieldset>ul.selected{
 
 #pageno{
     width: 60px;
+    height: 24px;
     padding: initial;
 }
 
@@ -603,7 +604,7 @@ select.language {
     cursor: pointer;
     border-radius: 3.5px;
     padding: 0.1em 0.2em 0.1em 0.2em;
-    margin: 2px 8px;
+    margin: 2px 2px;
     display: inline-table;
 }
 
@@ -816,14 +817,14 @@ select.language {
 }
 
 .status_icons{
-    width: 25%;
+    width: 33%;
     height: 20px;
     vertical-align: middle;
     font-size: 18px;
     cursor: pointer;
 }
 .status_icons.selected{
-    background-color: green;
+    background-color: #27ae60;
 }
 .tag_item{
     font-size: 11px;

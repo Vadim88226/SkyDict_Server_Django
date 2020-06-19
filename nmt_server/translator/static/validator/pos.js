@@ -225,7 +225,7 @@ $(document).ready(function() {
     var prepostaggedsUL = ''; // this value is <UL> tag $(this) selected from corpusfile list 
     var oldpostaggedsid = ''; // this value is server id of corpus file list
     var status = Array(); // this is array to save status of sentence 
-    var iconary = Array('question-sign','ok', 'remove','pencil' );
+    var iconary = Array('ok', 'remove','pencil');
     SentenceTable = $('#postaggedcontenttable').DataTable({
         data : [],
         columns : [
@@ -564,7 +564,7 @@ $(document).ready(function() {
             if(tagged_data[i].pos == "X"){
                 tagged_data[i].pos = "OTH";
             }
-            tags_str = tags_str + "<span class='taggedWord tag" + tagged_data[i].pos + "'   id='" + tagged_data[i].token + "'  >" + tagged_data[i].token + "<e class='tag_item' >[" + tagged_data[i].pos + "]</e></span>";
+            tags_str = tags_str + "<span class='taggedWord tag" + tagged_data[i].pos + "'   id='" + tagged_data[i].token + "'  >" + tagged_data[i].token + "<e class='tag_item' > [" + tagged_data[i].pos + "]</e></span>";
             if (sentence_str == ''){
                 sentence_str = tagged_data[i].token;
             }
@@ -586,7 +586,7 @@ $(document).ready(function() {
             if(source[i].pos == "X"){
                 source[i].pos = "OTH";
             }
-            source_tags = source_tags + "<span class='taggedWord tag" + source[i].pos + "'  id='" + source[i].token + "'  >" + source[i].token + "<e class='tag_item' >[" + source[i].pos + "]</e></span>";
+            source_tags = source_tags + "<span class='taggedWord tag" + source[i].pos + "'  id='" + source[i].token + "'  >" + source[i].token + "<e class='tag_item' > [" + source[i].pos + "]</e></span>";
             if (source_sentence == ''){
                 source_sentence = source[i].token;
             }
@@ -603,7 +603,7 @@ $(document).ready(function() {
             if(target[i].pos == "X"){
                 target[i].pos = "OTH";
             }
-            target_tags = target_tags + "<span class='taggedWord tag" + target[i].pos + "' id='" + target[i].token + "'  >" + target[i].token + "<e class='tag_item' >[" + target[i].pos + "]</e></span>";
+            target_tags = target_tags + "<span class='taggedWord tag" + target[i].pos + "' id='" + target[i].token + "'  >" + target[i].token + "<e class='tag_item' > [" + target[i].pos + "]</e></span>";
             if(target_sentence==''){
                 target_sentence = target[i].token;
             }
@@ -805,7 +805,7 @@ $(document).ready(function() {
             if(new_tag != 'old'){
 
                 $(span_word)[0].className = "taggedWord " + new_tag +" selected";
-                $(span_word)[0].innerHTML = $(span_word)[0].id + "<e class='tag_item' >["+ new_tag.replace('tag','')  + "]</e>";
+                $(span_word)[0].innerHTML = $(span_word)[0].id + "<e class='tag_item' > ["+ new_tag.replace('tag','')  + "]</e>";
             }else{
 
                 $(span_word)[0].className = $(span_word)[0].className.replace('selected',''); 

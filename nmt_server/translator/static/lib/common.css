@@ -667,5 +667,5 @@ kmc{
 
 
 #postaggedcontenttable > thead > tr > th:nth-child(4), #corpusfilecontenttable > thead > tr > th:nth-child(4), #postaggedcontenttable > tbody > tr > td:nth-child(4), #corpusfilecontenttable > tbody > tr > td:nth-child(4){
-    width: 100px;
+    width: 70px !important;
 }

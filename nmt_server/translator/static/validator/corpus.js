@@ -227,7 +227,7 @@ $(document).ready(function() {
     var precorpusfileUL = '';
     var oldcorpusfileid = '';
     var status = Array();
-    var iconary = Array('question-sign','ok', 'remove','pencil' );
+    var iconary = Array('ok', 'remove','pencil');
     SentenceTable = $('#corpusfilecontenttable').DataTable({
         data : [],
         columns : [
@@ -290,8 +290,11 @@ $(document).ready(function() {
         // The cell that has been clicked will be editable
         if($(this)[0].className != " editable")
             return;
-        $(this).attr('contenteditable', 'true');
+        if(SentenceTable.row($(this)).data().status != "Amendable")
+            return;
+        
         var el = $(this);
+        $(this).attr('contenteditable', 'true');
         // The cell have now the focus
         el.focus();
         $(this).blur(endEdition);
@@ -362,7 +365,7 @@ $(document).ready(function() {
     $(document).on('click', '#corpusfilecontenttable > tbody > tr > td > span.status_icons ', function(e){
         var el = $(this).parent();
         var child_list = el[0].children;
-        for( var i = 0; i< 4 ; i ++ ){
+        for( var i = 0; i< 3 ; i ++ ){
            const icon = child_list[ i ];
            icon.className = icon.className.replace('selected', '');
         }
@@ -478,6 +481,7 @@ $(document).ready(function() {
                 'csrfmiddlewaretoken': tk
             },
             success: function(response) {
+                td.data(value).draw();
             },
             error: function(response) {
           
