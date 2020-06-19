@@ -243,8 +243,10 @@ def translate_sdlxliff_file(s_url, t_url, s_lang, t_lang):
 # store CorpusSentences in DB
 def store_Corpus_Sentences(corpus_object):
     file_url = os.path.join(settings.MEDIA_ROOT, corpus_object.file_url.name)
-    # get Unchecked object
-    status_object = CorpusStatus.objects.filter(status='Unchecked').first()
+    # get Acceptable object
+    status_object = CorpusStatus.objects.filter(status='Acceptable').first()
+    if not status_object:
+        status_object = CorpusStatus.objects.first()
     filename, file_extension = os.path.splitext(file_url)
     # txt
     source_sentences = []
@@ -320,8 +322,11 @@ def store_Corpus_Sentences(corpus_object):
 # store CorpusSentences in DB
 def store_POSTagged_Sentences(corpus_object):
     file_url = os.path.join(settings.MEDIA_ROOT, corpus_object.file_url.name)
-    # get Unchecked object
-    status_object = CorpusStatus.objects.filter(status='Unchecked').first()
+    # get Acceptable object
+    status_object = CorpusStatus.objects.filter(status='Acceptable').first()
+    if not status_object:
+        status_object = CorpusStatus.objects.first()
+
     filename, file_extension = os.path.splitext(file_url)
     # txt
     source_sentences = []

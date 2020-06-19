@@ -227,7 +227,7 @@ $(document).ready(function() {
     var precorpusfileUL = '';
     var oldcorpusfileid = '';
     var status = Array();
-    var iconary = Array('question-sign','ok', 'remove','pencil' );
+    var iconary = Array('ok', 'remove','pencil');
     SentenceTable = $('#corpusfilecontenttable').DataTable({
         data : [],
         columns : [
@@ -353,7 +353,7 @@ $(document).ready(function() {
     $(document).on('click', '#corpusfilecontenttable > tbody > tr > td > span.status_icons ', function(e){
         var el = $(this).parent();
         var child_list = el[0].children;
-        for( var i = 0; i< 4 ; i ++ ){
+        for( var i = 0; i< 3 ; i ++ ){
            const icon = child_list[ i ];
            icon.className = icon.className.replace('selected', '');
         }

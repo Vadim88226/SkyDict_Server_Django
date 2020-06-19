@@ -770,9 +770,7 @@ def export_BilingualCorpus(request):
 def export_POSTaggedCorpus(request):
     if request.method == 'POST': 
         corpus_id = request.POST.get('id')
-        print(corpus_id)
         export_filename = request.POST.get('name')
-        print(export_filename)
         export_filetype = request.POST.get('type')
         export_status = request.POST.get('statuses')
         export_filename += "."+export_filetype
