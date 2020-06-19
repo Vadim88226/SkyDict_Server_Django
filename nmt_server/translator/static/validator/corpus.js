@@ -296,6 +296,7 @@ $(document).ready(function() {
         el.focus();
         $(this).blur(endEdition);
     });
+    
     $(document).on('click','#corpusfilecontenttable > tbody > tr', function(e) {
         e.preventDefault();
         // please check pre selected row or <tr>
@@ -304,8 +305,19 @@ $(document).ready(function() {
             presentencetr = this;
             presentencecss = $(this)[0].style.backgroundColor;
 
-        $(this).css('background-color', 'lightgrey');    
+        $(this).css('background-color', 'lightgrey');
+       
     });
+    
+    $(document).keydown(function (e) {
+
+        if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey) {
+          $(presentencetr)[0].children[3].children[1].click()
+          e.preventDefault()
+        }
+    });
+
+    
     // page no input box
     $('body').on('change', '#pageno', function(){
         var newpageno = $(this).val();

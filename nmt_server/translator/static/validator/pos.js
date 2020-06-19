@@ -548,6 +548,13 @@ $(document).ready(function() {
        
     });
 
+    $(document).keydown(function (e) {
+
+        if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey) {
+          $(presentencetr)[0].children[3].children[1].click()
+          e.preventDefault()
+        }
+    });
 
     var grid_POSTaggedsentenceONE = function(tagged_data, data_id){
         var tags_str = '';

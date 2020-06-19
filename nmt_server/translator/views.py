@@ -762,7 +762,7 @@ def export_BilingualCorpus(request):
         t_lang = corpus_object.t_lang
         export_status = export_status.split(",")
         status_ids = list(CorpusStatus.objects.filter(status__in=export_status).values_list("id", flat=True).distinct())
-        export_sentences = BilingualSentence.objects.filter(corpus=corpus_object, status__in=status_ids)
+        export_sentences = BilingualSentence.objects.filter(corpus=corpus_object, status__in=status_ids).order_by('id')
         export_path = os.path.join(settings.MEDIA_ROOT, export_filename)
         base_path = export_BilingualCorpus2File(export_path, export_sentences, export_filetype, s_lang, t_lang)
         return JsonResponse({'valid': True, 'file_path' : base_path}, status = 200)
@@ -782,7 +782,7 @@ def export_POSTaggedCorpus(request):
         t_lang = corpus_object.t_lang
         export_status = export_status.split(",")
         status_ids = list(CorpusStatus.objects.filter(status__in=export_status).values_list("id", flat=True).distinct())
-        export_sentences = POSTaggedSentence.objects.filter(corpus=corpus_object, status__in=status_ids)
+        export_sentences = POSTaggedSentence.objects.filter(corpus=corpus_object, status__in=status_ids).order_by('id')
         export_path = os.path.join(settings.MEDIA_ROOT, export_filename)
         base_path = export_POSTaggedCorpus2File(export_path, export_sentences, export_filetype, s_lang, t_lang)
         return JsonResponse({'valid': True, 'url' : base_path}, status = 200)

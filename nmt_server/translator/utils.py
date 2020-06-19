@@ -258,7 +258,7 @@ def store_Corpus_Sentences(corpus_object):
                 try:
                     objects.append(
                         BilingualSentence(
-                            corpus=corpus_object, source = sentences[0], target = sentences[1], status = status_object
+                            corpus=corpus_object, source = sentences[0].rstrip(), target = sentences[1].rstrip(), status = status_object
                         )
                     )
                 except IndexError:
@@ -392,6 +392,7 @@ def store_POSTagged_Sentences(corpus_object):
             POSTaggedSentence.objects.bulk_create(objects)
             return True
     elif file_extension == '.ptc':
+        status = CorpusStatus.objects.filter(status='Acceptable').first()
         with open(file_url, encoding='utf-8') as csvfile:
             readCSV = csv.reader(csvfile, delimiter=',')
             objects = []
@@ -401,7 +402,7 @@ def store_POSTagged_Sentences(corpus_object):
                         POSTaggedSentence(
                             corpus=corpus_object, source = row[0], target = row[1],
                             tagged_source = row[2], tagged_target = row[3],
-                            status = CorpusStatus.objects.filter(status=row[4]).first()
+                            status = status
                         )
                     )
                 except IndexError as error:
@@ -420,7 +421,7 @@ def export_BilingualCorpus2File(file_url, sentences, file_type, s_lang, t_lang):
             fout.close()
     elif file_type == 'csv':
         with open(file_url, 'w', encoding='utf-8') as csvfile:
-            writeCSV = csv.writer(csvfile, delimiter=',')
+            writeCSV = csv.writer(csvfile, delimiter=',', dialect='excel')
             for sentence in sentences:
                 writeCSV.writerow([sentence.source, sentence.target])
             csvfile.close()
@@ -455,8 +456,7 @@ def export_POSTaggedCorpus2File(file_url, sentences, file_type, s_lang, t_lang):
             writeCSV = csv.writer(csvfile, delimiter=',', dialect='excel')
             for sentence in sentences:
                 writeCSV.writerow([sentence.source, sentence.target, 
-                    sentence.tagged_source, sentence.tagged_target, 
-                    CorpusStatus.objects.get(id=sentence.status.id).status])
+                    sentence.tagged_source, sentence.tagged_target])
             csvfile.close()
     else:
         pass

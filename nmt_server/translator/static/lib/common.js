@@ -330,3 +330,28 @@ var rolecheck = function(id){
         document.getElementById("sign_role1").checked = false;
     }
 }
+document.addEventListener("contextmenu", function(e) {
+    e.preventDefault();
+});
+
+document.addEventListener("keypress", function(event) {
+    if (!(event.which == 115 && event.ctrlKey) && !(event.which == 19)) 
+        return true;
+    event.preventDefault()
+})
+
+document.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.key === 's') {
+      e.preventDefault();
+    }
+});
+a
+
+document.onkeydown=function(e){
+    if(e.which == 17)
+        isCtrl=true;
+        if(((e.which == 85) || (e.which == 117) || (e.which == 65) || (e.which == 97) || (e.which == 67) || (e.which == 99)) && isCtrl == true){
+        e.preventDefault();
+        return false;
+    }
+}
