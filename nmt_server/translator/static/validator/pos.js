@@ -551,7 +551,7 @@ $(document).ready(function() {
     $(document).keydown(function (e) {
 
         if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey) {
-          $(presentencetr)[0].children[3].children[1].click()
+          $(presentencetr)[0].children[3].children[0].click()
           e.preventDefault()
         }
     });
@@ -561,7 +561,7 @@ $(document).ready(function() {
         var sentence_str = '';
         for(var i = 0; i < tagged_data.length; i ++ ){
 
-            if(tagged_data[i].pos == "X"){
+            if(tagged_data[i].pos == "X" || tagged_data[i].pos == "SYM"){
                 tagged_data[i].pos = "OTH";
             }
             tags_str = tags_str + "<span class='taggedWord tag" + tagged_data[i].pos + "'   id='" + tagged_data[i].token + "'  >" + tagged_data[i].token + "<e class='tag_item' > [" + tagged_data[i].pos + "]</e></span>";
@@ -583,7 +583,7 @@ $(document).ready(function() {
         var source_sentence = '';
         for(var i = 0; i < source.length; i ++ ){
 
-            if(source[i].pos == "X"){
+            if(source[i].pos == "X" || source[i].pos == "SYM"){
                 source[i].pos = "OTH";
             }
             source_tags = source_tags + "<span class='taggedWord tag" + source[i].pos + "'  id='" + source[i].token + "'  >" + source[i].token + "<e class='tag_item' > [" + source[i].pos + "]</e></span>";
@@ -600,7 +600,7 @@ $(document).ready(function() {
         var target_sentence = '';
         for(var i = 0; i < target.length; i ++ ){
             
-            if(target[i].pos == "X"){
+            if(target[i].pos == "X" || target[i].pos == "SYM"){
                 target[i].pos = "OTH";
             }
             target_tags = target_tags + "<span class='taggedWord tag" + target[i].pos + "' id='" + target[i].token + "'  >" + target[i].token + "<e class='tag_item' > [" + target[i].pos + "]</e></span>";
@@ -770,7 +770,6 @@ $(document).ready(function() {
         var _Tsource_data = JSON.stringify(Tsource_data);
         var _Ttarget_data = JSON.stringify(Ttarget_data);
         // please save tagged sentence by user.
-        console.log(Ceed.id, _Tsource_data,_Ttarget_data);
         save_taggedsentencefn(Ceed.id, _Tsource_data,_Ttarget_data);
     });
 

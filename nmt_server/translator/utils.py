@@ -284,7 +284,7 @@ def store_Corpus_Sentences(corpus_object):
         for row in range(2, src_ws.max_row+1):
             objects.append(
                 BilingualSentence(
-                    corpus=corpus_object, source = src_ws.cell(row, en_col).value, target = src_ws.cell(row, th_col).value, status = status_object
+                    corpus=corpus_object, source = src_ws.cell(row, en_col).value.rstrip(), target = src_ws.cell(row, th_col).value.rstrip(), status = status_object
                 )
             )
         BilingualSentence.objects.bulk_create(objects)
@@ -297,7 +297,7 @@ def store_Corpus_Sentences(corpus_object):
                 try:
                     objects.append(
                         BilingualSentence(
-                            corpus=corpus_object, source = row[0], target = row[1], status = status_object
+                            corpus=corpus_object, source = row[0].rstrip(), target = row[1].rstrip(), status = status_object
                         )
                     )
                 except IndexError:
@@ -311,7 +311,7 @@ def store_Corpus_Sentences(corpus_object):
             for node in tmx_file.unit_iter():
                 objects.append(
                     BilingualSentence(
-                        corpus=corpus_object, source = node.getsource(), target = node.gettarget(), status = status_object
+                        corpus=corpus_object, source = node.getsource().rstrip(), target = node.gettarget().rstrip(), status = status_object
                     )
                 )
             BilingualSentence.objects.bulk_create(objects)
@@ -361,10 +361,10 @@ def store_POSTagged_Sentences(corpus_object):
             if 'th' in cell_value:
                 th_col = col
         objects = []
-        for row in range(2, src_ws.max_row+1):
+        for row in range(1, src_ws.max_row+1):
             objects.append(
                 POSTaggedSentence(
-                    corpus=corpus_object, source = src_ws.cell(row, en_col).value, target = src_ws.cell(row, th_col).value, status = status_object
+                    corpus=corpus_object, source = src_ws.cell(row, en_col).value.rstrip(), target = src_ws.cell(row, th_col).value.rstrip(), status = status_object
                 )
             )
         POSTaggedSentence.objects.bulk_create(objects)
@@ -377,7 +377,7 @@ def store_POSTagged_Sentences(corpus_object):
                 try:
                     objects.append(
                         POSTaggedSentence(
-                            corpus=corpus_object, source = row[0], target = row[1], status = status_object
+                            corpus=corpus_object, source = row[0].rstrip(), target = row[1].rstrip(), status = status_object
                         )
                     )
                 except IndexError:
@@ -391,7 +391,7 @@ def store_POSTagged_Sentences(corpus_object):
             for node in tmx_file.unit_iter():
                 objects.append(
                     POSTaggedSentence(
-                        corpus=corpus_object, source = node.getsource(), target = node.gettarget(), status = status_object
+                        corpus=corpus_object, source = node.getsource().rstrip(), target = node.gettarget().rstrip(), status = status_object
                     )
                 )
             POSTaggedSentence.objects.bulk_create(objects)
@@ -425,7 +425,7 @@ def export_BilingualCorpus2File(file_url, sentences, file_type, s_lang, t_lang):
                 fout.write(sentence.source + '|' + sentence.target + '\n')
             fout.close()
     elif file_type == 'csv':
-        with open(file_url, 'w', encoding='utf-8') as csvfile:
+        with open(file_url, 'a', encoding='utf-8') as csvfile:
             writeCSV = csv.writer(csvfile, delimiter=',', dialect='excel')
             for sentence in sentences:
                 writeCSV.writerow([sentence.source, sentence.target])
@@ -442,9 +442,7 @@ def export_BilingualCorpus2File(file_url, sentences, file_type, s_lang, t_lang):
         dst_wb.save(file_url)
         dst_wb = openpyxl.load_workbook(file_url)
         dst_ws = dst_wb['transmem']
-        dst_ws.cell(1, 1).value = 'en'
-        dst_ws.cell(1, 2).value = 'th'
-        row = 2
+        row = 1
         for sentence in sentences:
             dst_ws.cell(row, 1).value = sentence.source
             dst_ws.cell(row, 2).value = sentence.target
@@ -457,7 +455,7 @@ def export_BilingualCorpus2File(file_url, sentences, file_type, s_lang, t_lang):
 # Export Bilingual Corpus to File
 def export_POSTaggedCorpus2File(file_url, sentences, file_type, s_lang, t_lang):
     if file_type == 'ptc':
-        with open(file_url, 'w', encoding='utf-8') as csvfile:
+        with open(file_url, 'a', encoding='utf-8') as csvfile:
             writeCSV = csv.writer(csvfile, delimiter=',', dialect='excel')
             for sentence in sentences:
                 writeCSV.writerow([sentence.source, sentence.target, 

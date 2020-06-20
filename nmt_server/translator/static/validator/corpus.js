@@ -315,7 +315,7 @@ $(document).ready(function() {
     $(document).keydown(function (e) {
 
         if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey) {
-          $(presentencetr)[0].children[3].children[1].click()
+          $(presentencetr)[0].children[3].children[0].click()
           e.preventDefault()
         }
     });

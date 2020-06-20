@@ -624,7 +624,7 @@ def upload_CorpusFile(request):
             linguist_id = form.cleaned_data.get("linguist")
             corpus = form.save(commit=False)
             corpus.file_name = corpus.file_url.name
-            corpus.user = User.objects.get(id=linguist_id)
+            corpus.user = linguist_id
             corpus.save()
             valid = store_Corpus_Sentences(corpus)
         return redirect('/corpus_validator/')
@@ -640,7 +640,7 @@ def upload_POSTaggedFile(request):
             linguist_id = form.cleaned_data.get("linguist")
             taggedfile = form.save(commit=False)
             taggedfile.file_name = taggedfile.file_url.name
-            taggedfile.user = User.objects.get(id=linguist_id)
+            taggedfile.user = linguist_id
             taggedfile.save()
             valid = store_POSTagged_Sentences(taggedfile)
         return redirect('/pos_validator/')
