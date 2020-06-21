@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'translator.apps.TranslatorConfig',
     'django_cleanup.apps.CleanupConfig',
+    'translator.translation_model',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -42,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_filters',
     'django_tables2',
-    'translator.translation_model',
 ]
 AUTH_USER_MODEL = 'translator.User'
 MIDDLEWARE = [
@@ -90,8 +90,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'skydict_db',
-        'USER': 'scote',
-        'PASSWORD': '11111111111',
+        'USER': 'root',
+        'PASSWORD': 'vadim',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -138,11 +138,10 @@ MEDIA_URL = '/translator/static/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'translator/static/media')
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 LOGIN_REDIRECT_URL = "index"
-EMAIL_HIST = "smtp.gmail.com"
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST = "kingdragon2108@gmail.com"
-EMAIL_HOST_PASSWORD='password'
+EMAIL_HOST_USER = "prolocalize@gmail.com"
